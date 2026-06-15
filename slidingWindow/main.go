@@ -12,7 +12,7 @@ func main() {
 }
 func minArrivalsToDiscard(arrivals []int, w int, m int) int {
 	map1 := make(map[int]int)
-	re := 0
+	rea := 0
 	for v, value := range arrivals {
 		map1[value]++
 		if map1[value] > m {
@@ -24,5 +24,5 @@ func minArrivalsToDiscard(arrivals []int, w int, m int) int {
 			map1[arrivals[left]]--
 		}
 	}
-	return re
+	return rea
 }
