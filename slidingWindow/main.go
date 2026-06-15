@@ -24,5 +24,5 @@ func minArrivalsToDiscard(arrivals []int, w int, m int) int {
 			map1[arrivals[left]]--
 		}
 	}
-	return rea
+	return re
 }
