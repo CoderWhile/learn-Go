@@ -15,7 +15,7 @@ import (
 
 // 显示登录成功后的界面
 func ShowMenu(username string) {
-	fmt.Printf("---------%s用户登录界面----------", username)
+	fmt.Printf("---------%s用户登录界面----------\n", username)
 	fmt.Println("---------1.显示在线用户列表--------")
 	fmt.Println("---------2.发送消息---------------")
 	fmt.Println("---------3.信息列表---------------")
