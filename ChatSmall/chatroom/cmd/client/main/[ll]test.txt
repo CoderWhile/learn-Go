@@ -1,0 +1,5 @@
+Hello 123 World 456
+Java 789 Programming 2024
+Score 100 Grade A
+Price 99.5 Count 50
+End
