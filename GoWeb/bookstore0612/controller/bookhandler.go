@@ -8,12 +8,66 @@ import (
 	"strconv"
 )
 
-// 获取所有图书
-func GetBooks(w http.ResponseWriter, r *http.Request) {
+// 去首页的处理器
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	//获取页码
+	pageNo := r.FormValue("pageNo")
+	if pageNo == "" {
+		pageNo = "1"
+	}
 	//调用bookdao中的
-	books, _ := dao.GetBooks()
+	page, _ := dao.GetPageBooks(pageNo)
+	//解析模板
+	//去首页是通过引擎
+	t := template.Must(template.ParseFiles("views/index.html"))
+	t.Execute(w, page)
+}
+
+// 获取带分页和价格范围的图书
+func GetPageBooksByPrice(w http.ResponseWriter, r *http.Request) {
+	//获取页码
+	pageNo := r.FormValue("pageNo")
+	//获取价格范围
+	minPrice := r.FormValue("min")
+	maxPrice := r.FormValue("max")
+
+	if pageNo == "" {
+		pageNo = "1"
+	}
+	page := &model.Page{}
+	if minPrice == "" && maxPrice == "" {
+		page, _ = dao.GetPageBooks(pageNo)
+	} else {
+		//调用bookdao中的
+		page, _ = dao.GetPageBooksByPrice(pageNo, minPrice, maxPrice)
+		//将价格设置到page中
+		page.MinPrice = minPrice
+		page.MaxPrice = maxPrice
+	}
+	//调用IsLogin函数
+	flag, session := dao.IsLogin(r)
+
+	if flag {
+		//已经登录了,设置page中的IsLogin和Username
+		page.IsLogin = true
+		page.Username = session.UserName
+	}
+
+	t := template.Must(template.ParseFiles("views/index.html"))
+	t.Execute(w, page)
+}
+
+// 获取带分页所有图书
+func GetPageBooks(w http.ResponseWriter, r *http.Request) {
+	//获取页码
+	pageNo := r.FormValue("pageNo")
+	if pageNo == "" {
+		pageNo = "1"
+	}
+	//调用bookdao中的
+	page, _ := dao.GetPageBooks(pageNo)
 	t := template.Must(template.ParseFiles("views/pages/manager/book_manager.html"))
-	t.Execute(w, books)
+	t.Execute(w, page)
 }
 
 // 添加图书
@@ -39,7 +93,7 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	//获取图书id
 	bookID := r.FormValue("bookId")
 	dao.DeleteBook(bookID)
-	GetBooks(w, r)
+	GetPageBooks(w, r)
 }
 
 // 去更新或添加图书的页面
@@ -84,5 +138,5 @@ func UpdateOrADdBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//调用GetBooks处理器函数再查询一次数据库
-	GetBooks(w, r)
+	GetPageBooks(w, r)
 }

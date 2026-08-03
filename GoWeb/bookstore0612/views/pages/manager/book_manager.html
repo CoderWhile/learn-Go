@@ -29,7 +29,7 @@
 			<img class="logo_img" alt="" src="/static/img/logo.gif" >
 			<span class="wel_word">图书管理系统</span>
 			<div>
-				<a href="/getBooks">图书管理</a>
+				<a href="/getPageBooks">图书管理</a>
 				<a href="/main">返回商城</a>
 			</div>
 	</div>
@@ -44,7 +44,7 @@
 				<td>库存</td>
 				<td colspan="2">操作</td>
 			</tr>
-			{{range . }}
+			{{range .Books }}
 			<tr>
 				<td>{{.Title}}</td>
 				<td>{{.Price}}</td>
@@ -67,6 +67,28 @@
 				<td><a href="/toUpdateBookPage">添加图书</a></td>
 			</tr>	
 		</table>
+		<div id="page_nav">
+			{{if .IsHasPrev}}
+			<a href="/getPageBooks">首页</a>
+			<a href="/getPageBooks?pageNo={{.GetPrevPageNo}}">上一页</a>
+			{{end}}
+			 当前是第{{.PageNo}}页,共{{.TotalPageNo}}页,共{{.TotalRecord}}条记录
+			{{if .IsHasNext}}
+			<a href="/getPageBooks?pageNo={{.GetNextPageNo}}">下一页</a>
+			<a href="/getPageBooks?pageNo={{.TotalPageNo}}">末页</a>
+			{{end}}
+			 到第<input value="{{.PageNo}}" name="pn" id="pn_input"/>页
+			<input type="button" value="确定" id="sub">
+			<script>
+				//给确定按钮绑定单机事件
+				$("#sub").click(function(){
+				//获取输入的页码
+					var pageNo=$("#pn_input").val();
+					location="/getPageBooks?pageNo="+pageNo
+				});
+			</script>
+		</div>
+
 	</div>
 	
 	<div id="bottom">

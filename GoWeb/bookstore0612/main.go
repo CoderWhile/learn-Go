@@ -2,17 +2,16 @@ package main
 
 import (
 	"GoWeb/bookstore0612/controller"
-	"html/template"
 	"net/http"
 )
 
 // 去首页的处理器
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	//解析模板
-	//去首页是通过引擎
-	t := template.Must(template.ParseFiles("views/index.html"))
-	t.Execute(w, "")
-}
+//func IndexHandler(w http.ResponseWriter, r *http.Request) {
+//	//解析模板
+//	//去首页是通过引擎
+//	t := template.Must(template.ParseFiles("views/index.html"))
+//	t.Execute(w, "")
+//}
 
 func main() {
 
@@ -21,10 +20,11 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("views/static/"))))
 	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("views/pages/"))))
 
-	http.HandleFunc("/main", IndexHandler)
+	http.HandleFunc("/main", controller.GetPageBooksByPrice)
 
 	//去登陆:
 	http.HandleFunc("/login", controller.Login)
+	http.HandleFunc("/logout", controller.Logout)
 
 	//去注册
 	http.HandleFunc("/regist", controller.Regist)
@@ -33,7 +33,11 @@ func main() {
 	http.HandleFunc("/checkUserName", controller.CheckUserName)
 
 	//获取所有图书
-	http.HandleFunc("/getBooks", controller.GetBooks)
+	//http.HandleFunc("/getBooks", controller.GetBooks)
+	//获取带分页的图书信息
+	http.HandleFunc("/getPageBooks", controller.GetPageBooks)
+
+	http.HandleFunc("/getPageBooksByPrice", controller.GetPageBooksByPrice)
 
 	//添加图书
 	//http.HandleFunc("/addBook", controller.AddBook)
@@ -47,5 +51,10 @@ func main() {
 	//更新图书
 	http.HandleFunc("/updateOrAddBook", controller.UpdateOrADdBook)
 
+	//添加图书到购物车
+	http.HandleFunc("/addBook2Cart", controller.AddBook2Cart)
+
+	//获取购物车信息
+	http.HandleFunc("/getCartInfo", controller.GetCartInfo)
 	http.ListenAndServe(":8080", nil)
 }
