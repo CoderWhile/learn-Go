@@ -47,3 +47,17 @@ func UpdateCart(cart *model.Cart) error {
 	}
 	return nil
 }
+
+// DeleteCartByCartID 根据购物车的id删除购物车
+func DeleteCartByCartID(cartID string) error {
+	err := DeleteCartItemsByCartID(cartID)
+	if err != nil {
+		return err
+	}
+	sql := `delete from carts where id=?`
+	_, err2 := utils.Db.Exec(sql, cartID)
+	if err2 != nil {
+		return err2
+	}
+	return nil
+}

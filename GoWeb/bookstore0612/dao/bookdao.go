@@ -3,6 +3,7 @@ package dao
 import (
 	"GoWeb/bookstore0612/model"
 	"GoWeb/bookstore0612/utils"
+	"fmt"
 	"strconv"
 )
 
@@ -60,6 +61,7 @@ func UpdateBook(book *model.Book) error {
 	sqlStr := `update books set title=? ,author=? ,price=? ,sales=? ,stock=? ,img_path=? where id=?`
 	_, err := utils.Db.Exec(sqlStr, book.Title, book.Author, book.Price, book.Sales, book.Stock, book.ImagePath, book.ID)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return nil
