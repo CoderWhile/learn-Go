@@ -41,9 +41,17 @@
 		// Ajax 验证用户名是否存在
 		$("#username").change(function(){
 			var username = $(this).val();
-			if(username.length < 3) return;
-			$.post("/checkUserName", {username: username}, function(res){
-				$("#msg").show().text(res);
+			var url="/checkUserName"
+			var param={"username":username}
+			if(username.length<3){
+				$("#msg").show();
+				$("#msg").html("用户名短");
+				return
+			}
+			$.post(url, param, function(res){
+				// $("#msg").show().text(res);
+				$("#msg").show();
+				$("#msg").html(res);
 			});
 		});
 	});
@@ -81,7 +89,7 @@
 							<br /><br />
 							<label>确认密码：</label>
 							<input class="itxt" type="password" placeholder="确认密码" autocomplete="off" name="repwd" id="repwd" />
-						
+
 							<br /><br /><br />
 							<input type="submit" value="注册" id="sub_btn" />
 						</form>

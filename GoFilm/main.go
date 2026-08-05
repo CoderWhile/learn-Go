@@ -20,6 +20,9 @@ func main() {
 	//去注册
 	http.HandleFunc("/regist", controller.Regist)
 
+	//通过Ajax请求验证用户名是否可用
+	http.HandleFunc("/checkUserName", controller.CheckUserName)
+	
 	//用户注销
 	http.HandleFunc("/logout", controller.Logout)
 
