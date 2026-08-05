@@ -13,6 +13,7 @@ var (
 
 func init() {
 	Db, err = sql.Open("mysql", "root:bjy12345@tcp(127.0.0.1:3306)/test")
+
 	if err != nil {
 		panic(err.Error())
 	}

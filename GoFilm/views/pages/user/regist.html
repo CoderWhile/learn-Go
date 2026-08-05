@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 注册</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function(){
+		$("#sub_btn").click(function(){
+			var username = $("#username").val();
+			var usernameReg = /^[a-zA-Z0-9_\-\u4e00-\u9fa5]{3,16}$/;
+			if(!usernameReg.test(username)){
+				alert("请输入3-16位字母、数字、下划线、减号或中文的用户名！");
+				return false;
+			}
+			var password = $("#password").val();
+			var passwordReg = /^[a-zA-Z0-9_\-!@#$%^&*]{6,18}$/;
+			if(!passwordReg.test(password)){
+				alert("请输入6-18位字母、数字或特殊字符的密码！");
+				return false;
+			}
+			var repwd = $("#repwd").val();
+			if(repwd == ""){
+				alert("确认密码不能为空！");
+				return false;
+			}
+			if(repwd != password){
+				$("#repwd").val("");
+				alert("两次输入的密码不一致！");
+				return false;
+			}
+		});
+
+		$("#msg").hide();
+		var msg = "{{.}}";
+		if(msg && msg == "用户名已存在"){
+			$("#msg").show().text(msg);
+		}
+
+		// Ajax 验证用户名是否存在
+		$("#username").change(function(){
+			var username = $(this).val();
+			if(username.length < 3) return;
+			$.post("/checkUserName", {username: username}, function(res){
+				$("#msg").show().text(res);
+			});
+		});
+	});
+</script>
+</head>
+<body>
+
+	<div id="login_header">
+		<div class="login-logo">
+			<span class="logo-icon">🎬</span>
+			<span class="logo-text">网上影院</span>
+		</div>
+	</div>
+
+	<div class="login_banner">
+		<div id="l_content">
+			<span class="login_word">欢迎注册</span>
+			<p class="login_slogan">加入我们，开启观影之旅</p>
+		</div>
+
+		<div id="content">
+			<div class="login_form">
+				<div class="login_box">
+					<div class="tit">
+						<h1>注册会员</h1>
+						<span class="errorMsg" id="msg">{{.}}</span>
+					</div>
+					<div class="form">
+						<form action="/regist" method="POST">
+							<label>用户名称：</label>
+							<input class="itxt" type="text" placeholder="请输入用户名" autocomplete="off" name="username" id="username" />
+							<br /><br />
+							<label>用户密码：</label>
+							<input class="itxt" type="password" placeholder="请输入密码" autocomplete="off" name="password" id="password" />
+							<br /><br />
+							<label>确认密码：</label>
+							<input class="itxt" type="password" placeholder="确认密码" autocomplete="off" name="repwd" id="repwd" />
+							<br /><br />
+							<label>电子邮件：</label>
+							<input class="itxt" type="text" placeholder="请输入邮箱地址" autocomplete="off" name="email" id="email" />
+							<br /><br /><br />
+							<input type="submit" value="注册" id="sub_btn" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="bottom">
+		<span>GoFilm网上影院.Copyright &copy;2026</span>
+	</div>
+</body>
+</html>

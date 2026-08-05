@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 首页</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function(){
+		// 搜索
+		$("#searchBtn").click(function(){
+			var keyword = $("#searchInput").val().trim();
+			location.href = "/main?keyword=" + encodeURIComponent(keyword);
+		});
+		$("#searchInput").keydown(function(e){
+			if(e.keyCode == 13) $("#searchBtn").click();
+		});
+
+		// 分类点击
+		$(".cat-item").click(function(){
+			var catId = $(this).attr("data-cat");
+			location.href = "/main?category=" + catId;
+		});
+
+		// 标签/地区筛选
+		$("#tagSelect, #regionSelect").change(function(){
+			var tag = $("#tagSelect").val();
+			var region = $("#regionSelect").val();
+			location.href = "/main?tag=" + tag + "&region=" + region;
+		});
+
+		// 电影点击进入详情
+		$(".movie-card").click(function(){
+			var mid = $(this).attr("data-mid");
+			if (isLogin) {
+				location.href = "/movie/detail?movieId=" + mid;
+			} else {
+				alert("请先登录！");
+			}
+		});
+
+		// 注销
+		$("#logoutBtn").click(function(){
+			if(confirm("确定注销吗？")) location.href = "/logout";
+		});
+
+		// 导航激活样式
+		$(".nav-item").click(function(){
+			$(".nav-item").removeClass("active");
+			$(this).addClass("active");
+		});
+	});
+</script>
+</head>
+<body>
+<!--<script>-->
+<!--	var isLogin = {{if .IsLogin}}true{{else}}false{{end}};-->
+<!--</script>-->
+
+	<!-- ========== 顶部栏 ========== -->
+	<div id="topbar">
+		<div class="topbar-inner">
+			<div class="topbar-left">
+				<span class="logo-icon">🎬</span>
+				<span class="logo-text">网上影院</span>
+			</div>
+			<div class="topbar-center">
+				<input type="text" id="searchInput" placeholder="搜索电影..." value="">
+				<button id="searchBtn">搜索</button>
+			</div>
+			<div class="topbar-right">
+				{{if .IsLogin}}
+					<span class="welcome-text">欢迎 <span class="welcome-name">{{.Username}}</span> 登录</span>
+					<a href="/logout" id="logoutBtn" class="top-btn">注销</a>
+				{{else}}
+					<a href="/pages/user/login.html" class="top-btn">登录</a>
+					<a href="/pages/user/regist.html" class="top-btn">注册</a>
+				{{end}}
+<!--				{{if eq .Identity "admin"}}-->
+<!--					<a href="/pages/admin/manager.html" class="top-btn">管理</a>-->
+<!--				{{end}}-->
+			</div>
+		</div>
+	</div>
+
+	<!-- ========== 主体 ========== -->
+	<div id="main">
+
+		<!-- 子导航 -->
+		<div id="subnav">
+			<div class="subnav-inner">
+				<a class="nav-item active" href="/main">首页</a>
+				<a class="nav-item" href="/main?category=1">电影分类</a>
+				<a class="nav-item" href="/cinema/list">查看影院</a>
+				{{if .IsLogin}}
+					<a class="nav-item" href="/getMyOrders">我的</a>
+				{{else}}
+					<a class="nav-item" href="/pages/user/login.html">我的</a>
+				{{end}}
+					<a class="nav-item" href="/pages/admin/manager.html">管理员登录</a>
+			</div>
+		</div>
+
+		<!-- 筛选区 -->
+		<div id="filter_bar">
+			<div class="filter-inner">
+				<div class="filter-left">
+					<span class="filter-label">标签:</span>
+					<select id="tagSelect">
+						<option value="">全部</option>
+<!--						{{range .Tags}}-->
+<!--						<option value="{{.ID}}" {{if eq .ID $.TagID}}selected{{end}}>{{.Name}}</option>-->
+<!--						{{end}}-->
+					</select>
+					<span class="filter-label">地区:</span>
+					<select id="regionSelect">
+						<option value="">全部</option>
+<!--						<option value="china"  {{if eq .Region "china"}}selected{{end}}>中国</option>-->
+<!--						<option value="europe" {{if eq .Region "europe"}}selected{{end}}>欧洲</option>-->
+<!--						<option value="america" {{if eq .Region "america"}}selected{{end}}>美国</option>-->
+<!--						<option value="japan"  {{if eq .Region "japan"}}selected{{end}}>日本</option>-->
+<!--						<option value="korea"  {{if eq .Region "korea"}}selected{{end}}>韩国</option>-->
+					</select>
+				</div>
+				<div class="filter-right">
+					<ul class="cat-list">
+						<li class="cat-item {{if not .CategoryID}}active{{end}}" data-cat="0">全部</li>
+						{{range .Categories}}
+						<li class="cat-item {{if eq .ID $.CategoryID}}active{{end}}" data-cat="{{.ID}}">{{.Name}}</li>
+						{{end}}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- 电影展示区 -->
+		<div id="movie_showcase">
+			{{if .Movies}}
+			<div class="movie-grid">
+				{{range .Movies}}
+				<div class="movie-card" data-mid="{{.ID}}">
+					<div class="poster-wrap">
+						<img src="{{.ImagePath}}" alt="{{.Title}}">
+						<div class="movie-mask">
+							<span class="movie-title">{{.Title}}</span>
+						</div>
+					</div>
+					<div class="movie-meta">
+<!--						<span class="meta-rating">★ {{.Rating}}</span>-->
+						<span class="meta-genre">{{.Genre}}</span>
+					</div>
+				</div>
+				{{end}}
+			</div>
+			{{else}}
+			<div class="empty-tip">
+				{{if .Keyword}}未找到 "{{.Keyword}}" 相关电影{{else}}暂无电影{{end}}
+			</div>
+			{{end}}
+		</div>
+
+	</div>
+
+	<!-- ========== 底部 ========== -->
+	<div id="bottom">
+		<span>GoFilm网上影院.Copyright &copy;2026</span>
+	</div>
+</body>
+</html>

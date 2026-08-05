@@ -1,0 +1,42 @@
+package model
+
+// SeedMovies 返回35部电影种子数据，image_path 指向本地 static/img/movies/ 目录
+func SeedMovies() []Movie {
+	return []Movie{
+		{ID: 1, Title: "战狼2", Genre: "动作", Area: "china", Intro: "退伍军人冷锋卷入非洲国家叛乱，为同胞而战。", ImagePath: "/static/img/movies/01_战狼2.jpg"},
+		{ID: 2, Title: "红海行动", Genre: "动作", Area: "china", Intro: "中国海军蛟龙突击队深入伊维亚共和国撤侨。", ImagePath: "/static/img/movies/02_红海行动.jpg"},
+		{ID: 3, Title: "碟中谍7", Genre: "动作", Area: "america", Intro: "伊森·亨特面对失控AI，完成不可能的任务。", ImagePath: "/static/img/movies/03_碟中谍7.jpg"},
+		{ID: 4, Title: "速度与激情10", Genre: "动作", Area: "america", Intro: "但丁复仇家族，飞车家族再次集结。", ImagePath: "/static/img/movies/04_速度与激情10.jpg"},
+		{ID: 5, Title: "你好，李焕英", Genre: "喜剧", Area: "china", Intro: "女儿穿越回1981年，与年轻时的母亲相遇。", ImagePath: "/static/img/movies/05_你好_李焕英.jpg"},
+		{ID: 6, Title: "飞驰人生2", Genre: "喜剧", Area: "china", Intro: "昔日冠军车手重返巴音布鲁克赛场。", ImagePath: "/static/img/movies/06_飞驰人生2.jpg"},
+		{ID: 7, Title: "小偷家族", Genre: "喜剧", Area: "japan", Intro: "一个靠偷窃维生的家庭收养了一名被遗弃女孩。", ImagePath: "/static/img/movies/07_小偷家族.jpg"},
+		{ID: 8, Title: "这么多年", Genre: "爱情", Area: "china", Intro: "小镇女孩与叛逆少年跨越十年的青春恋曲。", ImagePath: "/static/img/movies/08_这么多年.jpg"},
+		{ID: 9, Title: "你的名字。", Genre: "爱情", Area: "japan", Intro: "东京男孩与乡下女孩身体互换的奇幻爱情。", ImagePath: "/static/img/movies/09_你的名字.jpg"},
+		{ID: 10, Title: "泰坦尼克号", Genre: "爱情", Area: "america", Intro: "穷小子与富家女在巨轮上的生死之恋。", ImagePath: "/static/img/movies/10_泰坦尼克号.jpg"},
+		{ID: 11, Title: "哪吒之魔童降世", Genre: "动画", Area: "china", Intro: "生而为魔的哪吒逆天改命，我命由我不由天。", ImagePath: "/static/img/movies/11_哪吒.jpg"},
+		{ID: 12, Title: "长安三万里", Genre: "动画", Area: "china", Intro: "以高适视角回顾李白的一生与大唐盛世。", ImagePath: "/static/img/movies/12_长安三万里.jpg"},
+		{ID: 13, Title: "千与千寻", Genre: "动画", Area: "japan", Intro: "少女千寻误入神灵世界，为救父母勇敢成长。", ImagePath: "/static/img/movies/13_千与千寻.jpg"},
+		{ID: 14, Title: "疯狂动物城", Genre: "动画", Area: "america", Intro: "兔子朱迪与狐狸尼克联手揭开动物城阴谋。", ImagePath: "/static/img/movies/14_疯狂动物城.jpg"},
+		{ID: 15, Title: "我不是药神", Genre: "剧情", Area: "china", Intro: "小商贩从印度走私抗癌药，拯救病人引发法律与良知的对决。", ImagePath: "/static/img/movies/15_我不是药神.jpg"},
+		{ID: 16, Title: "活着", Genre: "剧情", Area: "china", Intro: "福贵一家历经战争、运动与苦难，顽强生存。", ImagePath: "/static/img/movies/16_活着.jpg"},
+		{ID: 17, Title: "寄生虫", Genre: "剧情", Area: "korea", Intro: "贫家四口寄生富家，欲望终将吞噬一切。", ImagePath: "/static/img/movies/17_寄生虫.jpg"},
+		{ID: 18, Title: "消失的她", Genre: "悬疑", Area: "china", Intro: "妻子度假失踪，丈夫陷入惊天迷局。", ImagePath: "/static/img/movies/18_消失的她.jpg"},
+		{ID: 19, Title: "盗梦空间", Genre: "悬疑", Area: "america", Intro: "盗梦者潜入多层梦境植入想法，现实与梦境的边界模糊。", ImagePath: "/static/img/movies/19_盗梦空间.jpg"},
+		{ID: 20, Title: "看不见的客人", Genre: "悬疑", Area: "europe", Intro: "企业家被控谋杀情人，一场精心策划的完美辩护。", ImagePath: "/static/img/movies/20_看不见的客人.jpg"},
+		{ID: 21, Title: "沉默的羔羊", Genre: "惊悚", Area: "america", Intro: "实习探员向食人魔医生求助追捕连环杀手。", ImagePath: "/static/img/movies/21_沉默的羔羊.jpg"},
+		{ID: 22, Title: "恐怖直播", Genre: "惊悚", Area: "korea", Intro: "电台主持直播中遭遇恐怖袭击，演播室沦为战场。", ImagePath: "/static/img/movies/22_恐怖直播.jpg"},
+		{ID: 23, Title: "流浪地球2", Genre: "科幻", Area: "china", Intro: "太阳即将毁灭，人类启动流浪地球计划。", ImagePath: "/static/img/movies/23_流浪地球2.jpg"},
+		{ID: 24, Title: "星际穿越", Genre: "科幻", Area: "america", Intro: "宇航员穿越虫洞为人类寻找新家园。", ImagePath: "/static/img/movies/24_星际穿越.jpg"},
+		{ID: 25, Title: "阿丽塔：战斗天使", Genre: "科幻", Area: "america", Intro: "改造人少女在废铁城中追寻自己的身世。", ImagePath: "/static/img/movies/25_阿丽塔.jpg"},
+		{ID: 26, Title: "长津湖", Genre: "战争", Area: "china", Intro: "志愿军第九兵团在极寒中血战长津湖。", ImagePath: "/static/img/movies/26_长津湖.jpg"},
+		{ID: 27, Title: "血战钢锯岭", Genre: "战争", Area: "america", Intro: "军医戴斯蒙德在冲绳战役中不持一枪救下75人。", ImagePath: "/static/img/movies/27_血战钢锯岭.jpg"},
+		{ID: 28, Title: "少年派的奇幻漂流", Genre: "冒险", Area: "america", Intro: "少年与猛虎在太平洋上227天漂流求生。", ImagePath: "/static/img/movies/28_少年派.jpg"},
+		{ID: 29, Title: "阿凡达2：水之道", Genre: "冒险", Area: "america", Intro: "杰克一家为躲避追捕迁居潘多拉海洋部落。", ImagePath: "/static/img/movies/29_阿凡达2.jpg"},
+		{ID: 30, Title: "无间道", Genre: "警匪", Area: "china", Intro: "警察卧底与黑帮卧底的双面人生，终极对决。", ImagePath: "/static/img/movies/30_无间道.jpg"},
+		{ID: 31, Title: "追龙", Genre: "警匪", Area: "china", Intro: "毒枭跛豪与探长雷洛联手统治香港地下世界。", ImagePath: "/static/img/movies/31_追龙.jpg"},
+		{ID: 32, Title: "海蒂和爷爷", Genre: "家庭", Area: "europe", Intro: "孤儿海蒂被送到阿尔卑斯山与孤僻爷爷生活。", ImagePath: "/static/img/movies/32_海蒂和爷爷.jpg"},
+		{ID: 33, Title: "爆裂鼓手", Genre: "音乐", Area: "america", Intro: "爵士鼓学生对完美苛求到极致的疯狂之路。", ImagePath: "/static/img/movies/33_爆裂鼓手.jpg"},
+		{ID: 34, Title: "封神第一部", Genre: "冒险", Area: "china", Intro: "殷寿暴政引发人仙妖三界大战，少年英雄觉醒。", ImagePath: "/static/img/movies/34_封神第一部.jpg"},
+		{ID: 35, Title: "铃芽之旅", Genre: "动画", Area: "japan", Intro: "少女铃芽与闭门师草太踏上关闭灾难之门之旅。", ImagePath: "/static/img/movies/35_铃芽之旅.jpg"},
+	}
+}

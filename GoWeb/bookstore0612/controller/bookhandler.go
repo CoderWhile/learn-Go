@@ -70,24 +70,6 @@ func GetPageBooks(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, page)
 }
 
-// 添加图书
-//func AddBook(w http.ResponseWriter, r *http.Request) {
-//	//获取图书信息
-//	title := r.PostFormValue("title")
-//	author := r.PostFormValue("author")
-//	price := r.PostFormValue("price")
-//	sales := r.PostFormValue("sales")
-//	stock := r.PostFormValue("stock")
-//	fPrice, _ := strconv.ParseFloat(price, 64)
-//	iSales, _ := strconv.ParseInt(sales, 10, 0)
-//	iStock, _ := strconv.ParseInt(stock, 10, 0)
-//
-//	book := &model.Book{Title: title, Author: author, Price: fPrice, Sales: int(iSales), Stock: int(iStock), ImagePath: "/static/img/default.jpg"}
-//	dao.AddBook(book)
-//	//调用GetBooks处理器函数再查询一次数据库
-//	GetBooks(w, r)
-//}
-
 // 删除图书
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	//获取图书id
