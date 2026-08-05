@@ -35,48 +35,48 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 // 处理登录函数
 func Login(w http.ResponseWriter, r *http.Request) {
 	//判断是否已经登录
-	//flag, _ := dao.IsLogin(r)
-	//if flag {
-	//	//已经登录
-	//	//去首页
-	//	GetPageBooksByPrice(w, r)
-	//} else {
-	//获取用户名和密码和身份信息
-	username := r.PostFormValue("username")
-	password := r.PostFormValue("password")
-	//一并处理用户和管理员登录
-	//identity := r.PostFormValue("identity")
-	user, _ := dao.CheckUserNamePasswordIdentity(username, password)
-	if user.ID > 0 {
-		//生成UUID作为Session的id
-		uuid := utils.CreateUUID()
-		//用户名密码正确
-		//创建一个Session
-		sess := &model.Session{
-			SessionID:    uuid,
-			UserName:     user.Username,
-			UserID:       user.ID,
-			UserIdentity: user.Identity,
-		}
-		//将Session保存到数据库
-		dao.AddSession(sess)
-		//创建一个Cookid,和Session关联
-		cookie := http.Cookie{
-			Name:     "user",
-			Value:    uuid,
-			HttpOnly: true,
-		}
-		//将Cookid发送给浏览器
-		http.SetCookie(w, &cookie)
-		//登录成功
-		t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
-		t.Execute(w, user)
-
+	flag, _ := dao.IsLogin(r)
+	if flag {
+		//已经登录
+		//去首页
+		FirstPage(w, r)
 	} else {
-		t := template.Must(template.ParseFiles("views/pages/user/login.html"))
-		t.Execute(w, "用户名或密码不正确")
+		//获取用户名和密码和身份信息
+		username := r.PostFormValue("username")
+		password := r.PostFormValue("password")
+		//一并处理用户和管理员登录
+		//identity := r.PostFormValue("identity")
+		user, _ := dao.CheckUserNamePasswordIdentity(username, password)
+		if user.ID > 0 {
+			//生成UUID作为Session的id
+			uuid := utils.CreateUUID()
+			//用户名密码正确
+			//创建一个Session
+			sess := &model.Session{
+				SessionID:    uuid,
+				UserName:     user.Username,
+				UserID:       user.ID,
+				UserIdentity: user.Identity,
+			}
+			//将Session保存到数据库
+			dao.AddSession(sess)
+			//创建一个Cookid,和Session关联
+			cookie := http.Cookie{
+				Name:     "user",
+				Value:    uuid,
+				HttpOnly: true,
+			}
+			//将Cookid发送给浏览器
+			http.SetCookie(w, &cookie)
+			//登录成功
+			t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
+			t.Execute(w, user)
+
+		} else {
+			t := template.Must(template.ParseFiles("views/pages/user/login.html"))
+			t.Execute(w, "用户名或密码不正确")
+		}
 	}
-	//}
 
 }
 

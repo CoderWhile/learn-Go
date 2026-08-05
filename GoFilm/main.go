@@ -20,5 +20,8 @@ func main() {
 	//去注册
 	http.HandleFunc("/regist", controller.Regist)
 
+	//用户注销
+	http.HandleFunc("/logout", controller.Logout)
+
 	http.ListenAndServe(":8080", nil)
 }

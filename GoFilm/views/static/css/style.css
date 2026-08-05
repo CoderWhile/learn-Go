@@ -427,23 +427,24 @@ button {
 }
 
 .login_banner {
-	height: 520px;
+	min-height: 520px;
 	background: linear-gradient(135deg, #2a1a0a 0%, #4a3010 50%, #6b4c1e 100%);
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	padding: 40px 20px;
 	position: relative;
 }
 
 #l_content {
-	position: absolute;
-	left: 120px;
-	top: 50%;
-	transform: translateY(-50%);
+	position: static;
+	text-align: center;
+	margin-bottom: 24px;
 }
 
 .login_word {
-	font-size: 48px;
+	font-size: 42px;
 	color: #c9a84c;
 	font-weight: bold;
 	letter-spacing: 6px;
@@ -466,7 +467,7 @@ button {
 }
 
 #content {
-	width: 100%;
+	width: auto;
 }
 
 .login_box {
