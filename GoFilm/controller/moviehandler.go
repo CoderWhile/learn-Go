@@ -66,3 +66,18 @@ func AddMovieHandler(w http.ResponseWriter, r *http.Request) {
 	t := template.Must(template.ParseFiles("views/pages/manager/movie_add_success.html"))
 	t.Execute(w, movie)
 }
+
+// 电影信息更新
+func ToMovieUpdateHandler(w http.ResponseWriter, r *http.Request) {
+	movieid := r.FormValue("movieId")
+	imovieid, _ := strconv.ParseInt(movieid, 10, 64)
+
+	movie, _ := dao.GetMovieById(int(imovieid))
+	t := template.Must(template.ParseFiles("views/pages/movie/movie_edit.html"))
+	t.Execute(w, movie)
+
+}
+
+func MovieUpdateHandler(w http.ResponseWriter, r *http.Request) {
+
+}

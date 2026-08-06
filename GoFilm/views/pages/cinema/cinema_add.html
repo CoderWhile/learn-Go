@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 添加影院</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.form-wrap {
+		width: 700px;
+		margin: 30px auto;
+		background: #fff;
+		border-radius: 8px;
+		padding: 30px 40px;
+		box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+	}
+	.form-wrap h2 {
+		font-size: 22px;
+		margin-bottom: 24px;
+		padding-bottom: 12px;
+		border-bottom: 2px solid #b8860b;
+		color: #333;
+	}
+	.form-row {
+		display: flex;
+		align-items: flex-start;
+		margin-bottom: 16px;
+	}
+	.form-row label {
+		width: 90px;
+		font-size: 14px;
+		color: #555;
+		font-weight: bold;
+		flex-shrink: 0;
+		line-height: 38px;
+	}
+	.form-row input, .form-row select, .form-row textarea {
+		flex: 1;
+		height: 38px;
+		padding: 0 12px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 14px;
+		outline: none;
+		transition: border-color 0.3s;
+	}
+	.form-row textarea {
+		height: 80px;
+		padding: 10px 12px;
+		resize: vertical;
+	}
+	.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+		border-color: #b8860b;
+	}
+	.form-btn {
+		text-align: center;
+		margin-top: 24px;
+	}
+	.form-btn button {
+		width: 200px;
+		height: 42px;
+		background: linear-gradient(90deg, #8b6914, #b8860b);
+		color: #fff;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		font-weight: bold;
+		cursor: pointer;
+		margin: 0 10px;
+	}
+	.form-btn button:hover { opacity: 0.85; }
+	.form-btn .btn-cancel {
+		background: #999;
+	}
+</style>
+<script>
+	$(function(){
+		$("#submitBtn").click(function(){
+			var name = $("#name").val().trim();
+			if(name == ""){ alert("请输入影院名称！"); return false; }
+			var address = $("#address").val().trim();
+			if(address == ""){ alert("请输入影院地址！"); return false; }
+			var intro = $("#intro").val().trim();
+			if(intro == ""){ alert("请输入影院简介！"); return false; }
+		});
+	});
+</script>
+</head>
+<body>
+
+	<div id="topbar">
+		<div class="topbar-inner">
+			<div class="topbar-left">
+				<span class="logo-icon">🔧</span>
+				<span class="logo-text">后台管理</span>
+			</div>
+			<div class="topbar-right">
+				<a href="/pages/admin/manager.html" class="top-btn">电影管理</a>
+				<a href="/pages/admin/cinema_list.html" class="top-btn">查看影院</a>
+				<a href="/main" class="top-btn">前台</a>
+				<a href="/logout" class="top-btn">注销</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="main">
+		<div class="form-wrap">
+			<h2>添加影院</h2>
+			<form action="/addcinema" method="POST">
+				<div class="form-row">
+					<label>影院名称</label>
+					<input type="text" id="name" name="name" placeholder="请输入影院名称" />
+				</div>
+				<div class="form-row">
+					<label>影院地址</label>
+					<input type="text" id="address" name="address" placeholder="请输入详细地址" />
+				</div>
+				<div class="form-row">
+					<label>影院简介</label>
+					<textarea id="intro" name="intro" placeholder="请输入影院简介（设施、特色等）"></textarea>
+				</div>
+				<div class="form-btn">
+					<button type="submit" id="submitBtn">提交</button>
+					<a href="/pages/admin/manager.html"><button type="button" class="btn-cancel">取消</button></a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div id="bottom">
+		<span>GoFilm网上影院 - 后台管理.Copyright &copy;2026</span>
+	</div>
+</body>
+</html>

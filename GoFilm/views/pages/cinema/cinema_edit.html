@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 影院信息</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.form-wrap {
+		width: 700px;
+		margin: 30px auto;
+		background: #fff;
+		border-radius: 8px;
+		padding: 30px 40px;
+		box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+	}
+	.form-wrap h2 {
+		font-size: 22px;
+		margin-bottom: 24px;
+		padding-bottom: 12px;
+		border-bottom: 2px solid #b8860b;
+		color: #333;
+	}
+	.form-row {
+		display: flex;
+		align-items: flex-start;
+		margin-bottom: 16px;
+	}
+	.form-row label {
+		width: 90px;
+		font-size: 14px;
+		color: #555;
+		font-weight: bold;
+		flex-shrink: 0;
+		line-height: 38px;
+	}
+	.form-row input, .form-row textarea {
+		flex: 1;
+		height: 38px;
+		padding: 0 12px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 14px;
+		outline: none;
+		transition: border-color 0.3s;
+	}
+	.form-row textarea {
+		height: 80px;
+		padding: 10px 12px;
+		resize: vertical;
+	}
+	.form-row input:focus, .form-row textarea:focus {
+		border-color: #b8860b;
+	}
+	.form-btn {
+		text-align: center;
+		margin-top: 24px;
+	}
+	.form-btn button {
+		width: 180px;
+		height: 42px;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		font-weight: bold;
+		cursor: pointer;
+		margin: 0 8px;
+		transition: opacity 0.3s;
+	}
+	.form-btn button:hover { opacity: 0.85; }
+	.btn-submit {
+		background: linear-gradient(90deg, #8b6914, #b8860b);
+		color: #fff;
+	}
+	.btn-delete {
+		background: #e74c3c;
+		color: #fff;
+	}
+	.btn-cancel {
+		background: #999;
+	}
+</style>
+<script>
+	$(function(){
+		$("#submitBtn").click(function(){
+			var name = $("#name").val().trim();
+			if(name == ""){ alert("请输入影院名称！"); return false; }
+			var address = $("#address").val().trim();
+			if(address == ""){ alert("请输入影院地址！"); return false; }
+		});
+
+		$("#deleteBtn").click(function(){
+			var cid = $("#cinemaId").val();
+			var name = $("#name").val();
+			if(confirm("确定删除《" + name + "》吗？此操作不可恢复！")){
+				$.post("/admin/cinema/delete", {cinemaId: cid}, function(res){
+					if(res == "ok"){
+						alert("删除成功！");
+						location.href = "/pages/manager/cinema_list.html";
+					} else {
+						alert("删除失败：" + res);
+					}
+				});
+			}
+		});
+	});
+</script>
+</head>
+<body>
+
+	<div id="topbar">
+		<div class="topbar-inner">
+			<div class="topbar-left">
+				<span class="logo-icon">🔧</span>
+				<span class="logo-text">后台管理</span>
+			</div>
+			<div class="topbar-right">
+				<a href="/manager" class="top-btn">电影管理</a>
+				<a href="/pages/manager/cinema_list.html" class="top-btn">查看影院</a>
+				<a href="/main" class="top-btn">前台</a>
+				<a href="/logout" class="top-btn">注销</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="main">
+		<div class="form-wrap">
+			<h2>影院信息</h2>
+			<form action="/admin/cinema/update" method="POST">
+				<input type="hidden" id="cinemaId" name="id" value="{{.ID}}" />
+				<div class="form-row">
+					<label>影院名称</label>
+					<input type="text" id="name" name="name" value="{{.Name}}" />
+				</div>
+				<div class="form-row">
+					<label>影院地址</label>
+					<input type="text" id="address" name="address" value="{{.Address}}" />
+				</div>
+				<div class="form-row">
+					<label>影院简介</label>
+					<textarea id="intro" name="intro">{{.Intro}}</textarea>
+				</div>
+				<div class="form-btn">
+					<button type="submit" id="submitBtn" class="btn-submit">保存修改</button>
+					<button type="button" id="deleteBtn" class="btn-delete">删除影院</button>
+					<a href="/pages/manager/cinema_list.html"><button type="button" class="btn-cancel">取消</button></a>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div id="bottom">
+		<span>GoFilm网上影院 - 后台管理.Copyright &copy;2026</span>
+	</div>
+</body>
+</html>

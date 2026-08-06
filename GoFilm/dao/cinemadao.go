@@ -6,6 +6,23 @@ import (
 	"fmt"
 )
 
+// 获取所有影院
+func GetCinemas() ([]*model.Cinema, error) {
+	sqlStr := `select id,name,address,intro from cinemas`
+	utils.Db.Query(sqlStr)
+	rows, err := utils.Db.Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	var cinemas []*model.Cinema
+	for rows.Next() {
+		var cinema model.Cinema
+		rows.Scan(&cinema.ID, &cinema.Name, &cinema.Address, &cinema.Intro)
+		cinemas = append(cinemas, &cinema)
+	}
+	return cinemas, nil
+}
+
 // 向数据库中添加一个影院
 func AddCinema(cinema *model.Cinema) error {
 	id := utils.CreateUUID()
@@ -16,7 +33,8 @@ func AddCinema(cinema *model.Cinema) error {
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println(cinema)
+	fmt.Println(id, cinema.Name, cinema.Intro, cinema.Address)
+	fmt.Printf("%+v\n", cinema)
 	return nil
 
 }

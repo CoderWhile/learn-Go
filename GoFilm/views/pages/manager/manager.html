@@ -49,7 +49,7 @@
 		$(".btn-edit").click(function(e){
 			e.stopPropagation();
 			var mid = $(this).attr("data-mid");
-			location.href = "/pages/admin/movie_edit.html?movieId=" + mid;
+			location.href = "/movieupdate?movieId="+mid;
 		});
 
 		// 注销
@@ -99,10 +99,10 @@
 		<!-- 子导航 -->
 		<div id="subnav">
 			<div class="subnav-inner">
-				<a class="nav-item active" href="/pages/manager/manager.html">电影管理</a>
-				<a class="nav-item" href="/pages/manager/movie_add.html">添加电影</a>
-				<a class="nav-item" href="/pages/manager/cinema_add.html">添加影院</a>
-				<a class="nav-item" href="/pages/manager/cinema_list.html">查看影院</a>
+				<a class="nav-item active" href="/manager">电影管理</a>
+				<a class="nav-item" href="/pages/movie/movie_add.html">添加电影</a>
+				<a class="nav-item" href="/pages/cinema/cinema_add.html">添加影院</a>
+				<a class="nav-item" href="/cinemalist">查看影院</a>
 				<a class="nav-item" href="/main">返回前台</a>
 			</div>
 		</div>
@@ -142,7 +142,7 @@
 		<!-- 统计栏 -->
 		<div id="admin_stats">
 			<span>共 <strong>{{.TotalMovieCount}}</strong> 部电影</span>
-			<a href="/pages/manager/movie_add.html" class="top-btn" style="float:right;">+ 添加电影</a>
+			<a href="/pages/movie/movie_add.html" class="top-btn" style="float:right;">+ 添加电影</a>
 		</div>
 
 		<!-- 电影展示区 -->
@@ -169,7 +169,7 @@
 			</div>
 			{{else}}
 			<div class="empty-tip">
-				{{if .Keyword}}未找到 "{{.Keyword}}" 相关电影{{else}}暂无电影，<a href="/pages/admin/movie_add.html">添加一部</a>{{end}}
+				{{if .Keyword}}未找到 "{{.Keyword}}" 相关电影{{else}}暂无电影，<a href="/pages/movie/movie_add.html">添加一部</a>{{end}}
 			</div>
 			{{end}}
 		</div>

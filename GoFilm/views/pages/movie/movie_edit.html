@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 编辑电影</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<style type="text/css">
+	h1 {
+		text-align: center;
+		margin-top: 30px;
+		font-size: 24px;
+	}
+	#main table {
+		margin: 20px auto;
+		border-collapse: collapse;
+		width: 80%;
+	}
+	#main table td {
+		text-align: center;
+		border-bottom: 1px solid #e3e3e3;
+		padding: 8px;
+	}
+	#main table td input, #main table td select, #main table td textarea {
+		text-align: center;
+		width: 90%;
+		height: 30px;
+		border: 1px solid #ddd;
+		border-radius: 3px;
+		font-size: 14px;
+		outline: none;
+	}
+	#main table td textarea {
+		height: 60px;
+		text-align: left;
+		resize: vertical;
+	}
+	#main table td input:focus, #main table td select:focus {
+		border-color: #b8860b;
+	}
+	#main table td .btn-submit {
+		background: linear-gradient(90deg, #8b6914, #b8860b);
+		color: #fff;
+		border: none;
+		width: 120px;
+		height: 38px;
+		font-size: 15px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 4px;
+	}
+	#main table td .btn-delete {
+		background: #e74c3c;
+		color: #fff;
+		border: none;
+		width: 120px;
+		height: 38px;
+		font-size: 15px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 4px;
+		margin-right: 16px;
+	}
+</style>
+<script src="/static/script/jquery-1.7.2.js"></script>
+<script>
+	$(function(){
+		$("#deleteBtn").click(function(){
+			var mid = $("input[name='id']").val();
+			var title = $("input[name='title']").val();
+			if(confirm("确定删除《" + title + "》吗？此操作不可恢复！")){
+				$.post("/admin/movie/delete", {movieId: mid}, function(res){
+					if(res == "ok"){
+						alert("删除成功！");
+						location.href = "/manager";
+					} else {
+						alert("删除失败：" + res);
+					}
+				});
+			}
+		});
+
+		$("#submitBtn").click(function(){
+			var title = $("input[name='title']").val().trim();
+			if(title == ""){ alert("请输入电影名称！"); return false; }
+		});
+	});
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left">
+			<span class="logo-icon">🔧</span>
+			<span class="logo-text">后台管理</span>
+		</div>
+		<div class="topbar-right">
+			<a href="/manager" class="top-btn">电影管理</a>
+			<a href="/main" class="top-btn">前台</a>
+			<a href="/logout" class="top-btn">注销</a>
+		</div>
+	</div>
+</div>
+
+<div id="main">
+	<h1>编辑电影</h1>
+
+	{{if .}}
+	<form action="/movieupdate" method="POST">
+		<input type="hidden" name="id" value="{{.ID}}" />
+		<table>
+			<tr>
+				<td>名称</td>
+				<td>类型</td>
+				<td>地区</td>
+				<td>时长(分钟)</td>
+				<td>评分</td>
+				<td>状态</td>
+			</tr>
+			<tr>
+				<td><input name="title" type="text" value="{{.Title}}" /></td>
+				<td>
+					<select name="genre">
+						{{$genre := .Genre}}
+						<option value="动作" {{if eq $genre "动作"}}selected{{end}}>动作</option>
+						<option value="喜剧" {{if eq $genre "喜剧"}}selected{{end}}>喜剧</option>
+						<option value="爱情" {{if eq $genre "爱情"}}selected{{end}}>爱情</option>
+						<option value="动画" {{if eq $genre "动画"}}selected{{end}}>动画</option>
+						<option value="剧情" {{if eq $genre "剧情"}}selected{{end}}>剧情</option>
+						<option value="悬疑" {{if eq $genre "悬疑"}}selected{{end}}>悬疑</option>
+						<option value="惊悚" {{if eq $genre "惊悚"}}selected{{end}}>惊悚</option>
+						<option value="科幻" {{if eq $genre "科幻"}}selected{{end}}>科幻</option>
+						<option value="战争" {{if eq $genre "战争"}}selected{{end}}>战争</option>
+						<option value="冒险" {{if eq $genre "冒险"}}selected{{end}}>冒险</option>
+						<option value="警匪" {{if eq $genre "警匪"}}selected{{end}}>警匪</option>
+						<option value="家庭" {{if eq $genre "家庭"}}selected{{end}}>家庭</option>
+						<option value="音乐" {{if eq $genre "音乐"}}selected{{end}}>音乐</option>
+					</select>
+				</td>
+				<td>
+					<select name="area">
+						{{$area := .Area}}
+						<option value="china"  {{if eq $area "china"}}selected{{end}}>中国</option>
+						<option value="america" {{if eq $area "america"}}selected{{end}}>美国</option>
+						<option value="japan"  {{if eq $area "japan"}}selected{{end}}>日本</option>
+						<option value="korea"  {{if eq $area "korea"}}selected{{end}}>韩国</option>
+						<option value="europe" {{if eq $area "europe"}}selected{{end}}>欧洲</option>
+					</select>
+				</td>
+				<td><input name="duration" type="text" value="{{.Duration}}" /></td>
+				<td><input name="rating" type="text" value="{{.Rating}}" /></td>
+				<td>
+					<select name="status">
+						{{$status := .Status}}
+						<option value="未上映" {{if eq $status "未上映"}}selected{{end}}>未上映</option>
+						<option value="上映中" {{if eq $status "上映中"}}selected{{end}}>上映中</option>
+						<option value="下架"   {{if eq $status "下架"}}selected{{end}}>下架</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>海报地址</td>
+				<td colspan="5"><input name="imagePath" type="text" value="{{.ImagePath}}" style="width:95%;" /></td>
+			</tr>
+			<tr>
+				<td>简介</td>
+				<td colspan="5"><textarea name="intro">{{.Intro}}</textarea></td>
+			</tr>
+			<tr>
+				<td colspan="6" style="text-align:center; padding:16px;">
+					<button type="button" id="deleteBtn" class="btn-delete">删除电影</button>
+					<input type="submit" id="submitBtn" value="提交修改" class="btn-submit" />
+				</td>
+			</tr>
+		</table>
+	</form>
+	{{else}}
+	<h1>电影不存在或参数错误，<a href="/manager">返回电影管理</a></h1>
+	{{end}}
+</div>
+
+<div id="bottom">
+	<span>GoFilm网上影院.Copyright &copy;2026</span>
+</div>
+</body>
+</html>

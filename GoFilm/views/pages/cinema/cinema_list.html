@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 查看影院</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.cinema-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 20px;
+		padding: 20px;
+	}
+	.cinema-card {
+		background: #fff;
+		border: 1px solid #e8e8e8;
+		border-radius: 8px;
+		padding: 20px;
+		transition: box-shadow 0.3s;
+	}
+	.cinema-card:hover {
+		box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+	}
+	.cinema-name {
+		font-size: 18px;
+		font-weight: bold;
+		color: #333;
+		margin-bottom: 6px;
+	}
+	.cinema-addr {
+		font-size: 13px;
+		color: #999;
+		margin-bottom: 10px;
+	}
+	.cinema-addr::before {
+		content: "📍 ";
+	}
+	.cinema-intro {
+		font-size: 13px;
+		color: #666;
+		line-height: 1.6;
+		margin-bottom: 16px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.cinema-actions {
+		display: flex;
+		gap: 8px;
+	}
+	.cinema-actions button {
+		flex: 1;
+		height: 34px;
+		border: none;
+		border-radius: 4px;
+		font-size: 13px;
+		font-weight: bold;
+		cursor: pointer;
+		transition: opacity 0.3s;
+	}
+	.cinema-actions button:hover {
+		opacity: 0.85;
+	}
+	.btn-info {
+		background: linear-gradient(90deg, #8b6914, #b8860b);
+		color: #fff;
+	}
+	.btn-hall {
+		background: #2c3e50;
+		color: #fff;
+	}
+	.btn-show {
+		background: #27ae60;
+		color: #fff;
+	}
+	.empty-tip {
+		text-align: center;
+		padding: 80px 0;
+		color: #999;
+		font-size: 16px;
+	}
+	.empty-tip a {
+		color: #b8860b;
+	}
+</style>
+<script>
+	$(function(){
+		// 影院信息管理
+		$(".btn-info").click(function(){
+			var cid = $(this).attr("data-cid");
+			location.href = "/pages/manager/cinema_edit.html?cinemaId=" + cid;
+		});
+		// 影厅管理
+		$(".btn-hall").click(function(){
+			var cid = $(this).attr("data-cid");
+			location.href = "/pages/manager/hall_manager.html?cinemaId=" + cid;
+		});
+		// 添加场次
+		$(".btn-show").click(function(){
+			var cid = $(this).attr("data-cid");
+			location.href = "/pages/manager/show_add.html?cinemaId=" + cid;
+		});
+	});
+</script>
+</head>
+<body>
+
+	<div id="topbar">
+		<div class="topbar-inner">
+			<div class="topbar-left">
+				<span class="logo-icon">🔧</span>
+				<span class="logo-text">后台管理</span>
+			</div>
+			<div class="topbar-right">
+				<a href="/manager" class="top-btn">电影管理</a>
+				<a href="/pages/manager/cinema_add.html" class="top-btn">添加影院</a>
+				<a href="/main" class="top-btn">前台</a>
+				<a href="/logout" class="top-btn">注销</a>
+			</div>
+		</div>
+	</div>
+
+	<div id="main">
+		<div id="subnav">
+			<div class="subnav-inner">
+				<a class="nav-item" href="/manager">电影管理</a>
+				<a class="nav-item" href="/pages/manager/movie_add.html">添加电影</a>
+				<a class="nav-item" href="/pages/manager/cinema_add.html">添加影院</a>
+				<a class="nav-item active" href="/pages/manager/cinema_list.html">查看影院</a>
+				<a class="nav-item" href="/main">返回前台</a>
+			</div>
+		</div>
+
+		<div id="admin_stats">
+			<span>共 <strong>{{.TotalCinemaCount}}</strong> 家影院</span>
+			<a href="/pages/manager/cinema_add.html" class="top-btn" style="float:right;">+ 添加影院</a>
+		</div>
+
+		{{if .Cinemas}}
+		<div class="cinema-grid">
+			{{range .Cinemas}}
+			<div class="cinema-card">
+				<div class="cinema-name">{{.Name}}</div>
+				<div class="cinema-addr">{{.Address}}</div>
+				<div class="cinema-intro">{{.Intro}}</div>
+				<div class="cinema-actions">
+					<button class="btn-info" data-cid="{{.ID}}">影院信息</button>
+					<button class="btn-hall" data-cid="{{.ID}}">影厅管理</button>
+					<button class="btn-show" data-cid="{{.ID}}">添加场次</button>
+				</div>
+			</div>
+			{{end}}
+		</div>
+		{{else}}
+		<div class="empty-tip">
+			暂无影院，<a href="/pages/manager/cinema_add.html">添加一家</a>
+		</div>
+		{{end}}
+	</div>
+
+	<div id="bottom">
+		<span>GoFilm网上影院 - 后台管理.Copyright &copy;2026</span>
+	</div>
+</body>
+</html>
