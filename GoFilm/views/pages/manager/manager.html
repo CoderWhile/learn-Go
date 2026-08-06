@@ -34,13 +34,11 @@
 			var mid = $(this).attr("data-mid");
 			var title = $(this).attr("data-title");
 			if(confirm("确定删除《" + title + "》吗？此操作不可恢复！")){
-				$.post("/admin/movie/delete", {movieId: mid}, function(res){
-					if(res == "ok"){
+				$.post("/deletemovie", {movieId: mid}, function(res){
+
 						alert("删除成功！");
 						location.reload();
-					} else {
-						alert("删除失败：" + res);
-					}
+
 				});
 			}
 		});
@@ -49,7 +47,7 @@
 		$(".btn-edit").click(function(e){
 			e.stopPropagation();
 			var mid = $(this).attr("data-mid");
-			location.href = "/movieupdate?movieId="+mid;
+			location.href = "/tomovieupdate?movieId="+mid;
 		});
 
 		// 注销

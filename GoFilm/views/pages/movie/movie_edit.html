@@ -68,13 +68,11 @@
 			var mid = $("input[name='id']").val();
 			var title = $("input[name='title']").val();
 			if(confirm("确定删除《" + title + "》吗？此操作不可恢复！")){
-				$.post("/admin/movie/delete", {movieId: mid}, function(res){
-					if(res == "ok"){
+				$.post("/deletemovie", {movieId: mid}, function(res){
+
 						alert("删除成功！");
 						location.href = "/manager";
-					} else {
-						alert("删除失败：" + res);
-					}
+
 				});
 			}
 		});

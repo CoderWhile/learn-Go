@@ -90,7 +90,7 @@
 		// 影院信息管理
 		$(".btn-info").click(function(){
 			var cid = $(this).attr("data-cid");
-			location.href = "/pages/manager/cinema_edit.html?cinemaId=" + cid;
+			location.href = "/cinemainfo?cinemaId=" + cid;
 		});
 		// 影厅管理
 		$(".btn-hall").click(function(){
@@ -115,7 +115,7 @@
 			</div>
 			<div class="topbar-right">
 				<a href="/manager" class="top-btn">电影管理</a>
-				<a href="/pages/manager/cinema_add.html" class="top-btn">添加影院</a>
+				<a href="/pages/cinema/cinema_add.html" class="top-btn">添加影院</a>
 				<a href="/main" class="top-btn">前台</a>
 				<a href="/logout" class="top-btn">注销</a>
 			</div>
@@ -126,9 +126,9 @@
 		<div id="subnav">
 			<div class="subnav-inner">
 				<a class="nav-item" href="/manager">电影管理</a>
-				<a class="nav-item" href="/pages/manager/movie_add.html">添加电影</a>
-				<a class="nav-item" href="/pages/manager/cinema_add.html">添加影院</a>
-				<a class="nav-item active" href="/pages/manager/cinema_list.html">查看影院</a>
+				<a class="nav-item" href="/pages/movie/movie_add.html">添加电影</a>
+				<a class="nav-item" href="/pages/cinema/cinema_add.html">添加影院</a>
+				<a class="nav-item active" href="/pages/cinema/cinema_list.html">查看影院</a>
 				<a class="nav-item" href="/main">返回前台</a>
 			</div>
 		</div>

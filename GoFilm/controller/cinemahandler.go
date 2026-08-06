@@ -3,6 +3,7 @@ package controller
 import (
 	"GoFilm/dao"
 	"GoFilm/model"
+	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -34,4 +35,28 @@ func AddCinemaHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, cinema)
 
 	//
+}
+
+// 影院详细信息展示
+func CinemaInfoHandler(w http.ResponseWriter, r *http.Request) {
+	pagecinemainfo := &model.PageCinemaInfo{}
+	//获取影院信息
+	cinemaid := r.PostFormValue("cinemaId")
+	cinema, err := dao.GetCinemaById(cinemaid)
+	if err != nil {
+		fmt.Println("根据影院id获取影院错误：", err)
+	}
+	pagecinemainfo.Cinema = cinema
+	//获取该影院的影厅
+	halls, err := dao.GetHallsByCinemaId(cinemaid)
+	if err != nil {
+		fmt.Println("根据影院id获取影厅错误")
+	}
+	pagecinemainfo.Halls = halls
+	//获取该影院的场次
+	showtimes, err := dao.GetShowtimesByCinemaId(cinemaid)
+	pagecinemainfo.Showtimes = showtimes
+	//解析模板
+	t := template.Must(template.ParseFiles("views/pages/cinema/cinema_detail.html"))
+	t.Execute(w, pagecinemainfo)
 }

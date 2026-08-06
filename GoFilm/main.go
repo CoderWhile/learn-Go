@@ -39,10 +39,16 @@ func main() {
 	http.HandleFunc("/cinemalist", controller.CinemaHandler)
 
 	//去电影更新界面
-	http.HandleFunc("/movieupdate", controller.ToMovieUpdateHandler)
+	http.HandleFunc("/tomovieupdate", controller.ToMovieUpdateHandler)
+
+	//电影删除
+	http.HandleFunc("/deletemovie", controller.DeleteMovieHandler)
 
 	//电影信息更新
-	//http.HandleFunc("/movieupdate", controller.MovieUpdateHandler)
+	http.HandleFunc("/movieupdate", controller.MovieUpdateHandler)
+
+	//电影院详细信息展示
+	http.HandleFunc("/cinemainfo", controller.CinemaInfoHandler)
 
 	http.ListenAndServe(":8080", nil)
 }

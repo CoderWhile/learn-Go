@@ -3,6 +3,7 @@ package controller
 import (
 	"GoFilm/dao"
 	"GoFilm/model"
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -63,7 +64,7 @@ func AddMovieHandler(w http.ResponseWriter, r *http.Request) {
 		Duration:  int(iduration),
 	}
 	dao.AddMovie(movie)
-	t := template.Must(template.ParseFiles("views/pages/manager/movie_add_success.html"))
+	t := template.Must(template.ParseFiles("views/pages/movie/movie_add_success.html"))
 	t.Execute(w, movie)
 }
 
@@ -79,5 +80,44 @@ func ToMovieUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func MovieUpdateHandler(w http.ResponseWriter, r *http.Request) {
+	movieid := r.PostFormValue("id")
+	imovieid, _ := strconv.ParseInt(movieid, 10, 64)
+	title := r.PostFormValue("title")
+	genre := r.PostFormValue("genre")
+	area := r.PostFormValue("area")
+	intro := r.PostFormValue("intro")
+	imagepath := r.PostFormValue("imagePath")
+	rating := r.PostFormValue("rating")
+	status := r.PostFormValue("status")
+	duration := r.PostFormValue("duration")
+	irating, _ := strconv.ParseFloat(rating, 64)
+	iduration, _ := strconv.ParseInt(duration, 10, 0)
+	movie := &model.Movie{
+		ID:        int(imovieid),
+		Title:     title,
+		Genre:     genre,
+		Area:      area,
+		Intro:     intro,
+		ImagePath: imagepath,
+		Rating:    irating,
+		Status:    status,
+		Duration:  int(iduration),
+	}
+	dao.UpdateMovie(movie)
+	//电影修改成功
+	FirstPageManager(w, r)
+}
 
+// 删除电影
+func DeleteMovieHandler(w http.ResponseWriter, r *http.Request) {
+	//获取要删除的电影的id
+	movieid := r.PostFormValue("movieId")
+	imovieid, _ := strconv.ParseInt(movieid, 10, 64)
+
+	err := dao.DeleteMovieById(int(imovieid))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	FirstPageManager(w, r)
 }

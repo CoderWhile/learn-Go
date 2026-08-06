@@ -38,3 +38,16 @@ func AddCinema(cinema *model.Cinema) error {
 	return nil
 
 }
+
+// 根据影院id获取一个影院
+func GetCinemaById(id string) (*model.Cinema, error) {
+	sqlStr := "select id,name,address,intro from cinemas where id=?"
+	row := utils.Db.QueryRow(sqlStr, id)
+	cinema := &model.Cinema{}
+	err := row.Scan(&cinema.ID, &cinema.Name, &cinema.Address, &cinema.Intro)
+	if err != nil {
+		return nil, err
+	}
+	return cinema, nil
+
+}

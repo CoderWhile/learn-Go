@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 影院详情</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	h2 {
+		font-size: 20px;
+		margin: 24px 0 12px;
+		padding-left: 20px;
+		border-left: 4px solid #b8860b;
+	}
+	#main table {
+		margin: 10px auto 20px;
+		border-collapse: collapse;
+		width: 90%;
+	}
+	#main table td, #main table th {
+		text-align: center;
+		border-bottom: 1px solid #e3e3e3;
+		padding: 8px 6px;
+		font-size: 13px;
+	}
+	#main table th {
+		background: #fafafa;
+		font-weight: bold;
+	}
+	#main table td input, #main table td select {
+		text-align: center;
+		width: 90%;
+		height: 28px;
+		border: 1px solid #ddd;
+		border-radius: 3px;
+		font-size: 13px;
+		outline: none;
+	}
+	#main table td input:focus, #main table td select:focus {
+		border-color: #b8860b;
+	}
+	/* 影院信息区 --- 按钮行 */
+	.btn-row {
+		text-align: center;
+		padding: 12px;
+	}
+	.btn-submit {
+		background: linear-gradient(90deg, #8b6914, #b8860b);
+		color: #fff;
+		border: none;
+		width: 110px;
+		height: 34px;
+		font-size: 14px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 4px;
+	}
+	.btn-delete {
+		background: #e74c3c;
+		color: #fff;
+		border: none;
+		width: 110px;
+		height: 34px;
+		font-size: 14px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 4px;
+		margin-right: 12px;
+	}
+	.btn-save {
+		background: linear-gradient(90deg, #8b6914, #b8860b);
+		color: #fff;
+		border: none;
+		padding: 5px 14px;
+		font-size: 12px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 3px;
+	}
+	.btn-del {
+		background: #e74c3c;
+		color: #fff;
+		border: none;
+		padding: 5px 14px;
+		font-size: 12px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 3px;
+	}
+	.btn-add {
+		background: linear-gradient(90deg, #27ae60, #2ecc71);
+		color: #fff;
+		border: none;
+		padding: 8px 24px;
+		font-size: 14px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 4px;
+		margin: 10px 0 20px;
+	}
+	.btn-add:hover, .btn-save:hover { opacity: 0.85; }
+	.btn-delete:hover, .btn-del:hover { background: #c0392b; }
+</style>
+<script>
+	$(function(){
+		// ===== 影院信息更新 =====
+		$("#cinemaDeleteBtn").click(function(){
+			var cid = $("input[name='cinemaId']").val();
+			var name = $("input[name='name']").val();
+			if(confirm("确定删除《" + name + "》及旗下所有影厅和排片吗？")){
+				$.post("/admin/cinema/delete", {cinemaId: cid}, function(res){
+					if(res == "ok"){ alert("删除成功！"); location.href="/pages/cinema/cinema_list.html"; }
+					else { alert("删除失败："+res); }
+				});
+			}
+		});
+
+		// ===== 影厅编辑 =====
+		$(".hall-edit").click(function(){
+			var tr = $(this).closest("tr");
+			var hallId = $(this).attr("data-hid");
+			var name = tr.find(".hall-name").text();
+			var rows = tr.find(".hall-rows").text();
+			var cols = tr.find(".hall-cols").text();
+			tr.find(".hall-name").html("<input name='hallName' value='"+name+"'/>");
+			tr.find(".hall-rows").html("<input name='hallRows' value='"+rows+"' style='width:60px;'/>");
+			tr.find(".hall-cols").html("<input name='hallCols' value='"+cols+"' style='width:60px;'/>");
+			tr.find(".hall-act").html(
+				'<button class="btn-save hall-save" data-hid="'+hallId+'">保存</button>'+
+				'<button class="btn-del hall-cancel">取消</button>'
+			);
+		});
+
+		// 竖排保存
+		$(document).on("click", ".hall-save", function(){
+			var tr = $(this).closest("tr");
+			var hid = $(this).attr("data-hid");
+			var data = {
+				hallId: hid,
+				cinemaId: $("input[name='cinemaId']").val(),
+				name: tr.find("input[name='hallName']").val(),
+				totalRows: tr.find("input[name='hallRows']").val(),
+				totalCols: tr.find("input[name='hallCols']").val()
+			};
+			$.post("/admin/hall/update", data, function(res){
+				if(res == "ok"){ alert("保存成功！"); location.reload(); }
+				else { alert("保存失败："+res); }
+			});
+		});
+
+		$(document).on("click", ".hall-cancel", function(){
+			location.reload();
+		});
+
+		// 影厅删除
+		$(".hall-del").click(function(){
+			var hid = $(this).attr("data-hid");
+			var name = $(this).closest("tr").find(".hall-name").text();
+			if(confirm("确定删除影厅《"+name+"》吗？")){
+				$.post("/admin/hall/delete", {hallId: hid}, function(res){
+					if(res == "ok"){ alert("删除成功！"); location.reload(); }
+					else { alert("删除失败："+res); }
+				});
+			}
+		});
+
+		// ===== 排片编辑 =====
+		$(".show-edit").click(function(){
+			var tr = $(this).closest("tr");
+			var sid = $(this).attr("data-sid");
+			// 把文本转为输入框
+			tr.find("td").each(function(){
+				var txt = $(this).text().trim();
+				if($(this).hasClass("show-movie")){
+					$(this).html('<input name="movieId" value="'+$(this).attr("data-mid")+'" style="width:100px;"/>');
+				} else if($(this).hasClass("show-hall")){
+					$(this).html('<input name="hallId" value="'+$(this).attr("data-hid")+'" style="width:80px;"/>');
+				} else if($(this).hasClass("show-time")){
+					$(this).html('<input name="showTime" type="datetime-local" value="'+$(this).attr("data-val")+'" style="width:160px;"/>');
+				} else if($(this).hasClass("show-price")){
+					$(this).html('<input name="price" value="'+txt+'" style="width:80px;"/>');
+				}
+			});
+			tr.find(".show-act").html(
+				'<button class="btn-save show-save" data-sid="'+sid+'">保存</button>'+
+				'<button class="btn-del show-cancel">取消</button>'
+			);
+		});
+
+		$(document).on("click", ".show-save", function(){
+			var tr = $(this).closest("tr");
+			var sid = $(this).attr("data-sid");
+			var data = {
+				showId: sid,
+				movieId: tr.find("input[name='movieId']").val(),
+				hallId: tr.find("input[name='hallId']").val(),
+				showTime: tr.find("input[name='showTime']").val(),
+				price: tr.find("input[name='price']").val()
+			};
+			$.post("/admin/show/update", data, function(res){
+				if(res == "ok"){ alert("保存成功！"); location.reload(); }
+				else { alert("保存失败："+res); }
+			});
+		});
+
+		$(document).on("click", ".show-cancel", function(){
+			location.reload();
+		});
+
+		// 排片删除
+		$(".show-del").click(function(){
+			var sid = $(this).attr("data-sid");
+			if(confirm("确定删除该排片吗？")){
+				$.post("/admin/show/delete", {showId: sid}, function(res){
+					if(res == "ok"){ alert("删除成功！"); location.reload(); }
+					else { alert("删除失败："+res); }
+				});
+			}
+		});
+	});
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left">
+			<span class="logo-icon">🔧</span>
+			<span class="logo-text">后台管理</span>
+		</div>
+		<div class="topbar-right">
+			<a href="/manager" class="top-btn">电影管理</a>
+			<a href="/pages/cinema/cinema_list.html" class="top-btn">查看影院</a>
+			<a href="/main" class="top-btn">前台</a>
+			<a href="/logout" class="top-btn">注销</a>
+		</div>
+	</div>
+</div>
+
+<div id="main">
+
+	<!-- ========== 一、影院信息 ========== -->
+	<h2>影院信息</h2>
+	{{if .Cinema}}
+	<form action="/admin/cinema/update" method="POST">
+		<input type="hidden" name="cinemaId" value="{{.Cinema.ID}}" />
+		<table>
+			<tr>
+				<th>名称</th>
+				<th>地址</th>
+			</tr>
+			<tr>
+				<td><input name="name" type="text" value="{{.Cinema.Name}}" /></td>
+				<td><input name="address" type="text" value="{{.Cinema.Address}}" /></td>
+			</tr>
+			<tr>
+				<th>简介</th>
+				<th colspan="1">操作</th>
+			</tr>
+			<tr>
+				<td><input name="intro" type="text" value="{{.Cinema.Intro}}" style="width:95%;" /></td>
+				<td class="btn-row">
+					<button type="button" id="cinemaDeleteBtn" class="btn-delete">删除影院</button>
+					<input type="submit" value="保存修改" class="btn-submit" />
+				</td>
+			</tr>
+		</table>
+	</form>
+	{{else}}
+	<p style="text-align:center;color:#999;">影院数据加载失败</p>
+	{{end}}
+
+	<!-- ========== 二、影厅管理 ========== -->
+	<h2>影厅管理</h2>
+	<table>
+		<tr>
+			<th>影厅名称</th>
+			<th>排数</th>
+			<th>每排座位数</th>
+			<th>总座位</th>
+			<th>操作</th>
+		</tr>
+		{{if .Halls}}
+		{{range .Halls}}
+		<tr>
+			<td class="hall-name">{{.Name}}</td>
+			<td class="hall-rows">{{.TotalRows}}</td>
+			<td class="hall-cols">{{.TotalCols}}</td>
+			<td>{{multiply .TotalRows .TotalCols}}</td>
+			<td class="hall-act">
+				<button class="btn-save hall-edit" data-hid="{{.ID}}">编辑</button>
+				<button class="btn-del hall-del" data-hid="{{.ID}}">删除</button>
+			</td>
+		</tr>
+		{{end}}
+		{{else}}
+		<tr><td colspan="5" style="color:#999;">暂无影厅</td></tr>
+		{{end}}
+	</table>
+	<div style="text-align:center;">
+		<button class="btn-add" onclick="location.href='/pages/cinema/hall_add.html?cinemaId={{.Cinema.ID}}'">+ 添加影厅</button>
+	</div>
+
+	<!-- ========== 三、排片列表 ========== -->
+	<h2>排片列表</h2>
+	<table>
+		<tr>
+			<th>电影</th>
+			<th>影厅</th>
+			<th>放映时间</th>
+			<th>票价(元)</th>
+			<th>操作</th>
+		</tr>
+		{{if .ShowPlans}}
+		{{range .ShowPlans}}
+		<tr>
+			<td class="show-movie" data-mid="{{.MovieID}}">{{.MovieTitle}}</td>
+			<td class="show-hall" data-hid="{{.HallID}}">{{.HallName}}</td>
+			<td class="show-time" data-val="{{.ShowTime}}">{{formattime .ShowTime}}</td>
+			<td class="show-price">{{.Price}}</td>
+			<td class="show-act">
+				<button class="btn-save show-edit" data-sid="{{.ID}}">编辑</button>
+				<button class="btn-del show-del" data-sid="{{.ID}}">删除</button>
+			</td>
+		</tr>
+		{{end}}
+		{{else}}
+		<tr><td colspan="5" style="color:#999;">暂无排片</td></tr>
+		{{end}}
+	</table>
+	<div style="text-align:center;">
+		<button class="btn-add" onclick="location.href='/pages/cinema/show_add.html?cinemaId={{.Cinema.ID}}'">+ 添加场次</button>
+	</div>
+
+</div>
+
+<div id="bottom">
+	<span>GoFilm网上影院 - 后台管理.Copyright &copy;2026</span>
+</div>
+</body>
+</html>

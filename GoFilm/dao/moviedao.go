@@ -32,7 +32,7 @@ func AddMovie(movie *model.Movie) error {
 		fmt.Println(err)
 		return err
 	}
-	fmt.Println(movie)
+
 	return nil
 }
 
@@ -63,6 +63,16 @@ func GetMovieById(id int) (*model.Movie, error) {
 	row := utils.Db.QueryRow(sqlStr, id)
 	movie.ID = id
 	row.Scan(&movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration)
-	fmt.Println(movie)
+
 	return movie, nil
+}
+
+// 根据电影id删除电影
+func DeleteMovieById(id int) error {
+	sqlStr := `delete from movies where id=?`
+	_, err := utils.Db.Exec(sqlStr, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
