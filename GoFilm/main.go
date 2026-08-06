@@ -22,9 +22,15 @@ func main() {
 
 	//通过Ajax请求验证用户名是否可用
 	http.HandleFunc("/checkUserName", controller.CheckUserName)
-	
+
 	//用户注销
 	http.HandleFunc("/logout", controller.Logout)
+
+	//进入管理员首页
+	http.HandleFunc("/manager", controller.FirstPageManager)
+
+	//添加电影
+	http.HandleFunc("/addmovie", controller.AddMovieHandler)
 
 	http.ListenAndServe(":8080", nil)
 }

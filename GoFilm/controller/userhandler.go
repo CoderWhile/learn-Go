@@ -35,11 +35,17 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 // 处理登录函数
 func Login(w http.ResponseWriter, r *http.Request) {
 	//判断是否已经登录
-	flag, _ := dao.IsLogin(r)
+	flag, session := dao.IsLogin(r)
 	if flag {
 		//已经登录
-		//去首页
-		FirstPage(w, r)
+		if session.UserIdentity == "1" {
+			//进入管理界面
+			fmt.Println("进入管理界面")
+			FirstPageManager(w, r)
+		} else {
+			//去首页
+			FirstPage(w, r)
+		}
 	} else {
 		//获取用户名和密码和身份信息
 		username := r.PostFormValue("username")
@@ -47,6 +53,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		//一并处理用户和管理员登录
 		//identity := r.PostFormValue("identity")
 		user, _ := dao.CheckUserNamePasswordIdentity(username, password)
+
 		if user.ID > 0 {
 			//生成UUID作为Session的id
 			uuid := utils.CreateUUID()
@@ -68,14 +75,22 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			}
 			//将Cookid发送给浏览器
 			http.SetCookie(w, &cookie)
-			//登录成功
-			t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
-			t.Execute(w, user)
+			fmt.Printf("%+v\n", user)
+			if user.Identity == "1" {
+				//进入管理界面
+				fmt.Println("进入管理界面")
+				FirstPageManager(w, r)
+			} else {
+				//登录成功
+				t := template.Must(template.ParseFiles("views/pages/user/login_success.html"))
+				t.Execute(w, user)
+			}
 
 		} else {
 			t := template.Must(template.ParseFiles("views/pages/user/login.html"))
 			t.Execute(w, "用户名或密码不正确")
 		}
+
 	}
 
 }

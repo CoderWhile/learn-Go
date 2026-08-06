@@ -567,3 +567,52 @@ h1 {
 #main table tr:hover {
 	background: #fff8e7;
 }
+
+/* ========== 后台管理 ========== */
+#admin_stats {
+	padding: 10px 20px;
+	font-size: 14px;
+	color: #666;
+	border-bottom: 1px solid #eee;
+	overflow: hidden;
+}
+
+#admin_stats strong {
+	color: #b8860b;
+	font-size: 18px;
+}
+
+.admin-actions {
+	display: flex;
+	gap: 6px;
+	padding: 0 10px 10px;
+}
+
+.btn-edit, .btn-delete {
+	flex: 1;
+	padding: 6px 0;
+	border-radius: 4px;
+	font-size: 13px;
+	font-weight: bold;
+	cursor: pointer;
+	border: none;
+	transition: opacity 0.3s;
+}
+
+.btn-edit {
+	background: linear-gradient(90deg, #8b6914, #b8860b);
+	color: #fff;
+}
+
+.btn-edit:hover {
+	opacity: 0.85;
+}
+
+.btn-delete {
+	background: #e74c3c;
+	color: #fff;
+}
+
+.btn-delete:hover {
+	background: #c0392b;
+}
