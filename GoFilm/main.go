@@ -32,7 +32,7 @@ func main() {
 	//添加电影
 	http.HandleFunc("/addmovie", controller.AddMovieHandler)
 
-	//添加影厅
+	//添加影院
 	http.HandleFunc("/addcinema", controller.AddCinemaHandler)
 
 	//进入查看影院界面
@@ -49,6 +49,12 @@ func main() {
 
 	//电影院详细信息展示
 	http.HandleFunc("/cinemainfo", controller.CinemaInfoHandler)
+
+	//影院删除
+	http.HandleFunc("/deletecinema", controller.DeleteCinemaHandler)
+
+	//添加影厅
+	http.HandleFunc("/addhall", controller.AddHallHandler)
 
 	http.ListenAndServe(":8080", nil)
 }

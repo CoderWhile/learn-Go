@@ -135,7 +135,7 @@
 
 		<div id="admin_stats">
 			<span>共 <strong>{{.TotalCinemaCount}}</strong> 家影院</span>
-			<a href="/pages/manager/cinema_add.html" class="top-btn" style="float:right;">+ 添加影院</a>
+
 		</div>
 
 		{{if .Cinemas}}
@@ -147,8 +147,7 @@
 				<div class="cinema-intro">{{.Intro}}</div>
 				<div class="cinema-actions">
 					<button class="btn-info" data-cid="{{.ID}}">影院信息</button>
-					<button class="btn-hall" data-cid="{{.ID}}">影厅管理</button>
-					<button class="btn-show" data-cid="{{.ID}}">添加场次</button>
+
 				</div>
 			</div>
 			{{end}}

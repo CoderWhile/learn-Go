@@ -8,9 +8,10 @@ type Hall struct {
 	Name       string
 	TotalRows  int
 	TotalCols  int
-	Seats      []Seat
+	Seats      []*Seat
 	SeatMatrix [][]*Seat // 运行时索引 [row][col] → *Seat
 	Version    int64
+	CinemaID   string
 }
 
 func (h *Hall) BuildMatrix() {
@@ -20,8 +21,8 @@ func (h *Hall) BuildMatrix() {
 	}
 	for idx := range h.Seats {
 		s := &h.Seats[idx]
-		rowIdx := rowToInt(s.Row)
-		h.SeatMatrix[rowIdx][s.Col] = s
+		rowIdx := rowToInt((*s).Row)
+		h.SeatMatrix[rowIdx][(*s).Col] = *s
 
 	}
 }

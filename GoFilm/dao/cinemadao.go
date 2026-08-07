@@ -34,7 +34,7 @@ func AddCinema(cinema *model.Cinema) error {
 		return err
 	}
 	fmt.Println(id, cinema.Name, cinema.Intro, cinema.Address)
-	fmt.Printf("%+v\n", cinema)
+
 	return nil
 
 }
@@ -45,9 +45,23 @@ func GetCinemaById(id string) (*model.Cinema, error) {
 	row := utils.Db.QueryRow(sqlStr, id)
 	cinema := &model.Cinema{}
 	err := row.Scan(&cinema.ID, &cinema.Name, &cinema.Address, &cinema.Intro)
+
 	if err != nil {
 		return nil, err
 	}
+
 	return cinema, nil
 
+}
+
+// 删除影院
+func DeleteCinemaById(id string) error {
+	sqlStr := "delete from cinemas where id=?"
+	_, err := utils.Db.Exec(sqlStr, id)
+	fmt.Println("进入删除")
+	if err != nil {
+
+		return err
+	}
+	return nil
 }

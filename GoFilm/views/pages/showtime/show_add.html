@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 添加排片</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.form-wrap { width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; padding: 30px 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+	.form-wrap h2 { font-size: 22px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid #b8860b; color: #333; }
+	.form-row { display: flex; align-items: center; margin-bottom: 16px; }
+	.form-row label { width: 90px; font-size: 14px; color: #555; font-weight: bold; flex-shrink: 0; }
+	.form-row select, .form-row input { flex: 1; height: 38px; padding: 0 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; outline: none; }
+	.form-row select:focus, .form-row input:focus { border-color: #b8860b; }
+	.form-row .hint { font-size: 12px; color: #999; margin-left: 8px; }
+	.form-btn { text-align: center; margin-top: 24px; }
+	.form-btn button { width: 140px; height: 40px; border: none; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; margin: 0 8px; }
+	.form-btn button:hover { opacity: 0.85; }
+	.btn-submit { background: linear-gradient(90deg, #8b6914, #b8860b); color: #fff; }
+	.btn-cancel { background: #999; color: #fff; }
+</style>
+<script>
+	$(function(){
+		var cinemaId = getQuery("cinemaId");
+		if(cinemaId){ $("#cinemaId").val(cinemaId); }
+
+		// 影院切换时加载该影院的影厅
+		$("#cinemaSelect").change(function(){
+			var cid = $(this).val();
+			if(!cid){ $("#hallSelect").html('<option value="">请先选择影院</option>'); return; }
+			$("#cinemaId").val(cid);
+			// 加载影厅
+			$.get("/api/hall/list", {cinemaId: cid}, function(res){
+				var html = '<option value="">请选择影厅</option>';
+				if(res && res.length){
+					$.each(res, function(i, hall){
+						html += '<option value="'+hall.id+'">'+hall.name+'</option>';
+					});
+				}
+				$("#hallSelect").html(html);
+			}, "json");
+		});
+
+		$("#submitBtn").click(function(){
+			var movieId = $("#movieSelect").val();
+			if(!movieId){ alert("请选择电影！"); return false; }
+			var hallId = $("#hallSelect").val();
+			if(!hallId){ alert("请选择影厅！"); return false; }
+			var cinemaId = $("#cinemaId").val();
+			if(!cinemaId){ alert("请先选择影院！"); return false; }
+			var showTime = $("#showTime").val();
+			if(!showTime){ alert("请选择放映时间！"); return false; }
+			var price = $("#price").val().trim();
+			if(!price || parseFloat(price) <= 0){ alert("请输入正确的票价！"); return false; }
+		});
+	});
+
+	function getQuery(name){
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		return r ? decodeURIComponent(r[2]) : null;
+	}
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left"><span class="logo-icon">🔧</span><span class="logo-text">后台管理</span></div>
+		<div class="topbar-right">
+			<a href="/manager" class="top-btn">电影管理</a>
+			<a href="/pages/cinema/cinema_list.html" class="top-btn">查看影院</a>
+			<a href="/main" class="top-btn">前台</a>
+			<a href="/logout" class="top-btn">注销</a>
+		</div>
+	</div>
+</div>
+
+<div id="main">
+	<div class="form-wrap">
+		<h2>添加排片</h2>
+		<form action="/addshowtime" method="POST">
+			<input type="hidden" name="cinemaId" id="cinemaId" />
+
+			<div class="form-row">
+				<label>影院</label>
+				<select id="cinemaSelect">
+					<option value="">请选择影院</option>
+					{{range .Cinemas}}
+					<option value="{{.ID}}">{{.Name}}</option>
+					{{end}}
+				</select>
+			</div>
+
+			<div class="form-row">
+				<label>电影</label>
+				<select id="movieSelect" name="movieId">
+					<option value="">请选择电影</option>
+					{{range .Movies}}
+					<option value="{{.ID}}">{{.Title}}</option>
+					{{end}}
+				</select>
+			</div>
+
+			<div class="form-row">
+				<label>影厅</label>
+				<select id="hallSelect" name="hallId">
+					<option value="">请先选择影院</option>
+				</select>
+			</div>
+
+			<div class="form-row">
+				<label>放映时间</label>
+				<input type="datetime-local" id="showTime" name="startTime" />
+			</div>
+
+			<div class="form-row">
+				<label>票价</label>
+				<input type="number" id="price" name="price" placeholder="0.00" min="0" step="0.01" style="width:140px;flex:none;" />
+				<span class="hint">单位：元</span>
+			</div>
+
+			<div class="form-row">
+				<label>状态</label>
+				<select name="status">
+					<option value="预售" selected>预售</option>
+					<option value="已放映">已放映</option>
+				</select>
+			</div>
+
+			<div class="form-btn">
+				<button type="submit" id="submitBtn" class="btn-submit">提交</button>
+				<button type="button" class="btn-cancel" onclick="history.back()">取消</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div id="bottom"><span>GoFilm网上影院 - 后台管理.Copyright &copy;2026</span></div>
+</body>
+</html>

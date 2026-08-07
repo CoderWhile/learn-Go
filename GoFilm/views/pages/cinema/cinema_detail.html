@@ -108,9 +108,9 @@
 			var cid = $("input[name='cinemaId']").val();
 			var name = $("input[name='name']").val();
 			if(confirm("确定删除《" + name + "》及旗下所有影厅和排片吗？")){
-				$.post("/admin/cinema/delete", {cinemaId: cid}, function(res){
-					if(res == "ok"){ alert("删除成功！"); location.href="/pages/cinema/cinema_list.html"; }
-					else { alert("删除失败："+res); }
+				$.post("/deletecinema", {cinemaId: cid}, function(res){
+					location.href = "/cinemalist";
+
 				});
 			}
 		});
@@ -230,7 +230,7 @@
 		</div>
 		<div class="topbar-right">
 			<a href="/manager" class="top-btn">电影管理</a>
-			<a href="/pages/cinema/cinema_list.html" class="top-btn">查看影院</a>
+			<a href="/cinemalist" class="top-btn">查看影院</a>
 			<a href="/main" class="top-btn">前台</a>
 			<a href="/logout" class="top-btn">注销</a>
 		</div>
@@ -261,7 +261,7 @@
 				<td><input name="intro" type="text" value="{{.Cinema.Intro}}" style="width:95%;" /></td>
 				<td class="btn-row">
 					<button type="button" id="cinemaDeleteBtn" class="btn-delete">删除影院</button>
-					<input type="submit" value="保存修改" class="btn-submit" />
+					<button type="submit" class="btn-submit">保存修改</button>
 				</td>
 			</tr>
 		</table>
@@ -277,7 +277,7 @@
 			<th>影厅名称</th>
 			<th>排数</th>
 			<th>每排座位数</th>
-			<th>总座位</th>
+		
 			<th>操作</th>
 		</tr>
 		{{if .Halls}}
@@ -286,7 +286,7 @@
 			<td class="hall-name">{{.Name}}</td>
 			<td class="hall-rows">{{.TotalRows}}</td>
 			<td class="hall-cols">{{.TotalCols}}</td>
-			<td>{{multiply .TotalRows .TotalCols}}</td>
+
 			<td class="hall-act">
 				<button class="btn-save hall-edit" data-hid="{{.ID}}">编辑</button>
 				<button class="btn-del hall-del" data-hid="{{.ID}}">删除</button>
@@ -298,7 +298,7 @@
 		{{end}}
 	</table>
 	<div style="text-align:center;">
-		<button class="btn-add" onclick="location.href='/pages/cinema/hall_add.html?cinemaId={{.Cinema.ID}}'">+ 添加影厅</button>
+		<button class="btn-add" onclick="location.href='/pages/hall/hall_add.html?cinemaId={{.Cinema.ID}}'">+ 添加影厅</button>
 	</div>
 
 	<!-- ========== 三、排片列表 ========== -->
@@ -311,12 +311,12 @@
 			<th>票价(元)</th>
 			<th>操作</th>
 		</tr>
-		{{if .ShowPlans}}
-		{{range .ShowPlans}}
+		{{if .Showtimes}}
+		{{range .Showtimes}}
 		<tr>
 			<td class="show-movie" data-mid="{{.MovieID}}">{{.MovieTitle}}</td>
 			<td class="show-hall" data-hid="{{.HallID}}">{{.HallName}}</td>
-			<td class="show-time" data-val="{{.ShowTime}}">{{formattime .ShowTime}}</td>
+			<td class="show-time" data-val="{{.ShowTime}}">{{ .ShowTime}}</td>
 			<td class="show-price">{{.Price}}</td>
 			<td class="show-act">
 				<button class="btn-save show-edit" data-sid="{{.ID}}">编辑</button>
@@ -329,7 +329,7 @@
 		{{end}}
 	</table>
 	<div style="text-align:center;">
-		<button class="btn-add" onclick="location.href='/pages/cinema/show_add.html?cinemaId={{.Cinema.ID}}'">+ 添加场次</button>
+		<button class="btn-add" onclick="location.href='/pages/cinema/show_add.html?cinemaId={{.Cinema.ID}}'">+ 添加排片</button>
 	</div>
 
 </div>

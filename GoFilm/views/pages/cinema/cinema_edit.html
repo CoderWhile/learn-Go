@@ -93,13 +93,11 @@
 			var cid = $("#cinemaId").val();
 			var name = $("#name").val();
 			if(confirm("确定删除《" + name + "》吗？此操作不可恢复！")){
-				$.post("/admin/cinema/delete", {cinemaId: cid}, function(res){
-					if(res == "ok"){
+				$.post("/deletecinema", {cinemaId: cid}, function(res){
+
 						alert("删除成功！");
-						location.href = "/pages/manager/cinema_list.html";
-					} else {
-						alert("删除失败：" + res);
-					}
+						location.href = "/cinema_list.html";
+
 				});
 			}
 		});

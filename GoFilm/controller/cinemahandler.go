@@ -31,32 +31,72 @@ func AddCinemaHandler(w http.ResponseWriter, r *http.Request) {
 		Intro:   intro,
 	}
 	dao.AddCinema(cinema)
-	t := template.Must(template.ParseFiles("views/pages/manager/cinema_add_success.html"))
+	t := template.Must(template.ParseFiles("views/pages/cinema/cinema_add_success.html"))
 	t.Execute(w, cinema)
 
 	//
+}
+func multiply(a, b int) int {
+	return a * b
+}
+
+var funcMap = template.FuncMap{
+	"multiply": multiply,
 }
 
 // 影院详细信息展示
 func CinemaInfoHandler(w http.ResponseWriter, r *http.Request) {
 	pagecinemainfo := &model.PageCinemaInfo{}
 	//获取影院信息
-	cinemaid := r.PostFormValue("cinemaId")
+	cinemaid := r.FormValue("cinemaId")
+
+	cinema := &model.Cinema{}
 	cinema, err := dao.GetCinemaById(cinemaid)
 	if err != nil {
 		fmt.Println("根据影院id获取影院错误：", err)
 	}
 	pagecinemainfo.Cinema = cinema
 	//获取该影院的影厅
+
 	halls, err := dao.GetHallsByCinemaId(cinemaid)
 	if err != nil {
 		fmt.Println("根据影院id获取影厅错误")
 	}
 	pagecinemainfo.Halls = halls
 	//获取该影院的场次
+
 	showtimes, err := dao.GetShowtimesByCinemaId(cinemaid)
 	pagecinemainfo.Showtimes = showtimes
+
+	//// 必须：先Funcs注册函数 → 再解析模板！
+	//tpl, err := template.New("").
+	//	Funcs(funcMap).
+	//	ParseFiles("views/pages/cinema/cinema_detail.html")
+	//if err != nil {
+	//	fmt.Println("模板解析失败：", err)
+	//	http.Error(w, "页面模板加载失败", http.StatusInternalServerError)
+	//	return
+	//}
+	//
+	//// 执行渲染
+	//err = tpl.Execute(w, pagecinemainfo)
+	//if err != nil {
+	//	fmt.Println("模板渲染失败：", err)
+	//}
+
 	//解析模板
 	t := template.Must(template.ParseFiles("views/pages/cinema/cinema_detail.html"))
 	t.Execute(w, pagecinemainfo)
+}
+
+// 删除影院
+func DeleteCinemaHandler(w http.ResponseWriter, r *http.Request) {
+	cinemaid := r.FormValue("cinemaId")
+
+	err := dao.DeleteCinemaById(cinemaid)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("完成删除")
+	CinemaHandler(w, r)
 }

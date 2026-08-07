@@ -46,6 +46,7 @@ func GetShowtimesByCinemaId(cinemaID string) ([]*model.Showtime, error) {
 		rows.Scan(&st.ID, &st.MovieID, &st.StartTime, &st.HallID, &st.CinemaID, &st.Status, &st.Price)
 		list = append(list, st)
 	}
+
 	return list, nil
 }
 

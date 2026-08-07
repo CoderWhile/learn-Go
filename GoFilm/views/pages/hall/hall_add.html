@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 添加影厅</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.form-section {
+		width: 960px;
+		margin: 20px auto;
+		background: #fff;
+		border-radius: 8px;
+		padding: 24px 30px;
+		box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+	}
+	.form-section h2 {
+		font-size: 20px; margin-bottom: 16px;
+		padding-left: 12px; border-left: 4px solid #b8860b;
+	}
+	.form-row { display: flex; align-items: center; margin-bottom: 14px; gap: 16px; }
+	.form-row label { width: 80px; font-size: 14px; color: #555; font-weight: bold; flex-shrink: 0; }
+	.form-row input { height: 34px; padding: 0 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; outline: none; width: 100px; }
+	.form-row input:focus { border-color: #b8860b; }
+
+	/* 图例 */
+	.legend { display: flex; gap: 24px; margin: 12px 0; font-size: 13px; align-items: center; flex-wrap: wrap; }
+	.legend-item { display: flex; align-items: center; gap: 6px; }
+
+	/* 影厅边框 */
+	.hall-border {
+		margin: 16px auto;
+		padding: 24px 30px 20px;
+		border: 3px solid #c9a84c;
+		border-radius: 12px;
+		background: linear-gradient(180deg, #fdfaf3 0%, #faf5e8 100%);
+		display: inline-block;
+		box-shadow: inset 0 0 30px rgba(180,150,80,0.08);
+	}
+
+	/* 银幕 */
+	.screen-bar {
+		width: 70%;
+		margin: 0 auto 18px;
+		height: 28px;
+		line-height: 28px;
+		text-align: center;
+		background: linear-gradient(180deg, #e8e0cc, #d4c8a8);
+		color: #8b7355;
+		font-size: 13px;
+		letter-spacing: 6px;
+		border-radius: 0 0 60% 60%;
+	}
+
+	/* 列号行 */
+	.col-header-row { display: flex; justify-content: flex-start; padding-left: 4px; }
+	.col-header-row .seat-spacer { width: 36px; flex-shrink: 0; }
+	.col-header-row .col-num { width: 32px; font-size: 11px; color: #999; text-align: center; margin: 0 1px; }
+
+	/* 座位行 */
+	.seat-row { display: flex; align-items: center; }
+	.row-label { width: 36px; text-align: center; font-size: 12px; color: #999; flex-shrink: 0; }
+
+	/* 座位 */
+	.seat {
+		width: 30px; height: 30px; margin: 2px 1px;
+		border-radius: 6px 6px 3px 3px;
+		cursor: pointer;
+		text-align: center; line-height: 30px;
+		font-size: 15px;
+		transition: all 0.15s;
+		flex-shrink: 0;
+		position: relative;
+	}
+	.seat:hover { transform: scale(1.18); z-index: 2; }
+	.seat-regular { background: #66bb6a; }
+	.seat-couple { background: #f48fb1; }
+	.seat-disabled { background: #e0e0e0; cursor: not-allowed; }
+
+	/* 提交 */
+	.btn-wrap { text-align: center; margin-top: 20px; }
+	.btn-wrap button { width: 140px; height: 40px; border: none; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; margin: 0 8px; }
+	.btn-wrap button:hover { opacity: 0.85; }
+	.btn-primary { background: linear-gradient(90deg, #8b6914, #b8860b); color: #fff; }
+	.btn-cancel { background: #999; color: #fff; }
+</style>
+<script>
+	var totalRows = 7;
+	var totalCols = 10;
+	var cinemaId = "";
+	// seatState[row][col] = 0普通座  1维修  2情侣座
+	var seatState = {};
+
+	$(function(){
+		cinemaId = getQuery("cinemaId");
+		if(!cinemaId){ alert("缺少影院ID参数！"); return; }
+		$("#cinemaId").val(cinemaId);
+		$("#rows").val(7);
+		$("#cols").val(10);
+		initSeats(7, 10);
+		renderSeatMap();
+
+		$("#rows, #cols").on("input", function(){
+			var r = parseInt($("#rows").val()) || 7;
+			var c = parseInt($("#cols").val()) || 10;
+			if(r < 3) r = 3; if(r > 20) r = 20;
+			if(c < 5) c = 5; if(c > 25) c = 25;
+			$("#rows").val(r); $("#cols").val(c);
+			if(r !== totalRows || c !== totalCols){
+				totalRows = r; totalCols = c;
+				initSeats(r, c);
+				renderSeatMap();
+			}
+		});
+
+		// 点击座位循环切换: 普通座 → 情侣座 → 维修 → 普通座
+		$(document).on("click", ".seat-regular, .seat-couple, .seat-disabled", function(){
+			var r = $(this).data("row");
+			var c = $(this).data("col");
+			seatState[r][c] = (seatState[r][c] + 1) % 3;
+			renderSeatMap();
+		});
+
+		$("#submitBtn").click(function(){
+			var name = $("#name").val().trim();
+			if(!name){ alert("请输入影厅名称！"); return false; }
+			var seats = [];
+			for(var r = 0; r < totalRows; r++){
+				for(var c = 0; c < totalCols; c++){
+					var st = seatState[r][c];
+					seats.push({
+						row: rowLabel(r),
+						col: c + 1,
+						seatType: st === 2 ? 1 : 0, // 情侣座=1, 普通=0
+						status: st === 1 ? 1 : 0     // 维修=1, 可用=0
+					});
+				}
+			}
+			$("#seatsData").val(JSON.stringify(seats));
+		});
+	});
+
+	function getQuery(name){
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		return r ? decodeURIComponent(r[2]) : null;
+	}
+	function rowLabel(idx){ return String.fromCharCode(65 + idx); }
+	//初始化座位矩阵图
+	function initSeats(rows, cols){
+		seatState = {};
+		for(var r = 0; r < rows; r++){
+			seatState[r] = {};
+			for(var c = 0; c < cols; c++) seatState[r][c] = 0;
+		}
+	}
+	function renderSeatMap(){
+		var html = '<div class="screen-bar">🎬  银  幕</div>';
+
+		// 列号（与座位对齐，左留 rowLabel 宽度）
+		html += '<div class="col-header-row"><span class="seat-spacer"></span>';
+		for(var i = 0; i < totalCols; i++){
+			html += '<span class="col-num">' + (i+1) + '</span>';
+		}
+		html += '</div>';
+
+		// 座位行
+		for(var r = 0; r < totalRows; r++){
+			html += '<div class="seat-row">';
+			html += '<span class="row-label">' + rowLabel(r) + '</span>';
+			for(var c = 0; c < totalCols; c++){
+				var st = seatState[r][c];
+				var cls = "seat ", icon = "";
+				if(st === 0)      { cls += "seat-regular"; icon = "🪑"; }
+				else if(st === 1) { cls += "seat-disabled"; icon = "🚫"; }
+				else              { cls += "seat-couple";   icon = "💑"; }
+				html += '<span class="' + cls + '" data-row="' + r + '" data-col="' + c + '">' + icon + '</span>';
+			}
+			html += '<span class="row-label">' + rowLabel(r) + '</span>';
+			html += '</div>';
+		}
+		$("#seatMap").html(html);
+	}
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left">
+			<span class="logo-icon">🔧</span>
+			<span class="logo-text">后台管理</span>
+		</div>
+		<div class="topbar-right">
+			<a href="/manager" class="top-btn">电影管理</a>
+			<a href="/pages/cinema/cinema_list.html" class="top-btn">查看影院</a>
+			<a href="/main" class="top-btn">前台</a>
+			<a href="/logout" class="top-btn">注销</a>
+		</div>
+	</div>
+</div>
+
+<div id="main">
+
+	<div class="form-section">
+		<h2>添加影厅</h2>
+		<form action="/addhall" method="POST">
+			<input type="hidden" name="cinemaId" id="cinemaId" />
+			<input type="hidden" name="seats" id="seatsData" />
+
+			<div class="form-row">
+				<label>影厅名称</label>
+				<input type="text" id="name" name="name" placeholder="如 1号厅 / IMAX厅" style="width:260px;" />
+				<label>排数</label>
+				<input type="number" id="rows" name="totalRows" min="3" max="20" />
+				<label>每排座位数</label>
+				<input type="number" id="cols" name="totalCols" min="5" max="25" />
+			</div>
+
+			<!-- 图例 -->
+			<div class="legend">
+				<div class="legend-item">
+					<span style="display:inline-block;width:20px;height:20px;border-radius:4px 4px 2px 2px;background:#66bb6a;"></span>
+					🪑 普通座
+				</div>
+				<div class="legend-item">
+					<span style="display:inline-block;width:20px;height:20px;border-radius:4px 4px 2px 2px;background:#f48fb1;"></span>
+					💑 情侣座
+				</div>
+				<div class="legend-item">
+					<span style="display:inline-block;width:20px;height:20px;border-radius:4px 4px 2px 2px;background:#e0e0e0;"></span>
+					🚫 维修
+				</div>
+				<span style="color:#999;font-size:12px;margin-left:auto;">点击座位循环切换: 🪑→💑→🚫→🪑</span>
+			</div>
+
+			<!-- 可视化座位图 -->
+			<div style="text-align:center;">
+				<div class="hall-border">
+					<div id="seatMap"></div>
+				</div>
+			</div>
+
+			<div class="btn-wrap">
+				<button type="submit" id="submitBtn" class="btn-primary">添加影厅</button>
+				<button type="button" class="btn-cancel" onclick="history.back()">取消</button>
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<div id="bottom">
+	<span>GoFilm网上影院 - 后台管理.Copyright &copy;2026</span>
+</div>
+</body>
+</html>
