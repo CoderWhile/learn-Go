@@ -4,11 +4,11 @@ import (
 	"GoFilm/model"
 	"GoFilm/utils"
 	"fmt"
+	"strings"
 )
 
 // AddHall 向指定影院添加影厅（自动生成 UUID，Version 初始为 1）
 func AddHall(cinemaID string, hall *model.Hall) error {
-	hall.ID = utils.CreateUUID()
 	hall.Version = 1
 	sqlStr := "insert into halls(id,cinema_id,name,totalrows,totalcols,Version) values(?,?,?,?,?,?)"
 	_, err := utils.Db.Exec(sqlStr, hall.ID, cinemaID, hall.Name, hall.TotalRows, hall.TotalCols, hall.Version)
@@ -23,7 +23,7 @@ func AddHall(cinemaID string, hall *model.Hall) error {
 func GetHallById(id string) (*model.Hall, error) {
 	sqlStr := "select id,name,totalrows,totalcols,Version,cinema_id from halls where id = ?"
 	hall := &model.Hall{}
-	err := utils.Db.QueryRow(sqlStr, id).Scan(&hall.ID, &hall.Name, &hall.TotalRows, &hall.TotalCols, &hall.Version)
+	err := utils.Db.QueryRow(sqlStr, id).Scan(&hall.ID, &hall.Name, &hall.TotalRows, &hall.TotalCols, &hall.Version, &hall.CinemaID)
 	if err != nil {
 		return nil, err
 	}
@@ -77,4 +77,12 @@ func DeleteHall(id string) error {
 		return err
 	}
 	return nil
+}
+
+func rowToInt(row string) int {
+	var n int
+	for _, c := range strings.ToUpper(row) {
+		n = n*26 + int(c-'A'+1)
+	}
+	return n
 }

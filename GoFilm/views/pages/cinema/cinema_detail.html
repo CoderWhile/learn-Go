@@ -109,57 +109,29 @@
 			var name = $("input[name='name']").val();
 			if(confirm("确定删除《" + name + "》及旗下所有影厅和排片吗？")){
 				$.post("/deletecinema", {cinemaId: cid}, function(res){
+
 					location.href = "/cinemalist";
 
 				});
 			}
 		});
 
-		// ===== 影厅编辑 =====
+		// ===== 影厅编辑 → 跳转独立编辑页 =====
 		$(".hall-edit").click(function(){
-			var tr = $(this).closest("tr");
 			var hallId = $(this).attr("data-hid");
-			var name = tr.find(".hall-name").text();
-			var rows = tr.find(".hall-rows").text();
-			var cols = tr.find(".hall-cols").text();
-			tr.find(".hall-name").html("<input name='hallName' value='"+name+"'/>");
-			tr.find(".hall-rows").html("<input name='hallRows' value='"+rows+"' style='width:60px;'/>");
-			tr.find(".hall-cols").html("<input name='hallCols' value='"+cols+"' style='width:60px;'/>");
-			tr.find(".hall-act").html(
-				'<button class="btn-save hall-save" data-hid="'+hallId+'">保存</button>'+
-				'<button class="btn-del hall-cancel">取消</button>'
-			);
-		});
-
-		// 竖排保存
-		$(document).on("click", ".hall-save", function(){
-			var tr = $(this).closest("tr");
-			var hid = $(this).attr("data-hid");
-			var data = {
-				hallId: hid,
-				cinemaId: $("input[name='cinemaId']").val(),
-				name: tr.find("input[name='hallName']").val(),
-				totalRows: tr.find("input[name='hallRows']").val(),
-				totalCols: tr.find("input[name='hallCols']").val()
-			};
-			$.post("/admin/hall/update", data, function(res){
-				if(res == "ok"){ alert("保存成功！"); location.reload(); }
-				else { alert("保存失败："+res); }
-			});
-		});
-
-		$(document).on("click", ".hall-cancel", function(){
-			location.reload();
+			location.href = "/pages/hall/hall_edit.html?hallId=" + hallId;
 		});
 
 		// 影厅删除
 		$(".hall-del").click(function(){
 			var hid = $(this).attr("data-hid");
+			var cid=$(this).attr("data-cid");
 			var name = $(this).closest("tr").find(".hall-name").text();
 			if(confirm("确定删除影厅《"+name+"》吗？")){
-				$.post("/admin/hall/delete", {hallId: hid}, function(res){
-					if(res == "ok"){ alert("删除成功！"); location.reload(); }
-					else { alert("删除失败："+res); }
+				$.post("/deletehall", {hallId: hid}, function(res){
+
+					location.href = "/cinemainfo?cinemaId=" + cid;
+
 				});
 			}
 		});
@@ -281,6 +253,7 @@
 			<th>操作</th>
 		</tr>
 		{{if .Halls}}
+		{{$cinemaId := .Cinema.ID}}  <!-- 在循环外层捕获顶层影院ID -->
 		{{range .Halls}}
 		<tr>
 			<td class="hall-name">{{.Name}}</td>
@@ -289,7 +262,7 @@
 
 			<td class="hall-act">
 				<button class="btn-save hall-edit" data-hid="{{.ID}}">编辑</button>
-				<button class="btn-del hall-del" data-hid="{{.ID}}">删除</button>
+				<button class="btn-del hall-del" data-hid="{{.ID}}"   data-cid="{{$cinemaId}}">删除</button>
 			</td>
 		</tr>
 		{{end}}
@@ -309,14 +282,16 @@
 			<th>影厅</th>
 			<th>放映时间</th>
 			<th>票价(元)</th>
+			<th>状态</th>
 			<th>操作</th>
 		</tr>
 		{{if .Showtimes}}
 		{{range .Showtimes}}
 		<tr>
-			<td class="show-movie" data-mid="{{.MovieID}}">{{.MovieTitle}}</td>
-			<td class="show-hall" data-hid="{{.HallID}}">{{.HallName}}</td>
-			<td class="show-time" data-val="{{.ShowTime}}">{{ .ShowTime}}</td>
+			<td class="show-movie" data-mid="{{.MovieID}}">{{.MovieID}}</td>
+			<td class="show-hall" data-hid="{{.HallID}}">{{.HallID}}</td>
+			<td class="show-time" data-val="{{.StartTime}}">{{.StartTime}}</td>
+			<td class="show-status" data-sta="{{.Status}}">{{.Status}}</td>
 			<td class="show-price">{{.Price}}</td>
 			<td class="show-act">
 				<button class="btn-save show-edit" data-sid="{{.ID}}">编辑</button>
@@ -329,7 +304,7 @@
 		{{end}}
 	</table>
 	<div style="text-align:center;">
-		<button class="btn-add" onclick="location.href='/pages/cinema/show_add.html?cinemaId={{.Cinema.ID}}'">+ 添加排片</button>
+		<button class="btn-add" onclick="location.href='/pages/showtime/show_add.html?cinemaId={{.Cinema.ID}}'">+ 添加排片</button>
 	</div>
 
 </div>

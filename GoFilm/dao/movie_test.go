@@ -20,3 +20,12 @@ func testGetMovies(t *testing.T) {
 		fmt.Printf("%+v\n", movie)
 	}
 }
+
+// 测试添加座位
+func TestAddSeats(t *testing.T) {
+	fmt.Println("测试根据影厅Id批量添加座位")
+	t.Run()
+}
+func testAddSeats(t *testing.T) {
+
+}

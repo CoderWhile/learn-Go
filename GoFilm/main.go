@@ -56,5 +56,17 @@ func main() {
 	//添加影厅
 	http.HandleFunc("/addhall", controller.AddHallHandler)
 
+	//去影厅更新界面
+	http.HandleFunc("/toupdatehall", controller.GetHallJSON)
+
+	//影厅更新
+	http.HandleFunc("/updatehall", controller.UpdateHallHandler)
+
+	//影厅删除
+	http.HandleFunc("/deletehall", controller.DeleteHallHandler)
+
+	//影厅编辑,json接口
+	http.HandleFunc("/api/hall/get", controller.GetHallJSON)
+
 	http.ListenAndServe(":8080", nil)
 }

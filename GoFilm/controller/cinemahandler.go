@@ -98,5 +98,5 @@ func DeleteCinemaHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	fmt.Println("完成删除")
-	CinemaHandler(w, r)
+
 }

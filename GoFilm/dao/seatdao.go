@@ -12,7 +12,7 @@ func AddSeats(hallID string, seats []*model.Seat) error {
 		return nil
 	}
 	fmt.Println("准备添加座位")
-	sqlStr := "insert into seats(hall_id, row, col, seattype, status) values(?,?,?,?,?)"
+	sqlStr := "insert into seats(hall_id, seat_row, col, seattype, status) values(?,?,?,?,?)"
 	for _, s := range seats {
 		result, err := utils.Db.Exec(sqlStr, hallID, s.Row, s.Col, int(s.SeatType), int(s.Status))
 		if err != nil {
@@ -26,7 +26,7 @@ func AddSeats(hallID string, seats []*model.Seat) error {
 
 // GetSeatsByHallId 根据影厅 ID 查询该影厅的所有座位（按排+列排序）
 func GetSeatsByHallId(hallID string) ([]*model.Seat, error) {
-	sqlStr := "select id,hall_id, row, col, seattype, status from seats where hall_id = ? order by row, col"
+	sqlStr := "select id,hall_id, seat_row, col, seattype, status from seats where hall_id = ? order by seat_row, col"
 	rows, err := utils.Db.Query(sqlStr, hallID)
 	if err != nil {
 		return nil, err
