@@ -41,9 +41,13 @@ func GetShowtimesByCinemaId(cinemaID string) ([]*model.Showtime, error) {
 	defer rows.Close()
 
 	var list []*model.Showtime
+
 	for rows.Next() {
 		st := &model.Showtime{}
 		rows.Scan(&st.ID, &st.MovieID, &st.StartTime, &st.HallID, &st.CinemaID, &st.Status, &st.Price)
+		//把影厅
+		hall, _ := GetHallById(st.HallID)
+		st.Hall = hall
 		list = append(list, st)
 	}
 
@@ -63,8 +67,33 @@ func GetShowtimesByHallId(hallID string) ([]*model.Showtime, error) {
 	for rows.Next() {
 		st := &model.Showtime{}
 		rows.Scan(&st.ID, &st.MovieID, &st.StartTime, &st.HallID, &st.CinemaID, &st.Status, &st.Price)
+		hall, _ := GetHallById(st.HallID)
+		st.Hall = hall
 		list = append(list, st)
 	}
+	return list, nil
+}
+
+// 根据电影id和影院id 查询所有场次
+func GetShowtimeByMovieIdAndCinemaId(cinemaID string, movieId int) ([]*model.Showtime, error) {
+	sqlStr := "select id,movie_id,starttime,hall_id,cinema_id,status,price from showtimes where cinema_id = ? and movie_id = ? order by starttime"
+	rows, err := utils.Db.Query(sqlStr, cinemaID, movieId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var list []*model.Showtime
+
+	for rows.Next() {
+		st := &model.Showtime{}
+		rows.Scan(&st.ID, &st.MovieID, &st.StartTime, &st.HallID, &st.CinemaID, &st.Status, &st.Price)
+		//把影厅
+		hall, _ := GetHallById(st.HallID)
+		st.Hall = hall
+		list = append(list, st)
+	}
+
 	return list, nil
 }
 

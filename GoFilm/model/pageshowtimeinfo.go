@@ -1,8 +1,10 @@
 package model
 
 type PageShowtimeInfo struct {
-	//所有上映中的电影
-	movies []*Movie
-	//本影院的影厅
-	halls []*Hall
+	// 当前影院ID
+	CinemaID string
+	// 所有上映中的电影
+	Movies []*Movie
+	// 本影院的影厅
+	Halls []*Hall
 }

@@ -9,7 +9,7 @@ import (
 
 // AddHall 向指定影院添加影厅（自动生成 UUID，Version 初始为 1）
 func AddHall(cinemaID string, hall *model.Hall) error {
-	hall.Version = 1
+	hall.Version = 0
 	sqlStr := "insert into halls(id,cinema_id,name,totalrows,totalcols,Version) values(?,?,?,?,?,?)"
 	_, err := utils.Db.Exec(sqlStr, hall.ID, cinemaID, hall.Name, hall.TotalRows, hall.TotalCols, hall.Version)
 	if err != nil {

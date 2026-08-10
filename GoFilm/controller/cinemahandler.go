@@ -100,3 +100,52 @@ func DeleteCinemaHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("完成删除")
 
 }
+
+// 用户端影院列表
+func UserCinemaListHandler(w http.ResponseWriter, r *http.Request) {
+	flag, session := dao.IsLogin(r)
+	cinemaList := &model.CinemaList{}
+	if flag {
+		cinemaList.Username = session.UserName
+		cinemaList.IsLogin = true
+	}
+	cinema, _ := dao.GetCinemas()
+	cinemaList.Cinemas = cinema
+	cinemaList.TotalCinemaCount = len(cinema)
+	t := template.Must(template.ParseFiles("views/pages/cinema/cinema_list_user.html"))
+	t.Execute(w, cinemaList)
+}
+
+// 用户影院排片页
+func CinemaShowsHandler(w http.ResponseWriter, r *http.Request) {
+	//得到电影院id
+	cinemashows := &model.CinemaShows{}
+	cinemaid := r.FormValue("cinemaId")
+	cinema, _ := dao.GetCinemaById(cinemaid)
+	movies, _ := dao.GetMovies()
+	var moviegroups []*model.MovieGroup
+	cinemashows.Cinema = cinema
+	for _, movie := range movies {
+		moviegroup := &model.MovieGroup{}
+		moviegroup.MovieTitle = movie.Title
+		moviegroup.MovieGenre = movie.Genre
+		showtimes, _ := dao.GetShowtimeByMovieIdAndCinemaId(cinemaid, movie.ID)
+		if showtimes != nil {
+			moviegroup.IsShow = true
+		} else {
+			moviegroup.IsShow = false
+		}
+		moviegroup.Showtimes = showtimes
+
+		moviegroups = append(moviegroups, moviegroup)
+	}
+	cinemashows.MovieGroups = moviegroups
+	flag, session := dao.IsLogin(r)
+	if flag {
+		cinemashows.Username = session.UserName
+		cinemashows.IsLogin = true
+	}
+	t := template.Must(template.ParseFiles("views/pages/cinema/cinema_shows.html"))
+	t.Execute(w, cinemashows)
+
+}

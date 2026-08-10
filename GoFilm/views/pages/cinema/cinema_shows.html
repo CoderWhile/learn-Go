@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - {{.Cinema.Name}}</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.cinema-header { background: #fff; border-radius: 8px; padding: 20px 30px; margin: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+	.cinema-header h1 { font-size: 24px; color: #333; margin-bottom: 6px; }
+	.cinema-header .addr { font-size: 13px; color: #999; }
+	.cinema-header .addr::before { content: "📍 "; }
+	.cinema-header .intro { font-size: 13px; color: #666; margin-top: 8px; line-height: 1.6; }
+
+	.showtime-section { background: #fff; border-radius: 8px; padding: 20px 30px; margin: 0 20px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+	.showtime-section h2 { font-size: 20px; margin-bottom: 16px; padding-left: 12px; border-left: 4px solid #b8860b; }
+
+	.movie-group { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px dashed #eee; }
+	.movie-group:last-child { border-bottom: none; }
+	.movie-group h3 { font-size: 16px; color: #333; margin-bottom: 8px; }
+	.movie-group h3 .genre { font-size: 12px; color: #888; margin-left: 8px; }
+	.showtime-items { display: flex; flex-wrap: wrap; gap: 8px; }
+	.showtime-item { display: flex; align-items: center; gap: 8px; padding: 6px 16px; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+	.showtime-item:hover { border-color: #b8860b; background: #fdf3e7; }
+	.showtime-item .time { font-size: 16px; font-weight: bold; color: #333; }
+	.showtime-item .hall { font-size: 12px; color: #888; }
+	.showtime-item .status { font-size: 11px; padding: 1px 6px; border-radius: 2px; }
+	.status-预售 { background: #e8f5e9; color: #2e7d32; }
+	.status-已放映 { background: #eee; color: #999; }
+	.showtime-item .price { font-size: 16px; font-weight: bold; color: #e74c3c; }
+	.empty-tip { text-align: center; padding: 40px; color: #999; }
+</style>
+<script>
+	$(function(){
+		$(".showtime-item").click(function(){
+			var sid = $(this).attr("data-sid");
+			if(isLogin){
+				location.href = "/pages/ticket/seat_select.html?showtimeId=" + sid;
+			} else {
+				alert("请先登录后购票！");
+				location.href = "/pages/user/login.html";
+			}
+		});
+		$("#searchBtn").click(function(){
+			var kw = $("#searchInput").val().trim();
+			if(kw) location.href = "/main?keyword=" + encodeURIComponent(kw);
+		});
+		$("#searchInput").keydown(function(e){ if(e.keyCode==13) $("#searchBtn").click(); });
+	});
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left"><span class="logo-icon">🎬</span><span class="logo-text">网上影院</span></div>
+		<div class="topbar-center"><input type="text" placeholder="搜索电影..." id="searchInput"><button id="searchBtn">搜索</button></div>
+		<div class="topbar-right">
+			{{if .IsLogin}}
+				<span class="welcome-text">欢迎 <span class="welcome-name">{{.Username}}</span></span>
+				<a href="/logout" class="top-btn">注销</a>
+			{{else}}
+				<a href="/pages/user/login.html" class="top-btn">登录</a>
+				<a href="/pages/user/regist.html" class="top-btn">注册</a>
+			{{end}}
+		</div>
+	</div>
+</div>
+
+<div id="main">
+	<div class="cinema-header">
+		<h1>{{.Cinema.Name}}</h1>
+		<div class="addr">{{.Cinema.Address}}</div>
+		<div class="intro">{{.Cinema.Intro}}</div>
+	</div>
+
+	<div class="showtime-section">
+		<h2>今日排片</h2>
+		{{if .MovieGroups}}
+			{{range .MovieGroups}}
+			{{if .IsShow}}
+			<div class="movie-group">
+				<h3>{{.MovieTitle}}<span class="genre">{{.MovieGenre}}</span></h3>
+				<div class="showtime-items">
+					{{range .Showtimes}}
+					<div class="showtime-item" data-sid="{{.ID}}">
+						<span class="time">{{.StartTime}}</span>
+						<span class="hall">{{.Hall.Name}}</span>
+						<span class="status status-{{.Status}}">{{.Status}}</span>
+						<span class="price">¥{{.Price}}</span>
+					</div>
+					{{end}}
+				</div>
+			</div>
+			{{end}}
+			{{end}}
+		{{else}}
+			<div class="empty-tip">暂无排片场次</div>
+		{{end}}
+	</div>
+</div>
+
+<div id="bottom"><span>GoFilm网上影院.Copyright &copy;2026</span></div>
+
+<script>
+	var isLogin = {{if .IsLogin}}true{{else}}false{{end}};
+</script>
+</body>
+</html>

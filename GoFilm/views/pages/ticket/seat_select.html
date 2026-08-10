@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 选座购票</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.ticket-wrap { width: 900px; margin: 20px auto; }
+	.info-card { background: #fff; border-radius: 8px; padding: 20px 30px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px; }
+	.info-poster img { width: 100px; height: 140px; object-fit: cover; border-radius: 4px; }
+	.info-text h2 { font-size: 20px; margin-bottom: 4px; }
+	.info-text .meta { font-size: 13px; color: #888; }
+	.info-text .meta span { margin-right: 12px; }
+
+	.seat-section { background: #fff; border-radius: 8px; padding: 20px 30px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+	.seat-section h3 { font-size: 16px; margin-bottom: 12px; padding-left: 10px; border-left: 4px solid #b8860b; }
+	.legend { display: flex; gap: 20px; margin: 10px 0 16px; font-size: 13px; }
+	.legend-item { display: flex; align-items: center; gap: 6px; }
+	.legend-seat { width: 24px; height: 24px; border-radius: 5px 5px 2px 2px; display: inline-block; }
+
+	.hall-border { margin: 0 auto; padding: 16px 24px 14px; border: 3px solid #c9a84c; border-radius: 12px; background: linear-gradient(180deg, #fdfaf3, #faf5e8); display: inline-block; box-shadow: inset 0 0 20px rgba(180,150,80,0.06); }
+	.screen-bar { width: 60%; margin: 0 auto 14px; height: 24px; line-height: 24px; text-align: center; background: linear-gradient(180deg, #e8e0cc, #d4c8a8); color: #8b7355; font-size: 12px; letter-spacing: 6px; border-radius: 0 0 50% 50%; }
+	.col-header { display: flex; }
+	.col-header .spacer { width: 36px; flex-shrink: 0; }
+	.col-header .num { width: 32px; font-size: 10px; color: #999; text-align: center; margin: 0 1px; }
+	.seat-row { display: flex; align-items: center; }
+	.row-lab { width: 36px; text-align: center; font-size: 12px; color: #999; flex-shrink: 0; }
+
+	.seat { width: 30px; height: 30px; margin: 2px 1px; border-radius: 6px 6px 3px 3px; cursor: pointer; text-align: center; line-height: 30px; font-size: 13px; flex-shrink: 0; transition: transform 0.15s; }
+	.seat:hover { transform: scale(1.18); z-index: 2; }
+	.seat-available { background: #66bb6a; color: #fff; }
+	.seat-available::after { content: "█"; }
+	.seat-couple { background: #f48fb1; color: #fff; }
+	.seat-couple::after { content: "💑"; font-size: 11px; }
+	.seat-disabled { background: #e0e0e0; cursor: not-allowed; color: #aaa; }
+	.seat-disabled::after { content: "✕"; }
+	.seat-sold { background: #90a4ae; cursor: not-allowed; color: #fff; }
+	.seat-sold::after { content: "✕"; }
+	.seat-selected { background: #ff9800; color: #fff; }
+	.seat-selected::after { content: "✓"; }
+
+	.order-card { background: #fff; border-radius: 8px; padding: 20px 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+	.order-card h3 { font-size: 16px; margin-bottom: 12px; }
+	.order-seats { font-size: 14px; color: #333; margin-bottom: 10px; }
+	.order-seats span { color: #b8860b; font-weight: bold; }
+	.order-total { font-size: 20px; color: #e74c3c; font-weight: bold; margin-bottom: 16px; }
+	.order-total .label { font-size: 14px; color: #888; font-weight: normal; }
+	.btn-submit { width: 200px; height: 42px; background: linear-gradient(90deg, #e74c3c, #c0392b); color: #fff; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; }
+	.btn-submit:hover { opacity: 0.85; }
+	.btn-submit[disabled] { background: #ccc; cursor: not-allowed; }
+</style>
+<script>
+	var showtimeId = "";
+	var gPrice = 0;
+	var gSelected = [];  // [{row:"A", col:3}, ...]
+	var gSeats = [];     // 后端返回的所有座位
+
+	$(function(){
+		showtimeId = getQuery("showtimeId");
+		if(!showtimeId){ alert("缺少场次参数！"); return; }
+		loadShowtimeData();
+	});
+
+	function loadShowtimeData(){
+		$.get("/api/ticket/showtime", {showtimeId: showtimeId}, function(res){
+			if(!res || !res.id){ alert("场次数据加载失败！"); return; }
+			// 显示电影/影院/场次信息
+			$("#poster").attr("src", res.movieImage || "");
+			$("#movieTitle").text(res.movieTitle);
+			$("#cinemaName").text(res.cinemaName);
+			$("#hallName").text(res.hallName);
+			$("#showTime").text(res.showTime);
+			$("#status").text(res.status);
+			gPrice = parseFloat(res.price);
+			$("#price").text(gPrice.toFixed(2));
+
+			gSeats = res.seats || [];
+			renderSeatMap();
+		}, "json").fail(function(){ alert("加载失败，请检查后端接口"); });
+	}
+
+	function renderSeatMap(){
+		var html = '<div class="screen-bar">🎬  银  幕</div>';
+		// 列号
+		var mCols = gSeats.length > 0 ? Math.max.apply(null, gSeats.map(function(s){return s.col;})) : 10;
+		var mRows = gSeats.length > 0 ? (gSeats[gSeats.length-1].row.charCodeAt(0)-65+1) : 7;
+
+		html += '<div class="col-header"><span class="spacer"></span>';
+		for(var i=1; i<=mCols; i++) html += '<span class="num">'+i+'</span>';
+		html += '</div>';
+
+		for(var r=0; r<mRows; r++){
+			var rowChar = String.fromCharCode(65+r);
+			html += '<div class="seat-row">';
+			html += '<span class="row-lab">'+rowChar+'</span>';
+			for(var c=1; c<=mCols; c++){
+				var seat = findSeat(rowChar, c);
+				var cls = "seat ", icon = "";
+				if(!seat){
+					// 该位置不存在（过道等）
+					cls = ""; icon = "";
+				} else if(seat.status === 1){
+					cls += "seat-disabled";  // 维修
+				} else if(seat.sold){
+					cls += "seat-sold";      // 已售
+				} else if(isSelected(rowChar, c)){
+					cls += "seat-selected";  // 用户选中
+				} else if(seat.seattype === 1){
+					cls += "seat-couple";    // 情侣座
+				} else {
+					cls += "seat-available"; // 可选
+				}
+				html += '<span class="'+cls+'" data-row="'+rowChar+'" data-col="'+c+'"></span>';
+			}
+			html += '<span class="row-lab">'+rowChar+'</span></div>';
+		}
+		$("#seatMap").html(html);
+	}
+
+	function findSeat(row, col){
+		for(var i=0; i<gSeats.length; i++){
+			if(gSeats[i].row===row && gSeats[i].col===col) return gSeats[i];
+		}
+		return null;
+	}
+	function isSelected(row, col){
+		for(var i=0; i<gSelected.length; i++){
+			if(gSelected[i].row===row && gSelected[i].col===col) return true;
+		}
+		return false;
+	}
+
+	// 点击可选座位
+	$(document).on("click", ".seat-available, .seat-couple, .seat-selected", function(){
+		var row = $(this).data("row");
+		var col = $(this).data("col");
+		if(isSelected(row, col)){
+			gSelected = gSelected.filter(function(s){ return !(s.row===row && s.col===col); });
+		} else {
+			gSelected.push({row: row, col: col});
+		}
+		renderSeatMap();
+		updateOrder();
+	});
+
+	function updateOrder(){
+		if(gSelected.length === 0){
+			$("#orderSeats").text("未选座");
+			$("#orderTotal").text("¥0.00");
+			$("#submitBtn").prop("disabled", true);
+		} else {
+			var labels = gSelected.map(function(s){ return s.row+s.col; }).join(", ");
+			$("#orderSeats").text(labels);
+			var total = gPrice * gSelected.length;
+			$("#orderTotal").text("¥" + total.toFixed(2));
+			$("#submitBtn").prop("disabled", false);
+		}
+	}
+
+	$("#submitBtn").click(function(){
+		if(gSelected.length === 0){ alert("请先选择座位！"); return; }
+		if(!confirm("确认购买 " + gSelected.length + " 张票，共 ¥" + (gPrice*gSelected.length).toFixed(2) + " ？")) return;
+		$.post("/ticket/buy", {
+			showtimeId: showtimeId,
+			seats: JSON.stringify(gSelected)
+		}, function(res){
+			if(res === "ok"){
+				alert("购票成功！");
+				location.href = "/main";
+			} else {
+				alert("购票失败：" + res);
+			}
+		});
+	});
+
+	function getQuery(name){
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		return r ? decodeURIComponent(r[2]) : null;
+	}
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left"><span class="logo-icon">🎬</span><span class="logo-text">网上影院</span></div>
+		<div class="topbar-right">
+			<a href="/main" class="top-btn">首页</a>
+			<a href="/logout" class="top-btn">注销</a>
+		</div>
+	</div>
+</div>
+
+<div id="main">
+	<div class="ticket-wrap">
+
+		<!-- 场次信息 -->
+		<div class="info-card">
+			<div class="info-poster"><img id="poster" src="" alt=""></div>
+			<div class="info-text">
+				<h2 id="movieTitle"></h2>
+				<div class="meta">
+					<span id="cinemaName"></span>
+					<span id="hallName"></span>
+					<span id="showTime"></span>
+					<span>票价：<strong style="color:#e74c3c;">¥<span id="price">--</span></strong></span>
+				</div>
+			</div>
+		</div>
+
+		<!-- 座位图 -->
+		<div class="seat-section">
+			<h3>选择座位</h3>
+			<div class="legend">
+				<div class="legend-item"><span class="legend-seat" style="background:#66bb6a;"></span> 可选</div>
+				<div class="legend-item"><span class="legend-seat" style="background:#f48fb1;"></span> 情侣座</div>
+				<div class="legend-item"><span class="legend-seat" style="background:#ff9800;"></span> 已选</div>
+				<div class="legend-item"><span class="legend-seat" style="background:#90a4ae;"></span> 已售</div>
+				<div class="legend-item"><span class="legend-seat" style="background:#e0e0e0;"></span> 维修</div>
+			</div>
+			<div style="text-align:center;">
+				<div class="hall-border"><div id="seatMap"></div></div>
+			</div>
+		</div>
+
+		<!-- 订单 -->
+		<div class="order-card">
+			<h3>订单确认</h3>
+			<div class="order-seats">已选座位：<span id="orderSeats">未选座</span></div>
+			<div class="order-total"><span class="label">应付金额：</span><span id="orderTotal">¥0.00</span></div>
+			<button id="submitBtn" class="btn-submit" disabled>确认购票</button>
+		</div>
+
+	</div>
+</div>
+
+<div id="bottom"><span>GoFilm网上影院.Copyright &copy;2026</span></div>
+</body>
+</html>

@@ -103,6 +103,13 @@
 </style>
 <script>
 	$(function(){
+		// 全局变量 —— 页面渲染时从 Go 模板注入
+		gHalls = [
+			{{range .Halls}}
+			{id: "{{.ID}}", name: "{{.Name}}"},
+			{{end}}
+		];
+
 		// ===== 影院信息更新 =====
 		$("#cinemaDeleteBtn").click(function(){
 			var cid = $("input[name='cinemaId']").val();
@@ -140,17 +147,34 @@
 		$(".show-edit").click(function(){
 			var tr = $(this).closest("tr");
 			var sid = $(this).attr("data-sid");
-			// 把文本转为输入框
+			// 把文本转为输入框/下拉
 			tr.find("td").each(function(){
 				var txt = $(this).text().trim();
 				if($(this).hasClass("show-movie")){
-					$(this).html('<input name="movieId" value="'+$(this).attr("data-mid")+'" style="width:100px;"/>');
+					// 电影：暂时用文本输入（也可以改成下拉，需要 movies 数据）
+					$(this).html('<input name="movieId" value="'+$(this).attr("data-mid")+'" style="width:80px;"/>');
 				} else if($(this).hasClass("show-hall")){
-					$(this).html('<input name="hallId" value="'+$(this).attr("data-hid")+'" style="width:80px;"/>');
+					// 影厅：改为下拉，选中当前影厅
+					var curHid = $(this).attr("data-hid");
+					var html = '<select name="hallId" style="width:120px;">';
+					for(var i = 0; i < gHalls.length; i++){
+						var sel = (gHalls[i].id === curHid) ? ' selected' : '';
+						html += '<option value="'+gHalls[i].id+'"'+sel+'>'+gHalls[i].name+'</option>';
+					}
+					html += '</select>';
+					$(this).html(html);
 				} else if($(this).hasClass("show-time")){
-					$(this).html('<input name="showTime" type="datetime-local" value="'+$(this).attr("data-val")+'" style="width:160px;"/>');
+					$(this).html('<input name="showTime" type="datetime-local" value="'+$(this).attr("data-val")+'" style="width:170px;"/>');
+				} else if($(this).hasClass("show-status")){
+					// 状态：改为下拉
+					var curSta = $(this).attr("data-sta");
+					var html = '<select name="status" style="width:80px;">';
+					html += '<option value="预售"'+ (curSta==="预售"?' selected':'') +'>预售</option>';
+					html += '<option value="已放映"'+ (curSta==="已放映"?' selected':'') +'>已放映</option>';
+					html += '</select>';
+					$(this).html(html);
 				} else if($(this).hasClass("show-price")){
-					$(this).html('<input name="price" value="'+txt+'" style="width:80px;"/>');
+					$(this).html('<input name="price" value="'+txt+'" style="width:70px;"/>');
 				}
 			});
 			tr.find(".show-act").html(
@@ -165,13 +189,14 @@
 			var data = {
 				showId: sid,
 				movieId: tr.find("input[name='movieId']").val(),
-				hallId: tr.find("input[name='hallId']").val(),
+				hallId:  tr.find("select[name='hallId']").val(),
 				showTime: tr.find("input[name='showTime']").val(),
-				price: tr.find("input[name='price']").val()
+				status:  tr.find("select[name='status']").val(),
+				price:   tr.find("input[name='price']").val()
 			};
-			$.post("/admin/show/update", data, function(res){
-				if(res == "ok"){ alert("保存成功！"); location.reload(); }
-				else { alert("保存失败："+res); }
+			$.post("/updateshowtime", data, function(res){
+				alert("保存成功！"); location.reload();
+
 			});
 		});
 
@@ -281,15 +306,16 @@
 			<th>电影</th>
 			<th>影厅</th>
 			<th>放映时间</th>
-			<th>票价(元)</th>
 			<th>状态</th>
+			<th>票价(元)</th>
+
 			<th>操作</th>
 		</tr>
 		{{if .Showtimes}}
 		{{range .Showtimes}}
 		<tr>
 			<td class="show-movie" data-mid="{{.MovieID}}">{{.MovieID}}</td>
-			<td class="show-hall" data-hid="{{.HallID}}">{{.HallID}}</td>
+			<td class="show-hall" data-hid="{{.HallID}}">{{.Hall.Name}}</td>
 			<td class="show-time" data-val="{{.StartTime}}">{{.StartTime}}</td>
 			<td class="show-status" data-sta="{{.Status}}">{{.Status}}</td>
 			<td class="show-price">{{.Price}}</td>
@@ -304,7 +330,7 @@
 		{{end}}
 	</table>
 	<div style="text-align:center;">
-		<button class="btn-add" onclick="location.href='/pages/showtime/show_add.html?cinemaId={{.Cinema.ID}}'">+ 添加排片</button>
+		<a href="/toaddshowtime?cinemaId={{.Cinema.ID}}" class="btn-add" role="button">+添加排片</a>
 	</div>
 
 </div>

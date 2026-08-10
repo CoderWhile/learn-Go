@@ -96,7 +96,7 @@ func GetHallJSON(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(hallID)
+	//fmt.Println(hallID)
 	hall, err := dao.GetHallById(hallID)
 	if err != nil {
 		json.NewEncoder(w).Encode(map[string]string{"error": "影厅不存在"})
@@ -104,10 +104,10 @@ func GetHallJSON(w http.ResponseWriter, r *http.Request) {
 	}
 
 	seats, _ := dao.GetSeatsByHallId(hallID)
-	for _, seat := range seats {
-		fmt.Printf("%+v\n", seat)
-	}
-	fmt.Printf("%+v\n", seats)
+	//for _, seat := range seats {
+	//	fmt.Printf("%+v\n", seat)
+	//}
+	//fmt.Printf("%+v\n", seats)
 	// 返回前端需要的格式
 	type SeatVO struct {
 		Row      string `json:"row"`
@@ -157,7 +157,7 @@ func UpdateHallHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	seatJSON := r.PostFormValue("seats")
-
+	fmt.Println(seatJSON)
 	//座位解析
 	type SeatInput struct {
 		Row      string `json:"row"`
@@ -185,15 +185,19 @@ func UpdateHallHandler(w http.ResponseWriter, r *http.Request) {
 			Status:   model.SeatStatus(s.Status),
 		})
 	}
+	fmt.Printf("%+v\n", hall)
 	//将影厅和座位更新数据库
 	dao.UpdateHall(hall)
 
 	//把座位信息存入数据库
 	//批量更新座位信息
-
+	//按照影厅id更新座位信息
+	//根据影厅批量删除座位
+	dao.DeleteSeatsByHallId(hall.ID)
+	//根据影厅添加新座位
 	dao.AddSeats(hall.ID, hall.Seats)
 	//进入影厅添加成功界面
-	t := template.Must(template.ParseFiles("views/pages/hall/hall_add_success.html"))
+	t := template.Must(template.ParseFiles("views/pages/hall/hall_update_success.html"))
 	t.Execute(w, hall)
 }
 
@@ -204,5 +208,7 @@ func DeleteHallHandler(w http.ResponseWriter, r *http.Request) {
 	dao.DeleteSeatsByHallId(hallID)
 	//在删除影厅
 	dao.DeleteHall(hallID)
+	//删除该影厅的座位
+	dao.DeleteSeatsByHallId(hallID)
 	//
 }

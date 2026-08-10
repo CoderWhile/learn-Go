@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 影院列表</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.cinema-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px; }
+	.cinema-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 24px; cursor: pointer; transition: box-shadow 0.3s; }
+	.cinema-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+	.cinema-name { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 8px; }
+	.cinema-addr { font-size: 13px; color: #999; margin-bottom: 10px; }
+	.cinema-addr::before { content: "📍 "; }
+	.cinema-intro { font-size: 13px; color: #666; line-height: 1.6; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+	.empty-tip { text-align: center; padding: 80px; color: #999; font-size: 16px; }
+</style>
+<script>
+	$(function(){
+		$(".cinema-card").click(function(){
+			var cid = $(this).attr("data-cid");
+			location.href = "/cinema/shows?cinemaId=" + cid;
+		});
+		$("#searchBtn").click(function(){
+			var kw = $("#searchInput").val().trim();
+			if(kw) location.href = "/main?keyword=" + encodeURIComponent(kw);
+		});
+		$("#searchInput").keydown(function(e){ if(e.keyCode==13) $("#searchBtn").click(); });
+	});
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left"><span class="logo-icon">🎬</span><span class="logo-text">网上影院</span></div>
+		<div class="topbar-center"><input type="text" placeholder="搜索电影..." id="searchInput"><button id="searchBtn">搜索</button></div>
+		<div class="topbar-right">
+			{{if .IsLogin}}
+				<span class="welcome-text">欢迎 <span class="welcome-name">{{.Username}}</span></span>
+				<a href="/logout" class="top-btn">注销</a>
+			{{else}}
+				<a href="/pages/user/login.html" class="top-btn">登录</a>
+				<a href="/pages/user/regist.html" class="top-btn">注册</a>
+			{{end}}
+		</div>
+	</div>
+</div>
+
+<div id="main">
+	<div style="padding:20px 20px 0;">
+		<span style="font-size:20px;font-weight:bold;padding-left:12px;border-left:4px solid #b8860b;">全部影院</span>
+		<span style="color:#999;font-size:14px;margin-left:12px;">共 {{.TotalCinemaCount}} 家</span>
+	</div>
+
+	{{if .Cinemas}}
+	<div class="cinema-grid">
+		{{range .Cinemas}}
+		<div class="cinema-card" data-cid="{{.ID}}">
+			<div class="cinema-name">{{.Name}}</div>
+			<div class="cinema-addr">{{.Address}}</div>
+			<div class="cinema-intro">{{.Intro}}</div>
+		</div>
+		{{end}}
+	</div>
+	{{else}}
+	<div class="empty-tip">暂无影院</div>
+	{{end}}
+</div>
+
+<div id="bottom"><span>GoFilm网上影院.Copyright &copy;2026</span></div>
+</body>
+</html>

@@ -68,5 +68,29 @@ func main() {
 	//影厅编辑,json接口
 	http.HandleFunc("/api/hall/get", controller.GetHallJSON)
 
+	//去添加场次界面
+	http.HandleFunc("/toaddshowtime", controller.ToAddShowTimeHandler)
+
+	//添加场次
+	http.HandleFunc("/addshowtime", controller.AddShowTimeHandler)
+
+	//场次更新
+	http.HandleFunc("/updateshowtime", controller.UpdateShowTimeHandler)
+
+	//用户进入电影的详情页面
+	http.HandleFunc("/movie/detail", controller.MovieDetailHandler)
+
+	//用户端影院列表
+	http.HandleFunc("/cinema/list", controller.UserCinemaListHandler) // 用户端影院列表
+
+	//影院排片页
+	http.HandleFunc("/cinema/shows", controller.CinemaShowsHandler) // 影院排片页
+
+	//用户选购票页
+	http.HandleFunc("/ticket/select", controller.TicketSelectHandler) // 选座购票页
+
+	// 购票页 Ajax 数据
+	http.HandleFunc("/api/ticket/showtime", controller.GetTicketDataJSON)
+
 	http.ListenAndServe(":8080", nil)
 }

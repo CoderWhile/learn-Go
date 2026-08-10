@@ -32,11 +32,7 @@
 		// 电影点击进入详情
 		$(".movie-card").click(function(){
 			var mid = $(this).attr("data-mid");
-			if (isLogin) {
-				location.href = "/movie/detail?movieId=" + mid;
-			} else {
-				alert("请先登录！");
-			}
+			location.href = "/movie/detail?movieId=" + mid;
 		});
 
 		// 注销
@@ -108,18 +104,18 @@
 					<span class="filter-label">标签:</span>
 					<select id="tagSelect">
 						<option value="">全部</option>
-<!--						{{range .Tags}}-->
-<!--						<option value="{{.ID}}" {{if eq .ID $.TagID}}selected{{end}}>{{.Name}}</option>-->
-<!--						{{end}}-->
+						{{range .Tags}}
+						<option value="{{.ID}}" {{if eq .ID $.TagID}}selected{{end}}>{{.Name}}</option>
+						{{end}}
 					</select>
 					<span class="filter-label">地区:</span>
 					<select id="regionSelect">
 						<option value="">全部</option>
-<!--						<option value="china"  {{if eq .Region "china"}}selected{{end}}>中国</option>-->
-<!--						<option value="europe" {{if eq .Region "europe"}}selected{{end}}>欧洲</option>-->
-<!--						<option value="america" {{if eq .Region "america"}}selected{{end}}>美国</option>-->
-<!--						<option value="japan"  {{if eq .Region "japan"}}selected{{end}}>日本</option>-->
-<!--						<option value="korea"  {{if eq .Region "korea"}}selected{{end}}>韩国</option>-->
+						<option value="china"  {{if eq .Region "china"}}selected{{end}}>中国</option>
+						<option value="europe" {{if eq .Region "europe"}}selected{{end}}>欧洲</option>
+						<option value="america" {{if eq .Region "america"}}selected{{end}}>美国</option>
+						<option value="japan"  {{if eq .Region "japan"}}selected{{end}}>日本</option>
+						<option value="korea"  {{if eq .Region "korea"}}selected{{end}}>韩国</option>
 					</select>
 				</div>
 				<div class="filter-right">

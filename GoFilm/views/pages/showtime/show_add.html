@@ -21,45 +21,17 @@
 </style>
 <script>
 	$(function(){
-		var cinemaId = getQuery("cinemaId");
-		if(cinemaId){ $("#cinemaId").val(cinemaId); }
-
-		// 影院切换时加载该影院的影厅
-		$("#cinemaSelect").change(function(){
-			var cid = $(this).val();
-			if(!cid){ $("#hallSelect").html('<option value="">请先选择影院</option>'); return; }
-			$("#cinemaId").val(cid);
-			// 加载影厅
-			$.get("/api/hall/list", {cinemaId: cid}, function(res){
-				var html = '<option value="">请选择影厅</option>';
-				if(res && res.length){
-					$.each(res, function(i, hall){
-						html += '<option value="'+hall.id+'">'+hall.name+'</option>';
-					});
-				}
-				$("#hallSelect").html(html);
-			}, "json");
-		});
-
 		$("#submitBtn").click(function(){
 			var movieId = $("#movieSelect").val();
 			if(!movieId){ alert("请选择电影！"); return false; }
 			var hallId = $("#hallSelect").val();
 			if(!hallId){ alert("请选择影厅！"); return false; }
-			var cinemaId = $("#cinemaId").val();
-			if(!cinemaId){ alert("请先选择影院！"); return false; }
 			var showTime = $("#showTime").val();
 			if(!showTime){ alert("请选择放映时间！"); return false; }
 			var price = $("#price").val().trim();
 			if(!price || parseFloat(price) <= 0){ alert("请输入正确的票价！"); return false; }
 		});
 	});
-
-	function getQuery(name){
-		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-		var r = window.location.search.substr(1).match(reg);
-		return r ? decodeURIComponent(r[2]) : null;
-	}
 </script>
 </head>
 <body>
@@ -80,17 +52,8 @@
 	<div class="form-wrap">
 		<h2>添加排片</h2>
 		<form action="/addshowtime" method="POST">
-			<input type="hidden" name="cinemaId" id="cinemaId" />
+			<input type="hidden" name="cinemaId" value="{{.CinemaID}}" />
 
-			<div class="form-row">
-				<label>影院</label>
-				<select id="cinemaSelect">
-					<option value="">请选择影院</option>
-					{{range .Cinemas}}
-					<option value="{{.ID}}">{{.Name}}</option>
-					{{end}}
-				</select>
-			</div>
 
 			<div class="form-row">
 				<label>电影</label>
@@ -105,7 +68,10 @@
 			<div class="form-row">
 				<label>影厅</label>
 				<select id="hallSelect" name="hallId">
-					<option value="">请先选择影院</option>
+					<option value="">请选择影厅</option>
+					{{range .Halls}}
+					<option value="{{.ID}}">{{.Name}}</option>
+					{{end}}
 				</select>
 			</div>
 

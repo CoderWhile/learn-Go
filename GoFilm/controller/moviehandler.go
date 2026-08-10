@@ -121,3 +121,44 @@ func DeleteMovieHandler(w http.ResponseWriter, r *http.Request) {
 
 	FirstPageManager(w, r)
 }
+
+// 进入电影详情界面
+func MovieDetailHandler(w http.ResponseWriter, r *http.Request) {
+	//调用IsLogin函数
+	movieID := r.FormValue("movieId")
+	imovieID, _ := strconv.ParseInt(movieID, 10, 64)
+	flag, session := dao.IsLogin(r)
+	page := &model.MovieDetail{}
+	movie, _ := dao.GetMovieById(int(imovieID))
+	var showtimeGroups []*model.ShowtimeGroup
+
+	cinemas, _ := dao.GetCinemas()
+	for _, cinema := range cinemas {
+		//根据电影id和影院Id查询对应场次
+		//当前电影院下当前电影的场次
+		showtimes, _ := dao.GetShowtimeByMovieIdAndCinemaId(cinema.ID, int(imovieID))
+		showtimeGroup := &model.ShowtimeGroup{
+			CinemaName: cinema.Name,
+			CinemaAddr: cinema.Address,
+			Showtimes:  showtimes,
+		}
+
+		showtimeGroups = append(showtimeGroups, showtimeGroup)
+	}
+	if flag {
+		//已经登录了,设置page中的IsLogin和Username
+		page.IsLogin = true
+		page.Username = session.UserName
+
+	}
+	if movie.Status == "下架" {
+		page.Isdelist = false
+	} else {
+		page.Isdelist = true
+	}
+	page.Movie = movie
+	page.ShowtimeGroups = showtimeGroups
+
+	t := template.Must(template.ParseFiles("views/pages/movie/movie_detail.html"))
+	t.Execute(w, page)
+}

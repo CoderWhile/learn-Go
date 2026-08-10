@@ -11,7 +11,7 @@ func AddSeats(hallID string, seats []*model.Seat) error {
 	if len(seats) == 0 {
 		return nil
 	}
-	fmt.Println("准备添加座位")
+	//fmt.Println("准备添加座位")
 	sqlStr := "insert into seats(hall_id, seat_row, col, seattype, status) values(?,?,?,?,?)"
 	for _, s := range seats {
 		result, err := utils.Db.Exec(sqlStr, hallID, s.Row, s.Col, int(s.SeatType), int(s.Status))
