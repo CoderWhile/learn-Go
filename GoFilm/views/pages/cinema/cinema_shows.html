@@ -36,6 +36,7 @@
 			var sid = $(this).attr("data-sid");
 			if(isLogin){
 				location.href = "/pages/ticket/seat_select.html?showtimeId=" + sid;
+				// location.href = "/ticket/select?showtimeId=" + sid;
 			} else {
 				alert("请先登录后购票！");
 				location.href = "/pages/user/login.html";
@@ -83,12 +84,14 @@
 				<h3>{{.MovieTitle}}<span class="genre">{{.MovieGenre}}</span></h3>
 				<div class="showtime-items">
 					{{range .Showtimes}}
+					{{if .IsYuShow}}
 					<div class="showtime-item" data-sid="{{.ID}}">
 						<span class="time">{{.StartTime}}</span>
 						<span class="hall">{{.Hall.Name}}</span>
 						<span class="status status-{{.Status}}">{{.Status}}</span>
 						<span class="price">¥{{.Price}}</span>
 					</div>
+					{{end}}
 					{{end}}
 				</div>
 			</div>

@@ -29,7 +29,7 @@ func (h *Hall) BuildMatrix() {
 
 func (h *Hall) GetSeat(row string, col int) *Seat {
 	r := rowToInt(row)
-	if r < 1 || r >= h.TotalRows || col < 1 || col >= h.TotalCols {
+	if r < 1 || r > h.TotalRows || col < 1 || col > h.TotalCols {
 		return nil
 	}
 	return h.SeatMatrix[r][col]

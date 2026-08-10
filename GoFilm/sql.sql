@@ -119,3 +119,18 @@ INSERT INTO `movies` (`id`, `title`, `genre`, `area`, `intro`, `image_path`) VAL
 (32, '海蒂和爷爷',    '家庭', 'europe',  '孤儿海蒂被送到阿尔卑斯山与孤僻爷爷生活。',         '/static/img/movies/32_海蒂和爷爷.jpg'),
 (33, '爆裂鼓手',      '音乐', 'america','爵士鼓学生对完美苛求到极致的疯狂之路。',           '/static/img/movies/33_爆裂鼓手.jpg'),
 (35, '铃芽之旅',      '动画', 'japan',  '少女铃芽与闭门师草太踏上关闭灾难之门之旅。',       '/static/img/movies/35_铃芽之旅.jpg');
+
+-- ==========================================
+-- 电影票表（防并发：UNIQUE(showtime_id, seat_id)）
+-- ==========================================
+CREATE TABLE IF NOT EXISTS `tickets` (
+    `id`          INT AUTO_INCREMENT PRIMARY KEY,
+    `showtime_id` INT NOT NULL,
+    `user_id`     INT NOT NULL,
+    `seat_id`     BIGINT NOT NULL,
+    `price`       DOUBLE(11,2) NOT NULL DEFAULT 0,
+    `status`      VARCHAR(20) NOT NULL DEFAULT 'paid' COMMENT 'locked/paid',
+    `lock_time`   DATETIME,
+    `created_at`  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY `uk_showtime_seat` (`showtime_id`, `seat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

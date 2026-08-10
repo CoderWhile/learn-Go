@@ -53,18 +53,48 @@
 <script>
 	var showtimeId = "";
 	var gPrice = 0;
-	var gSelected = [];  // [{row:"A", col:3}, ...]
-	var gSeats = [];     // 后端返回的所有座位
+	var gSelected = [];     // [{row:"A", col:3}, ...]
+	var gSeats = [];        // 后端返回的所有座位
+	var gLockTimer = null;  // 倒计时定时器
+	var gLockSeconds = 0;   // 剩余秒数
 
 	$(function(){
 		showtimeId = getQuery("showtimeId");
 		if(!showtimeId){ alert("缺少场次参数！"); return; }
 		loadShowtimeData();
+
+		// 页面关闭时释放锁定
+		$(window).on("beforeunload", function(){ releaseLock(); });
+
+		// 确认购票
+		$("#submitBtn").click(function(){
+			if(gSelected.length === 0){ alert("请先选择座位！"); return; }
+			if(!confirm("确认购买 " + gSelected.length + " 张票，共 ¥" + (gPrice*gSelected.length).toFixed(2) + " ？")) return;
+			$("#submitBtn").prop("disabled", true);
+			$.post("/ticket/buy", {
+				showtimeId: showtimeId,
+				seats: JSON.stringify(gSelected)
+			}, function(res){
+				if(res === "ok"){
+					clearInterval(gLockTimer);
+					alert("购票成功！");
+					location.href = "/main";
+				} else {
+					$("#submitBtn").prop("disabled", false);
+					alert("购票失败：" + res);
+					// 重新加载座位状态
+					loadShowtimeData();
+				}
+			});
+		});
 	});
 
 	function loadShowtimeData(){
+		console.log("loadShowtimeData: showtimeId=" + showtimeId);
 		$.get("/api/ticket/showtime", {showtimeId: showtimeId}, function(res){
+			console.log("API返回:", res);
 			if(!res || !res.id){ alert("场次数据加载失败！"); return; }
+			console.log("seats数量:", res.seats ? res.seats.length : 0);
 			// 显示电影/影院/场次信息
 			$("#poster").attr("src", res.movieImage || "");
 			$("#movieTitle").text(res.movieTitle);
@@ -80,11 +110,15 @@
 		}, "json").fail(function(){ alert("加载失败，请检查后端接口"); });
 	}
 
+	//座位图绘制
 	function renderSeatMap(){
+		console.log("renderSeatMap: gSeats.length=" + gSeats.length);
+		console.log("gSeats sample:", gSeats.slice(0,3));
 		var html = '<div class="screen-bar">🎬  银  幕</div>';
 		// 列号
 		var mCols = gSeats.length > 0 ? Math.max.apply(null, gSeats.map(function(s){return s.col;})) : 10;
 		var mRows = gSeats.length > 0 ? (gSeats[gSeats.length-1].row.charCodeAt(0)-65+1) : 7;
+		console.log("mCols="+mCols+" mRows="+mRows);
 
 		html += '<div class="col-header"><span class="spacer"></span>';
 		for(var i=1; i<=mCols; i++) html += '<span class="num">'+i+'</span>';
@@ -124,6 +158,7 @@
 		}
 		return null;
 	}
+	//判断用户是否已点击选中该座位,每次enderSeatMap()都会调用.决定是否显示橙色
 	function isSelected(row, col){
 		for(var i=0; i<gSelected.length; i++){
 			if(gSelected[i].row===row && gSelected[i].col===col) return true;
@@ -131,7 +166,7 @@
 		return false;
 	}
 
-	// 点击可选座位
+	// 点击可选座位 → 选座 + 锁座
 	$(document).on("click", ".seat-available, .seat-couple, .seat-selected", function(){
 		var row = $(this).data("row");
 		var col = $(this).data("col");
@@ -142,8 +177,10 @@
 		}
 		renderSeatMap();
 		updateOrder();
+		lockSeats();  // 后端锁座
 	});
 
+	//更新订单
 	function updateOrder(){
 		if(gSelected.length === 0){
 			$("#orderSeats").text("未选座");
@@ -158,21 +195,48 @@
 		}
 	}
 
-	$("#submitBtn").click(function(){
-		if(gSelected.length === 0){ alert("请先选择座位！"); return; }
-		if(!confirm("确认购买 " + gSelected.length + " 张票，共 ¥" + (gPrice*gSelected.length).toFixed(2) + " ？")) return;
-		$.post("/ticket/buy", {
+	// 后端锁定
+	function lockSeats(){
+		clearInterval(gLockTimer);
+		if(gSelected.length === 0){
+			releaseLock();
+			$("#lockCountdown").hide();
+			return;
+		}
+		$.post("/ticket/lock", {
 			showtimeId: showtimeId,
 			seats: JSON.stringify(gSelected)
 		}, function(res){
-			if(res === "ok"){
-				alert("购票成功！");
-				location.href = "/main";
-			} else {
-				alert("购票失败：" + res);
+			if(res === "busy"){
+				alert("部分座位已被他人锁定，请重新选择");
+				releaseLock();
+				loadShowtimeData();
+				return;
 			}
+			gLockSeconds = 300;
+			$("#lockCountdown").show();
+			tickCountdown();
+			gLockTimer = setInterval(tickCountdown, 1000);
 		});
-	});
+	}
+
+	function tickCountdown(){
+		var m = Math.floor(gLockSeconds / 60);
+		var s = gLockSeconds % 60;
+		$("#lockCountdown").text("座位已锁定 " + m + ":" + (s<10?"0":"") + s);
+		gLockSeconds--;
+		if(gLockSeconds < 0){
+			clearInterval(gLockTimer);
+			alert("锁座超时，请重新选座");
+			releaseLock();
+			loadShowtimeData();
+		}
+	}
+
+	function releaseLock(){
+		clearInterval(gLockTimer);
+		$.post("/ticket/unlock", {showtimeId: showtimeId}, function(){});
+	}
 
 	function getQuery(name){
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -214,7 +278,7 @@
 		<div class="seat-section">
 			<h3>选择座位</h3>
 			<div class="legend">
-				<div class="legend-item"><span class="legend-seat" style="background:#66bb6a;"></span> 可选</div>
+				<div class="legend-item"><span class="legend-seat" style="background:#66bb6a;"></span> 普通座</div>
 				<div class="legend-item"><span class="legend-seat" style="background:#f48fb1;"></span> 情侣座</div>
 				<div class="legend-item"><span class="legend-seat" style="background:#ff9800;"></span> 已选</div>
 				<div class="legend-item"><span class="legend-seat" style="background:#90a4ae;"></span> 已售</div>
@@ -227,7 +291,7 @@
 
 		<!-- 订单 -->
 		<div class="order-card">
-			<h3>订单确认</h3>
+			<h3>订单确认 <span id="lockCountdown" style="font-size:13px;color:#e74c3c;font-weight:bold;display:none;"></span></h3>
 			<div class="order-seats">已选座位：<span id="orderSeats">未选座</span></div>
 			<div class="order-total"><span class="label">应付金额：</span><span id="orderTotal">¥0.00</span></div>
 			<button id="submitBtn" class="btn-submit" disabled>确认购票</button>

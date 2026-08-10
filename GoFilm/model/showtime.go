@@ -11,3 +11,11 @@ type Showtime struct {
 	Status    string //场次的状态：预售/已放映
 	Price     float64
 }
+
+func (s *Showtime) IsYuShow() bool {
+	if s.Status == "预售" {
+		return true
+	} else {
+		return false
+	}
+}

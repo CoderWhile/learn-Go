@@ -48,7 +48,7 @@ func GetSeatsByHallId(hallID string) ([]*model.Seat, error) {
 
 // GetSeatById 根据座位 ID 查询单个座位
 func GetSeatById(id int64) (*model.Seat, error) {
-	sqlStr := "select id,hall_id, row, col, seattype, status from seats where id = ?"
+	sqlStr := "select id,hall_id, seat_row, col, seattype, status from seats where id = ?"
 	s := &model.Seat{}
 	var seatType int
 	var status int

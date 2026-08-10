@@ -11,9 +11,18 @@ import (
 
 func FirstPage(w http.ResponseWriter, r *http.Request) {
 	//调用IsLogin函数
+	//获得搜索关键词
+	searchword := r.FormValue("keyword")
+
 	flag, session := dao.IsLogin(r)
 	page := &model.Page{}
-	movies, _ := dao.GetMovies()
+	var movies []*model.Movie
+	if searchword == "" {
+		movies, _ = dao.GetMovies()
+	} else {
+		//按照关键词获得电影
+	
+	}
 	if flag {
 		//已经登录了,设置page中的IsLogin和Username
 		page.IsLogin = true

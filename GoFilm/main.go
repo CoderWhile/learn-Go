@@ -86,11 +86,24 @@ func main() {
 	//影院排片页
 	http.HandleFunc("/cinema/shows", controller.CinemaShowsHandler) // 影院排片页
 
-	//用户选购票页
-	http.HandleFunc("/ticket/select", controller.TicketSelectHandler) // 选座购票页
+	////用户选购票页
+	//http.HandleFunc("/ticket/select", controller.TicketSelectHandler) // 选座购票页
 
 	// 购票页 Ajax 数据
 	http.HandleFunc("/api/ticket/showtime", controller.GetTicketDataJSON)
+
+	//购买票
+	http.HandleFunc("/ticket/buy", controller.BuyTicketHandler)
+	//锁定座位
+	http.HandleFunc("/ticket/lock", controller.LockSeatsHandler)
+	//释放锁定
+	http.HandleFunc("/ticket/unlock", controller.UnlockSeatsHandler)
+
+	//用户的订单
+	http.HandleFunc("/getMyOrders", controller.UserOrdersHandler)
+
+	//关键词搜索电影（待实现）
+	// http.HandleFunc("/Search", controller.SearchHandler)
 
 	http.ListenAndServe(":8080", nil)
 }
