@@ -56,3 +56,62 @@ func GetTicketsByUserId(userID int) ([]*model.Ticket, error) {
 	}
 	return list, nil
 }
+
+// 根据场次Id查找票
+func GetTicketsByShowtimeId(stID int) ([]*model.Ticket, error) {
+	sql := `select id,showtime_id,user_id,seat_id,status,lock_time,created_at from tickets where showtime_id=?`
+	rows, err := utils.Db.Query(sql, stID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var list []*model.Ticket
+	for rows.Next() {
+		t := &model.Ticket{}
+		rows.Scan(&t.ID, &t.ShowtimeID, &t.UserID, &t.SeatID, &t.Status, &t.LockTime, &t.CreatedAt)
+	}
+	return list, nil
+}
+
+// 根据座位id 删除票
+func DeleteTicketBySeatId(stID int) error {
+	sql := `delete * from tickets where seat_id=?`
+	_, err := utils.Db.Exec(sql, stID)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+// 根据用户票的id删除票
+func DeleteTicketByID(id int) error {
+	sql := `DELETE FROM tickets WHERE id=?`
+	_, err := utils.Db.Exec(sql, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// 更新场次票价
+func UpdatePriceByShowtime(stID int, price float64) error {
+	sql := `update tickets set price=? where showtime_id=?`
+	_, err := utils.Db.Exec(sql, price, stID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetTicketByID(id int) (*model.Ticket, error) {
+	sqlStr := `SELECT id,showtime_id,user_id,seat_id,status FROM tickets WHERE id = ? `
+	row := utils.Db.QueryRow(sqlStr, id)
+	t := &model.Ticket{}
+	err := row.Scan(&t.ID, &t.ShowtimeID, &t.UserID, &t.SeatID, &t.Status)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return t, nil
+}

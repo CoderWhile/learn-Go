@@ -28,6 +28,7 @@
 			if(!hallId){ alert("请选择影厅！"); return false; }
 			var showTime = $("#showTime").val();
 			if(!showTime){ alert("请选择放映时间！"); return false; }
+			if(new Date(showTime) <= new Date()){ alert("放映时间必须在当前时间之后！"); return false; }
 			var price = $("#price").val().trim();
 			if(!price || parseFloat(price) <= 0){ alert("请输入正确的票价！"); return false; }
 		});

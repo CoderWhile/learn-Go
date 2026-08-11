@@ -47,13 +47,58 @@ CREATE TABLE IF NOT EXISTS `movies` (
     INDEX `idx_area` (`area`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- 补全电影表的评分、时长、状态字段（已有表执行，新建表跳过）
+ALTER TABLE `movies`
+    ADD COLUMN IF NOT EXISTS `rating`      DOUBLE(3,1) DEFAULT NULL COMMENT '评分',
+    ADD COLUMN IF NOT EXISTS `duration`    INT          DEFAULT NULL COMMENT '时长(分钟)',
+    ADD COLUMN IF NOT EXISTS `status`      VARCHAR(20)  DEFAULT '上映中' COMMENT '未上映/上映中/下架',
+    ADD COLUMN IF NOT EXISTS `category_id` INT          DEFAULT NULL COMMENT '分类ID';
+
 -- ==========================================
--- 插入管理员账号
--- 密码: admin123 (MD5)
+-- 分类表
 -- ==========================================
-INSERT INTO `users` (`username`, `password`, `identity`) VALUES
-('admin', MD5('admin123'), 'admin'),
-('test', MD5('test123'), 'customer');
+CREATE TABLE IF NOT EXISTS `categories` (
+    `id`   INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO categories (id, name) VALUES
+(1,'动作'),(2,'喜剧'),(3,'爱情'),(4,'动画'),(5,'剧情'),(6,'悬疑'),(7,'惊悚'),(8,'科幻'),(9,'战争'),(10,'冒险'),(11,'警匪'),(12,'家庭'),(13,'音乐')
+ON DUPLICATE KEY UPDATE name=VALUES(name);
+
+-- ==========================================
+-- 标签表
+-- ==========================================
+CREATE TABLE IF NOT EXISTS `tags` (
+    `id`   INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO tags (id, name) VALUES
+(1,'热门'),(2,'高分'),(3,'经典'),(4,'院线'),(5,'国产'),(6,'进口'),(7,'IMAX'),(8,'3D')
+ON DUPLICATE KEY UPDATE name=VALUES(name);
+
+-- ==========================================
+-- 电影-标签关联表
+-- ==========================================
+CREATE TABLE IF NOT EXISTS `movie_tags` (
+    `movie_id` INT NOT NULL,
+    `tag_id`   INT NOT NULL,
+    PRIMARY KEY (`movie_id`, `tag_id`),
+    FOREIGN KEY (`movie_id`) REFERENCES `movies`(`id`),
+    FOREIGN KEY (`tag_id`)   REFERENCES `tags`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO movie_tags (movie_id, tag_id) VALUES
+(1,1),(1,5), (2,2),(2,5), (10,2),(10,3),(10,6),
+(11,1),(11,2),(11,5), (13,2),(13,3),(13,6),
+(15,1),(15,2),(15,5), (19,2),(19,3),(19,6),
+(21,2),(21,3),(21,6), (23,1),(23,5),(23,7),
+(24,2),(24,3),(24,6),(24,7), (28,2),(28,3),(28,6),
+(30,1),(30,2),(30,3),(30,5)
+ON DUPLICATE KEY UPDATE tag_id=VALUES(tag_id);
+
+
 
 -- ==========================================
 -- 插入 35 部电影素材
@@ -119,6 +164,45 @@ INSERT INTO `movies` (`id`, `title`, `genre`, `area`, `intro`, `image_path`) VAL
 (32, '海蒂和爷爷',    '家庭', 'europe',  '孤儿海蒂被送到阿尔卑斯山与孤僻爷爷生活。',         '/static/img/movies/32_海蒂和爷爷.jpg'),
 (33, '爆裂鼓手',      '音乐', 'america','爵士鼓学生对完美苛求到极致的疯狂之路。',           '/static/img/movies/33_爆裂鼓手.jpg'),
 (35, '铃芽之旅',      '动画', 'japan',  '少女铃芽与闭门师草太踏上关闭灾难之门之旅。',       '/static/img/movies/35_铃芽之旅.jpg');
+
+-- ==========================================
+-- 给所有电影补充评分、时长、状态
+-- ==========================================
+UPDATE movies SET rating=7.2, duration=123, status='上映中' WHERE id=1;
+UPDATE movies SET rating=8.3, duration=138, status='上映中' WHERE id=2;
+UPDATE movies SET rating=7.8, duration=163, status='上映中' WHERE id=3;
+UPDATE movies SET rating=6.2, duration=141, status='上映中' WHERE id=4;
+UPDATE movies SET rating=7.8, duration=128, status='下架'   WHERE id=5;
+UPDATE movies SET rating=7.3, duration=121, status='上映中' WHERE id=6;
+UPDATE movies SET rating=8.1, duration=117, status='下架'   WHERE id=7;
+UPDATE movies SET rating=7.1, duration=114, status='下架'   WHERE id=8;
+UPDATE movies SET rating=8.4, duration=106, status='下架'   WHERE id=9;
+UPDATE movies SET rating=9.4, duration=194, status='下架'   WHERE id=10;
+UPDATE movies SET rating=8.5, duration=110, status='上映中' WHERE id=11;
+UPDATE movies SET rating=8.0, duration=168, status='上映中' WHERE id=12;
+UPDATE movies SET rating=9.3, duration=125, status='下架'   WHERE id=13;
+UPDATE movies SET rating=9.2, duration=108, status='下架'   WHERE id=14;
+UPDATE movies SET rating=9.0, duration=116, status='上映中' WHERE id=15;
+UPDATE movies SET rating=9.3, duration=132, status='下架'   WHERE id=16;
+UPDATE movies SET rating=8.7, duration=132, status='上映中' WHERE id=17;
+UPDATE movies SET rating=6.7, duration=121, status='下架'   WHERE id=18;
+UPDATE movies SET rating=9.3, duration=148, status='下架'   WHERE id=19;
+UPDATE movies SET rating=8.6, duration=106, status='下架'   WHERE id=20;
+UPDATE movies SET rating=8.8, duration=118, status='下架'   WHERE id=21;
+UPDATE movies SET rating=8.1, duration=98,  status='下架'   WHERE id=22;
+UPDATE movies SET rating=8.3, duration=173, status='上映中' WHERE id=23;
+UPDATE movies SET rating=9.3, duration=169, status='上映中' WHERE id=24;
+UPDATE movies SET rating=7.3, duration=122, status='下架'   WHERE id=25;
+UPDATE movies SET rating=7.4, duration=176, status='上映中' WHERE id=26;
+UPDATE movies SET rating=8.7, duration=139, status='上映中' WHERE id=27;
+UPDATE movies SET rating=9.1, duration=127, status='上映中' WHERE id=28;
+UPDATE movies SET rating=7.6, duration=192, status='上映中' WHERE id=29;
+UPDATE movies SET rating=9.2, duration=101, status='上映中' WHERE id=30;
+UPDATE movies SET rating=7.3, duration=132, status='下架'   WHERE id=31;
+UPDATE movies SET rating=9.2, duration=111, status='下架'   WHERE id=32;
+UPDATE movies SET rating=8.5, duration=106, status='下架'   WHERE id=33;
+UPDATE movies SET rating=7.2, duration=148, status='上映中' WHERE id=34;
+UPDATE movies SET rating=7.7, duration=122, status='上映中' WHERE id=35;
 
 -- ==========================================
 -- 电影票表（防并发：UNIQUE(showtime_id, seat_id)）

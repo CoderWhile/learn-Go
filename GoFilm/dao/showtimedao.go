@@ -20,6 +20,30 @@ func AddShowtime(st *model.Showtime) error {
 	return nil
 }
 
+func GetShowtime() ([]*model.Showtime, error) {
+	sqlStr := "select id,movie_id,starttime,hall_id,cinema_id,status,price from showtimes"
+	rows, err := utils.Db.Query(sqlStr)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var list []*model.Showtime
+
+	for rows.Next() {
+		st := &model.Showtime{}
+		rows.Scan(&st.ID, &st.MovieID, &st.StartTime, &st.HallID, &st.CinemaID, &st.Status, &st.Price)
+		//把影厅
+		movie, _ := GetMovieById(st.MovieID)
+		st.MovieName = movie.Title
+		hall, _ := GetHallById(st.HallID)
+		st.Hall = hall
+		list = append(list, st)
+	}
+
+	return list, nil
+}
+
 // GetShowtimeById 根据场次 ID 查询
 func GetShowtimeById(id int) (*model.Showtime, error) {
 	sqlStr := "select id,movie_id,starttime,hall_id,cinema_id,status,price from showtimes where id = ?"
@@ -46,6 +70,8 @@ func GetShowtimesByCinemaId(cinemaID string) ([]*model.Showtime, error) {
 		st := &model.Showtime{}
 		rows.Scan(&st.ID, &st.MovieID, &st.StartTime, &st.HallID, &st.CinemaID, &st.Status, &st.Price)
 		//把影厅
+		movie, _ := GetMovieById(st.MovieID)
+		st.MovieName = movie.Title
 		hall, _ := GetHallById(st.HallID)
 		st.Hall = hall
 		list = append(list, st)
@@ -99,8 +125,8 @@ func GetShowtimeByMovieIdAndCinemaId(cinemaID string, movieId int) ([]*model.Sho
 
 // UpdateShowtime 更新场次（电影、时间、影厅、状态、价格）
 func UpdateShowtime(st *model.Showtime) error {
-	sqlStr := "update showtimes set movie_id=?, starttime=?, hall_id=?, status=?, price=? where id=?"
-	_, err := utils.Db.Exec(sqlStr, st.MovieID, st.StartTime, st.HallID, st.Status, st.Price, st.ID)
+	sqlStr := "update showtimes set  starttime=?, hall_id=?, status=?, price=? where id=?"
+	_, err := utils.Db.Exec(sqlStr, st.StartTime, st.HallID, st.Status, st.Price, st.ID)
 	if err != nil {
 		fmt.Println("UpdateShowtime error:", err)
 		return err
@@ -112,7 +138,7 @@ func UpdateShowtime(st *model.Showtime) error {
 func DeleteShowtime(id int) error {
 	_, err := utils.Db.Exec("delete from showtimes where id = ?", id)
 	if err != nil {
-		fmt.Println("DeleteShowtime error:", err)
+		//fmt.Println("DeleteShowtime error:", err)
 		return err
 	}
 	return nil

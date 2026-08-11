@@ -67,3 +67,35 @@ func UserOrdersHandler(w http.ResponseWriter, r *http.Request) {
 	t := template.Must(template.ParseFiles("views/pages/user/my_orders.html"))
 	t.Execute(w, page)
 }
+
+// 退票
+func RefundTicketHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, sess := dao.IsLogin(r)
+	if sess == nil {
+		w.Write([]byte("请先登录"))
+		return
+	}
+	tid, _ := strconv.Atoi(r.PostFormValue("ticketId"))
+	fmt.Println("tid", tid)
+	ticket, _ := dao.GetTicketByID(tid)
+	fmt.Printf("%+v\n", ticket)
+	showtime, _ := dao.GetShowtimeById(ticket.ShowtimeID)
+	fmt.Printf("%+v", showtime)
+	layout := "2006-01-02T15:04"
+	st, _ := time.Parse(layout, showtime.StartTime)
+	elapsed := st.Sub(time.Now())
+	//elapsed := time.Now().Sub(st)
+	fmt.Println("elapsed", elapsed)
+	if elapsed.Minutes() < 120 {
+		w.Write([]byte("开场前两小时不需退票"))
+	} else {
+
+		err := dao.DeleteTicketByID(tid)
+		if err != nil {
+			w.Write([]byte("退票失败"))
+			return
+		}
+		w.Write([]byte("ok"))
+	}
+}

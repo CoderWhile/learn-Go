@@ -30,9 +30,32 @@
 	.showtime-item .hall { font-size: 12px; color: #888; }
 	.showtime-item .price { font-size: 15px; font-weight: bold; color: #e74c3c; }
 	.empty-tip { text-align: center; padding: 40px; color: #999; }
+
+	/* 评论区 */
+	.review-section { width: 100%; margin-top: 20px; }
+	.review-section h2 { font-size: 20px; margin-bottom: 16px; padding-left: 12px; border-left: 4px solid #b8860b; }
+	.review-list{ margin-bottom: 20px; }
+	.review-item { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+	.review-item:last-child { border-bottom: none; }
+	.review-header { font-size: 13px; color: #333; margin-bottom: 4px; }
+	.review-header strong { color: #b8860b; }
+	.review-header .time { color: #999; font-size: 12px; margin-left: 8px; }
+	.review-body { font-size: 14px; color: #444; line-height: 1.6; }
+	.review-reply { font-size: 12px; color: #b8860b; cursor: pointer; margin-top: 4px; display: inline-block; }
+	.review-input { margin-top: 16px; }
+	.review-input textarea { width: 100%; height: 60px; border: 1px solid #ddd; border-radius: 4px; padding: 8px; font-size: 14px; resize: vertical; outline: none; }
+	.review-input textarea:focus { border-color: #b8860b; }
+	.review-input .btn-row { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
+	.review-input .btn-submit { padding: 8px 24px; background: linear-gradient(90deg, #8b6914, #b8860b); color: #fff; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; }
+	.review-input .reply-hint { font-size: 13px; color: #b8860b; }
+	.review-input .reply-hint a { color: #999; cursor: pointer; margin-left: 8px; font-size: 12px; }
 </style>
 <script>
+	var movieId = 0;
+
 	$(function(){
+		movieId = {{.Movie.ID}};
+
 		$(".showtime-item").click(function(){
 			var sid = $(this).attr("data-sid");
 			if(isLogin){
@@ -41,6 +64,17 @@
 				alert("请先登录后购票！");
 				location.href = "/pages/user/login.html";
 			}
+		});
+
+		loadReviews();
+
+		// 每 10 秒自动拉取新评论
+		setInterval(loadReviews, 1000);
+
+		$("#postReviewBtn").click(postReview);
+		$("#cancelReply").click(function(){
+			$("#replyTo").val(0);
+			$("#replyHint").hide();
 		});
 	});
 </script>
@@ -109,6 +143,24 @@
 		</div>
 		{{end}}
 
+		<!-- 评论区 -->
+		<div class="review-section">
+			<h2>💬 观众评论</h2>
+			<div id="reviewList" class="review-list"></div>
+
+			<div class="review-input">
+				<textarea id="reviewContent" placeholder="写下你的评论..."></textarea>
+				<input type="hidden" id="replyTo" value="0">
+				<div class="btn-row">
+					<button id="postReviewBtn" class="btn-submit">发布评论</button>
+					<span id="replyHint" class="reply-hint" style="display:none;">
+						回复 @<span id="replyName"></span>
+						<a id="cancelReply">取消</a>
+					</span>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
 
@@ -121,6 +173,58 @@
 		if(kw) location.href = "/main?keyword=" + encodeURIComponent(kw);
 	});
 	$("#searchInput").keydown(function(e){ if(e.keyCode==13) $("#searchBtn").click(); });
+
+	// ===== 评论 =====
+	function loadReviews(){
+		console.log("loadReviews: movieId=" + movieId);
+		$.get("/getcomment", {movieId: movieId}, function(roots){
+			console.log("评论数据:", roots);
+			$("#reviewList").html(renderTree(roots, 0));
+		}).fail(function(xhr){
+			console.log("评论加载失败:", xhr.status, xhr.responseText);
+		});
+	}
+
+	function renderTree(nodes, depth){
+		var html = "";
+		$.each(nodes, function(i, node){
+			html += '<div class="review-item" style="margin-left:'+(depth*24)+'px;">';
+			html += '<div class="review-header"><strong>'+node.userName+'</strong><span class="time">'+node.createdAt+'</span></div>';
+			html += '<div class="review-body">'+node.content+'</div>';
+			html += '<span class="review-reply" onclick="replyTo('+node.id+',\''+node.userName+'\')">回复</span>';
+			if(node.children && node.children.length > 0){
+				html += renderTree(node.children, depth+1);
+			}
+			html += '</div>';
+		});
+		return html;
+	}
+
+	function replyTo(parentId, userName){
+		if(!isLogin){ alert("请先登录"); return; }
+		$("#replyTo").val(parentId);
+		$("#replyName").text(userName);
+		$("#replyHint").show();
+		$("#reviewContent").focus();
+	}
+
+	function postReview(){
+		if(!isLogin){ alert("请先登录"); return; }
+		var content = $("#reviewContent").val().trim();
+		if(!content){ return; }
+		var parentId = parseInt($("#replyTo").val()) || 0;
+
+		$.post("/addcomment", {
+			movieId: movieId,
+			parentId: parentId,
+			content: content
+		}, function(res){
+			$("#reviewContent").val("");
+			$("#replyTo").val(0);
+			$("#replyHint").hide();
+			loadReviews();
+		});
+	}
 </script>
 </body>
 </html>

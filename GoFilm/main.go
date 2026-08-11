@@ -2,7 +2,11 @@ package main
 
 import (
 	"GoFilm/controller"
+	"context"
+	"log"
 	"net/http"
+	"sync"
+	"time"
 )
 
 // TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
@@ -77,6 +81,9 @@ func main() {
 	//场次更新
 	http.HandleFunc("/updateshowtime", controller.UpdateShowTimeHandler)
 
+	//场次删除
+	http.HandleFunc("/deleteshowtime", controller.DeleteShowTimeHandler)
+
 	//用户进入电影的详情页面
 	http.HandleFunc("/movie/detail", controller.MovieDetailHandler)
 
@@ -101,9 +108,53 @@ func main() {
 
 	//用户的订单
 	http.HandleFunc("/getMyOrders", controller.UserOrdersHandler)
+	//退票
+	http.HandleFunc("/ticket/refund", controller.RefundTicketHandler)
 
 	//关键词搜索电影（待实现）
 	// http.HandleFunc("/Search", controller.SearchHandler)
 
+	//添加评论
+	http.HandleFunc("/addcomment", controller.AddComment)
+
+	//获取某电影的所有评论
+	http.HandleFunc("/getcomment", controller.GetCommentTree)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	go StartShowtimeChecker(ctx)
+
 	http.ListenAndServe(":8080", nil)
+}
+func StartShowtimeChecker(ctx context.Context) {
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	// ★ 防重叠：上一轮没跑完就跳过
+	var mu sync.Mutex
+
+	// 启动时立即执行一次
+	go func() {
+		if mu.TryLock() {
+			controller.CheckStatusShowtime(ctx)
+			mu.Unlock()
+		}
+	}()
+
+	for {
+		select {
+		case <-ticker.C:
+			if !mu.TryLock() {
+				log.Println("上一轮场次检查未完成，跳过本轮")
+				continue
+			}
+			go func() {
+				defer mu.Unlock()
+				controller.CheckStatusShowtime(ctx)
+			}()
+		case <-ctx.Done():
+			return
+		}
+	}
 }

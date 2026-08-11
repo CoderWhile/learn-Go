@@ -10,4 +10,5 @@ type Movie struct {
 	Rating    float64 // 评分
 	Status    string  //状态  未上映，上映中，下架
 	Duration  int     // 时长(分钟)
+	Count     int     //票房数量
 }

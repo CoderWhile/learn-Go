@@ -16,11 +16,11 @@
 			if(e.keyCode == 13) $("#searchBtn").click();
 		});
 
-		// 分类点击
-		$(".cat-item").click(function(){
-			var catId = $(this).attr("data-cat");
-			location.href = "/main?category=" + catId;
-		});
+		// // 分类点击
+		// $(".cat-item").click(function(){
+		// 	var catId = $(this).attr("data-cat");
+		// 	location.href = "/main?category=" + catId;
+		// });
 
 		// 标签/地区筛选
 		$("#tagSelect, #regionSelect").change(function(){
@@ -49,9 +49,9 @@
 </script>
 </head>
 <body>
-<!--<script>-->
-<!--	var isLogin = {{if .IsLogin}}true{{else}}false{{end}};-->
-<!--</script>-->
+<script>
+	var isLogin = {{if .IsLogin}}true{{else}}false{{end}};
+</script>
 
 	<!-- ========== 顶部栏 ========== -->
 	<div id="topbar">
@@ -72,9 +72,9 @@
 					<a href="/pages/user/login.html" class="top-btn">登录</a>
 					<a href="/pages/user/regist.html" class="top-btn">注册</a>
 				{{end}}
-<!--				{{if eq .Identity "admin"}}-->
-<!--					<a href="/pages/admin/manager.html" class="top-btn">管理</a>-->
-<!--				{{end}}-->
+				{{if eq .Identity "admin"}}
+					<a href="/pages/admin/manager.html" class="top-btn">管理</a>
+				{{end}}
 			</div>
 		</div>
 	</div>
@@ -86,7 +86,7 @@
 		<div id="subnav">
 			<div class="subnav-inner">
 				<a class="nav-item active" href="/main">首页</a>
-				<a class="nav-item" href="/main?category=1">电影分类</a>
+<!--				<a class="nav-item" href="/main?category=1">电影分类</a>-->
 				<a class="nav-item" href="/cinema/list">查看影院</a>
 				{{if .IsLogin}}
 					<a class="nav-item" href="/getMyOrders">我的</a>
@@ -104,8 +104,8 @@
 					<span class="filter-label">标签:</span>
 					<select id="tagSelect">
 						<option value="">全部</option>
-						{{range .Tags}}
-						<option value="{{.ID}}" {{if eq .ID $.TagID}}selected{{end}}>{{.Name}}</option>
+						{{range .Categories}}
+						<option value="{{.ID}}" {{if eq .ID $.CategoryID}}selected{{end}}>{{.Name}}</option>
 						{{end}}
 					</select>
 					<span class="filter-label">地区:</span>
@@ -118,14 +118,14 @@
 						<option value="korea"  {{if eq .Region "korea"}}selected{{end}}>韩国</option>
 					</select>
 				</div>
-				<div class="filter-right">
-					<ul class="cat-list">
-						<li class="cat-item {{if not .CategoryID}}active{{end}}" data-cat="0">全部</li>
-						{{range .Categories}}
-						<li class="cat-item {{if eq .ID $.CategoryID}}active{{end}}" data-cat="{{.ID}}">{{.Name}}</li>
-						{{end}}
-					</ul>
-				</div>
+<!--				<div class="filter-right">-->
+<!--					<ul class="cat-list">-->
+<!--						<li class="cat-item {{if not .CategoryID}}active{{end}}" data-cat="0">全部</li>-->
+<!--						{{range .Categories}}-->
+<!--						<li class="cat-item {{if eq .ID $.CategoryID}}active{{end}}" data-cat="{{.ID}}">{{.Name}}</li>-->
+<!--						{{end}}-->
+<!--					</ul>-->
+<!--				</div>-->
 			</div>
 		</div>
 
@@ -142,7 +142,7 @@
 						</div>
 					</div>
 					<div class="movie-meta">
-<!--						<span class="meta-rating">★ {{.Rating}}</span>-->
+						<span class="meta-rating">★ {{.Rating}}</span>
 						<span class="meta-genre">{{.Genre}}</span>
 					</div>
 				</div>

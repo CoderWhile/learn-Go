@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>网上影院 - 我的订单</title>
 <link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
 <style>
 	.order-wrap { width: 960px; margin: 20px auto; }
 	.order-wrap h2 { font-size: 22px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #b8860b; }
@@ -20,6 +21,8 @@
 	.status-passed { background: #eee; color: #999; }
 	.status-upcoming { background: #e8f5e9; color: #2e7d32; }
 	.order-price { flex-shrink: 0; font-size: 18px; font-weight: bold; color: #e74c3c; text-align: right; min-width: 80px; }
+	.btn-refund { padding: 4px 12px; border: 1px solid #e74c3c; color: #e74c3c; background: #fff; border-radius: 4px; font-size: 12px; cursor: pointer; margin-left: 8px; }
+	.btn-refund:hover { background: #e74c3c; color: #fff; }
 
 	.order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 	.order-count { color: #999; font-size: 14px; }
@@ -29,6 +32,18 @@
 	.empty-tip p { font-size: 16px; color: #999; }
 	.empty-tip a { color: #b8860b; text-decoration: none; font-weight: bold; }
 </style>
+<script>
+	$(function(){
+		$(".btn-refund").click(function(){
+			var tid = $(this).attr("data-tid");
+			if(!confirm("确定要退掉这张票吗？")) return;
+			$.post("/ticket/refund", {ticketId: tid}, function(res){
+				if(res === "ok"){ alert("退票成功"); location.reload(); }
+				else { alert("退票失败：" + res); }
+			});
+		});
+	});
+</script>
 </head>
 <body>
 
@@ -60,10 +75,11 @@
 						<span>{{.CinemaName}}</span>
 						<span>{{.HallName}}</span>
 						<span>{{.SeatLabel}} 座</span>
+						<span>{{.ShowTime}}</span>
 						<span class="order-status {{if .IsPassed}}status-passed{{else}}status-upcoming{{end}}">{{.Status}}</span>
 					</div>
 				</div>
-				<div class="order-price">¥{{.Price}}</div>
+				<div class="order-price">¥{{.Price}}{{if not .IsPassed}}<br><button class="btn-refund" data-tid="{{.TicketID}}">退 票</button>{{end}}</div>
 			</div>
 			{{end}}
 		{{else}}

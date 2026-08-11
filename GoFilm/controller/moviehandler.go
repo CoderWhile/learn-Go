@@ -10,42 +10,83 @@ import (
 )
 
 func FirstPage(w http.ResponseWriter, r *http.Request) {
-	//调用IsLogin函数
-	//获得搜索关键词
 	searchword := r.FormValue("keyword")
-
-	flag, session := dao.IsLogin(r)
-	page := &model.Page{}
-	var movies []*model.Movie
-	if searchword == "" {
-		movies, _ = dao.GetMovies()
-	} else {
-		//按照关键词获得电影
-	
+	region := r.FormValue("region")
+	cid := r.FormValue("tag")
+	icid, _ := strconv.Atoi(cid)
+	//fmt.Println("icid:", icid)
+	category := &model.Category{
+		ID:   icid,
+		Name: "",
 	}
+	category, _ = dao.GetCategoryById(icid)
+	fmt.Println(region, "cid:", cid)
+	fmt.Printf("%+v\n", category)
+	flag, session := dao.IsLogin(r)
+	page := &model.Page{CategoryID: icid, Keyword: searchword, Region: region}
+
+	// 加载分类和标签（始终显示在页面上）
+	categories, _ := dao.GetAllCategories()
+	//tags, _ := dao.GetAllTags()
+	page.Categories = categories
+	//page.Tags = tags
+
+	// 按条件查询电影
+	var movies []*model.Movie
+	if searchword != "" {
+		movies, _ = dao.GetMoviesByWord(searchword)
+	} else if region != "" || icid != 0 {
+		movies, _ = dao.GetMoviesByReigonAndTag(region, category.Name)
+	} else {
+		movies, _ = dao.GetMovies()
+	}
+
 	if flag {
-		//已经登录了,设置page中的IsLogin和Username
 		page.IsLogin = true
 		page.Username = session.UserName
-		page.Movies = movies
-		page.TotalMovieCount = len(movies)
 	}
 	page.Movies = movies
+	page.TotalMovieCount = len(movies)
+
 	t := template.Must(template.ParseFiles("views/index.html"))
 	t.Execute(w, page)
 }
 
 func FirstPageManager(w http.ResponseWriter, r *http.Request) {
+	searchword := r.FormValue("keyword")
+	region := r.FormValue("region")
+	cid := r.FormValue("tag")
+	icid, _ := strconv.Atoi(cid)
+	//fmt.Println("icid:", icid)
+	category := &model.Category{
+		ID:   icid,
+		Name: "",
+	}
+	category, _ = dao.GetCategoryById(icid)
 	flag, session := dao.IsLogin(r)
-	page := &model.Page{}
-	movies, _ := dao.GetMovies()
+	page := &model.Page{CategoryID: icid, Keyword: searchword, Region: region}
+
+	// 加载分类和标签（始终显示在页面上）
+	categories, _ := dao.GetAllCategories()
+	//tags, _ := dao.GetAllTags()
+	page.Categories = categories
+	//page.Tags = tags
+
+	// 按条件查询电影
+	var movies []*model.Movie
+	if searchword != "" {
+		movies, _ = dao.GetMoviesByWord(searchword)
+	} else if region != "" || icid != 0 {
+		movies, _ = dao.GetMoviesByReigonAndTag(region, category.Name)
+	} else {
+		movies, _ = dao.GetMovies()
+	}
 	if flag {
 		page.IsLogin = true
 		page.Username = session.UserName
-		page.Movies = movies
-		page.TotalMovieCount = len(movies)
 	}
 	page.Movies = movies
+	page.TotalMovieCount = len(movies)
 	t := template.Must(template.ParseFiles("views/pages/manager/manager.html"))
 	t.Execute(w, page)
 }

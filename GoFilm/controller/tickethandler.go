@@ -145,6 +145,7 @@ func BuyTicketHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		seatIDs = append(seatIDs, seat.ID)
 	}
+	//movie, _ := dao.GetMovieById(st.MovieID)
 
 	//开启事务
 	tx, err := utils.Db.Begin()
@@ -155,17 +156,19 @@ func BuyTicketHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, seatID := range seatIDs {
 		// 先尝试把已有的锁直接升级为 paid
+
 		result, _ := tx.Exec(
 			"UPDATE tickets SET status='paid', lock_time=NULL WHERE showtime_id=? AND seat_id=? AND user_id=? AND status='locked'",
 			showtimeID, seatID, sess.UserID,
 		)
 		affected, _ := result.RowsAffected()
 		if affected > 0 {
+
 			continue
 		}
 
 		// 没锁就直接插入（UNIQUE 约束防并发）
-		_, err = tx.Exec(
+		result, err = tx.Exec(
 			"INSERT INTO tickets (price, showtime_id, user_id, seat_id, status, lock_time, created_at) VALUES (?, ?, ?, ?, 'paid', NULL, NOW())",
 			st.Price, showtimeID, sess.UserID, seatID,
 		)
@@ -178,8 +181,12 @@ func BuyTicketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-	}
+		affected, _ = result.RowsAffected()
 
+	}
+	//购票成功增加电影票房数量
+	_ = st.MovieID
+	//
 	tx.Commit()
 	w.Write([]byte("ok"))
 }

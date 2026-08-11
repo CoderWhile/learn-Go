@@ -136,8 +136,9 @@
 			var name = $(this).closest("tr").find(".hall-name").text();
 			if(confirm("确定删除影厅《"+name+"》吗？")){
 				$.post("/deletehall", {hallId: hid}, function(res){
-
-					location.href = "/cinemainfo?cinemaId=" + cid;
+					if(res == "ok"){ alert("删除成功！"); location.reload(); }
+					else { alert("删除失败："+res); }
+					// location.href = "/cinemainfo?cinemaId=" + cid;
 
 				});
 			}
@@ -150,9 +151,9 @@
 			// 把文本转为输入框/下拉
 			tr.find("td").each(function(){
 				var txt = $(this).text().trim();
-				if($(this).hasClass("show-movie")){
-					// 电影：暂时用文本输入（也可以改成下拉，需要 movies 数据）
-					$(this).html('<input name="movieId" value="'+$(this).attr("data-mid")+'" style="width:80px;"/>');
+				// 电影列不允许编辑，跳过
+				if($(this).hasClass("show-movie") || $(this).hasClass("show-moviename")){
+					// 保持原内容不动
 				} else if($(this).hasClass("show-hall")){
 					// 影厅：改为下拉，选中当前影厅
 					var curHid = $(this).attr("data-hid");
@@ -188,14 +189,15 @@
 			var sid = $(this).attr("data-sid");
 			var data = {
 				showId: sid,
-				movieId: tr.find("input[name='movieId']").val(),
 				hallId:  tr.find("select[name='hallId']").val(),
 				showTime: tr.find("input[name='showTime']").val(),
 				status:  tr.find("select[name='status']").val(),
 				price:   tr.find("input[name='price']").val()
 			};
 			$.post("/updateshowtime", data, function(res){
-				alert("保存成功！"); location.reload();
+				if(res == "ok"){ alert("保存成功！"); location.reload(); }
+				else { alert("保存失败："+res); }
+
 
 			});
 		});
@@ -208,7 +210,7 @@
 		$(".show-del").click(function(){
 			var sid = $(this).attr("data-sid");
 			if(confirm("确定删除该排片吗？")){
-				$.post("/admin/show/delete", {showId: sid}, function(res){
+				$.post("deleteshowtime", {showId: sid}, function(res){
 					if(res == "ok"){ alert("删除成功！"); location.reload(); }
 					else { alert("删除失败："+res); }
 				});
@@ -304,6 +306,7 @@
 	<table>
 		<tr>
 			<th>电影</th>
+			<th>电影名字</th>
 			<th>影厅</th>
 			<th>放映时间</th>
 			<th>状态</th>
@@ -315,6 +318,7 @@
 		{{range .Showtimes}}
 		<tr>
 			<td class="show-movie" data-mid="{{.MovieID}}">{{.MovieID}}</td>
+			<td class="show-moviename" data-mid="{{.MovieName}}">{{.MovieName}}</td>
 			<td class="show-hall" data-hid="{{.HallID}}">{{.Hall.Name}}</td>
 			<td class="show-time" data-val="{{.StartTime}}">{{.StartTime}}</td>
 			<td class="show-status" data-sta="{{.Status}}">{{.Status}}</td>

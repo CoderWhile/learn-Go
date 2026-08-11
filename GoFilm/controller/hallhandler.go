@@ -204,6 +204,19 @@ func UpdateHallHandler(w http.ResponseWriter, r *http.Request) {
 // 删除影厅
 func DeleteHallHandler(w http.ResponseWriter, r *http.Request) {
 	hallID := r.PostFormValue("hallId")
+	//先把座位的票删了
+	showtimes, _ := dao.GetShowtimesByHallId(hallID)
+	for _, t := range showtimes {
+		if t.Status == "预售" {
+			w.Write([]byte("仍有场次在放映中"))
+			return
+		}
+	}
+
+	seats, _ := dao.GetSeatsByHallId(hallID)
+	for _, seat := range seats {
+		dao.DeleteTicketBySeatId(int(seat.ID))
+	}
 	//先删除座位
 	dao.DeleteSeatsByHallId(hallID)
 	//在删除影厅
@@ -211,4 +224,5 @@ func DeleteHallHandler(w http.ResponseWriter, r *http.Request) {
 	//删除该影厅的座位
 	dao.DeleteSeatsByHallId(hallID)
 	//
+	w.Write([]byte("ok"))
 }

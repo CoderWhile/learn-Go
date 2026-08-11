@@ -10,23 +10,29 @@
 		// 搜索
 		$("#searchBtn").click(function(){
 			var keyword = $("#searchInput").val().trim();
-			location.href = "/pages/admin/manager.html?keyword=" + encodeURIComponent(keyword);
+			location.href = "/manager?keyword=" + encodeURIComponent(keyword);
 		});
 		$("#searchInput").keydown(function(e){
 			if(e.keyCode == 13) $("#searchBtn").click();
 		});
 
-		// 分类点击
-		$(".cat-item").click(function(){
-			var catId = $(this).attr("data-cat");
-			location.href = "/pages/admin/manager.html?category=" + catId;
-		});
+		// // 分类点击
+		// $(".cat-item").click(function(){
+		// 	var catId = $(this).attr("data-cat");
+		// 	location.href = "/pages/admin/manager.html?category=" + catId;
+		// });
 
-		// 地区筛选
-		$("#regionSelect").change(function(){
+		// 标签/地区筛选
+		$("#tagSelect, #regionSelect").change(function(){
+			var tag = $("#tagSelect").val();
 			var region = $("#regionSelect").val();
-			location.href = "/pages/admin/manager.html?region=" + region;
+			location.href = "/manager?tag=" + tag + "&region=" + region;
 		});
+		// // 地区筛选
+		// $("#regionSelect").change(function(){
+		// 	var region = $("#regionSelect").val();
+		// 	location.href = "/pages/admin/manager.html?region=" + region;
+		// });
 
 		// 删除电影
 		$(".btn-delete").click(function(e){
@@ -64,9 +70,9 @@
 </script>
 </head>
 <body>
-<!--<script>-->
-<!--	// var isLogin = {{if .IsLogin}}true{{else}}false{{end}};-->
-<!--</script>-->
+<script>
+	// var isLogin = {{if .IsLogin}}true{{else}}false{{end}};
+</script>
 
 	<!-- ========== 顶部栏 ========== -->
 	<div id="topbar">
@@ -112,28 +118,28 @@
 					<span class="filter-label">标签:</span>
 					<select id="tagSelect">
 						<option value="">全部</option>
-<!--						{{range .Tags}}-->
-<!--						<option value="{{.ID}}" {{if eq .ID $.TagID}}selected{{end}}>{{.Name}}</option>-->
-<!--						{{end}}-->
+						{{range .Categories}}
+						<option value="{{.ID}}" {{if eq .ID $.CategoryID}}selected{{end}}>{{.Name}}</option>
+						{{end}}
 					</select>
 					<span class="filter-label">地区:</span>
 					<select id="regionSelect">
 						<option value="">全部</option>
-<!--						<option value="china"  {{if eq .Region "china"}}selected{{end}}>中国</option>-->
-<!--						<option value="europe" {{if eq .Region "europe"}}selected{{end}}>欧洲</option>-->
-<!--						<option value="america" {{if eq .Region "america"}}selected{{end}}>美国</option>-->
-<!--						<option value="japan"  {{if eq .Region "japan"}}selected{{end}}>日本</option>-->
-<!--						<option value="korea"  {{if eq .Region "korea"}}selected{{end}}>韩国</option>-->
+						<option value="china"  {{if eq .Region "china"}}selected{{end}}>中国</option>
+						<option value="europe" {{if eq .Region "europe"}}selected{{end}}>欧洲</option>
+						<option value="america" {{if eq .Region "america"}}selected{{end}}>美国</option>
+						<option value="japan"  {{if eq .Region "japan"}}selected{{end}}>日本</option>
+						<option value="korea"  {{if eq .Region "korea"}}selected{{end}}>韩国</option>
 					</select>
 				</div>
-				<div class="filter-right">
-					<ul class="cat-list">
-						<li class="cat-item {{if not .CategoryID}}active{{end}}" data-cat="0">全部</li>
-<!--						{{range $i, $cat := .Categories}}-->
-						<li class="cat-item {{if eq $i $.CategoryID}}active{{end}}" data-cat="{{$i}}">{{$cat}}</li>
-<!--						{{end}}-->
-					</ul>
-				</div>
+<!--				<div class="filter-right">-->
+<!--					<ul class="cat-list">-->
+<!--						<li class="cat-item {{if not .CategoryID}}active{{end}}" data-cat="0">全部</li>-->
+<!--&lt;!&ndash;						{{range $i, $cat := .Categories}}&ndash;&gt;-->
+<!--						<li class="cat-item {{if eq $i $.CategoryID}}active{{end}}" data-cat="{{$i}}">{{$cat}}</li>-->
+<!--&lt;!&ndash;						{{end}}&ndash;&gt;-->
+<!--					</ul>-->
+<!--				</div>-->
 			</div>
 		</div>
 

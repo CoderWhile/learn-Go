@@ -4,11 +4,108 @@ import (
 	"GoFilm/model"
 	"GoFilm/utils"
 	"fmt"
+	"strings"
 )
+
+// 按照关键词获取电影
+func GetMoviesByWord(word string) ([]*model.Movie, error) {
+	//处理用户输入
+
+	kw := strings.NewReplacer("%", "\\%", "_", "\\_").Replace(strings.TrimSpace(word))
+	sql := `select id,title,genre,area,intro,imagePath,rating,duration,status
+			from movies
+			where title like ?
+			order by
+			    case
+			    	when title=? then 0
+			    	when title like concat(?,'%') then 1
+			    	else 2
+				end,
+				rating desc
+			LIMIT 20`
+	likePattern := `%` + kw + `%`
+	rows, err := utils.Db.Query(sql, likePattern, word, word)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	movies := []*model.Movie{}
+	for rows.Next() {
+		movie := &model.Movie{}
+		err := rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Duration, &movie.Status)
+		if err != nil {
+			return nil, err
+		}
+		movies = append(movies, movie)
+	}
+	return movies, nil
+}
+
+// //按照标签和地区获取电影
+func GetMoviesByReigonAndTag(reigon string, tag string) ([]*model.Movie, error) {
+	if reigon != "" && tag != "" {
+		fmt.Println("分类和地区")
+		sql := `select id,title,genre,area,intro,imagePath,rating,duration,status from movies where genre like concat(?,'%') and area=?`
+		rows, err := utils.Db.Query(sql, tag, reigon)
+		if err != nil {
+			return nil, err
+		}
+		var movies []*model.Movie
+		for rows.Next() {
+			var movie model.Movie
+			rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Duration, &movie.Status)
+			movies = append(movies, &movie)
+		}
+		return movies, nil
+	} else if reigon == "" && tag != "" {
+		fmt.Println("分类 tag:", tag)
+		sql := `select id,title,genre,area,intro,imagePath,rating,duration,status from movies where genre like concat(?,'%')`
+		rows, err := utils.Db.Query(sql, tag)
+		if err != nil {
+			return nil, err
+		}
+		var movies []*model.Movie
+		for rows.Next() {
+			var movie model.Movie
+			rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Duration, &movie.Status)
+			movies = append(movies, &movie)
+		}
+		return movies, nil
+	} else if tag == "" && reigon != "" {
+		fmt.Println("单独查地区")
+		sql := `select id,title,genre,area,intro,imagePath,rating,duration,status from movies where area=?`
+		rows, err := utils.Db.Query(sql, reigon)
+		if err != nil {
+			return nil, err
+		}
+		var movies []*model.Movie
+		for rows.Next() {
+			var movie model.Movie
+			rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Duration, &movie.Status)
+			movies = append(movies, &movie)
+		}
+		return movies, nil
+	} else {
+		fmt.Println("all")
+		sql := `select id,title,genre,area,intor,imagePath,rating,duration,status from movies`
+		rows, err := utils.Db.Query(sql)
+		if err != nil {
+			return nil, err
+		}
+		var movies []*model.Movie
+		for rows.Next() {
+			var movie model.Movie
+			rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Duration, &movie.Status)
+			movies = append(movies, &movie)
+		}
+		return movies, nil
+	}
+
+}
 
 // 获取所有电影
 func GetMovies() ([]*model.Movie, error) {
-	sqlStr := `select id,title,genre,area,intro,imagePath from movies`
+	sqlStr := `select id,title,genre,area,intro,imagePath,rating from movies`
 	utils.Db.Query(sqlStr)
 	rows, err := utils.Db.Query(sqlStr)
 	if err != nil {
@@ -17,7 +114,7 @@ func GetMovies() ([]*model.Movie, error) {
 	var movies []*model.Movie
 	for rows.Next() {
 		var movie model.Movie
-		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath)
+		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating)
 		movies = append(movies, &movie)
 	}
 	return movies, nil
@@ -76,3 +173,6 @@ func DeleteMovieById(id int) error {
 	}
 	return nil
 }
+
+// 根据电影Id增加电影票房数量
+func AddMovieCountByID(count int) error { return nil }
