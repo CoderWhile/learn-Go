@@ -60,7 +60,7 @@ func AddShowTimeHandler(w http.ResponseWriter, r *http.Request) {
 			ed = emovie.Duration
 		}
 		esEnd := esStart.Add(time.Duration(ed) * time.Minute)
-		// 时间重叠判断: A.start < B.end && B.start < A.end
+		// 时间重叠判断:
 		if st.Before(esEnd) && esStart.Before(newEnd) {
 			w.Write([]byte("该影厅在 " + es.StartTime + " 已有排片（电影：" + emovie.Title + "），时间冲突"))
 			return
@@ -76,10 +76,7 @@ func AddShowTimeHandler(w http.ResponseWriter, r *http.Request) {
 		Price:     iprice,
 	}
 	dao.AddShowtime(showtime)
-
-	t := template.Must(template.ParseFiles("views/pages/showtime/show_add_success.html"))
-	t.Execute(w, showtime)
-
+	w.Write([]byte("ok"))
 }
 
 // 场次更新
@@ -98,7 +95,7 @@ func UpdateShowTimeHandler(w http.ResponseWriter, r *http.Request) {
 	// 检查同一个影厅的时间冲突
 	movie, _ := dao.GetMovieById(int(imovieID))
 	layout := "2006-01-02T15:04"
-	st, _ := time.Parse(layout, StartTime) // ← 用 StartTime，不是 startTime
+	st, _ := time.Parse(layout, StartTime) //
 	duration := movie.Duration
 	if duration <= 0 {
 		duration = 120
@@ -106,7 +103,7 @@ func UpdateShowTimeHandler(w http.ResponseWriter, r *http.Request) {
 	newEnd := st.Add(time.Duration(duration) * time.Minute)
 	existings, _ := dao.GetShowtimesByHallId(hallID)
 	for _, es := range existings {
-		if es.ID == int(sid) || es.Status == "已放映" { // ← 跳过自己 + 已放映
+		if es.ID == int(sid) || es.Status == "已放映" {
 			continue
 		}
 		esStart, err := time.Parse(layout, es.StartTime)
@@ -163,8 +160,9 @@ func DeleteShowTimeHandler(w http.ResponseWriter, r *http.Request) {
 
 // 场次过期检查：每分钟将已过时间的"预售"场次改为"已放映"
 func CheckStatusShowtime(ctx context.Context) {
+	loc, _ := time.LoadLocation("Asia/Shanghai")
 	showtimes, _ := dao.GetShowtime()
-	now := time.Now()
+	now := time.Now().In(loc)
 	layout := "2006-01-02T15:04"
 
 	for _, s := range showtimes {
@@ -172,11 +170,13 @@ func CheckStatusShowtime(ctx context.Context) {
 		if s.Status == "已放映" {
 			continue
 		}
-		st, err := time.Parse(layout, s.StartTime)
+		st, err := time.ParseInLocation(layout, s.StartTime, loc)
 		if err != nil {
 			continue
 		}
+
 		if st.Before(now) {
+
 			s.Status = "已放映"
 			fmt.Println("正在更新")
 			dao.UpdateShowtime(s) // 直接用查出来的 s 更新，只改 status

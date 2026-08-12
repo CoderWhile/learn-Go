@@ -52,7 +52,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	password := r.PostFormValue("password")
 	//一并处理用户和管理员登录
 	//identity := r.PostFormValue("identity")
-	user, _ := dao.CheckUserNamePasswordIdentity(username, password)
+	mpassword := dao.MD5Hash(password)
+	user, _ := dao.CheckUserNamePasswordIdentity(username, mpassword)
 
 	if user.ID > 0 {
 		//生成UUID作为Session的id
@@ -101,7 +102,7 @@ func Regist(w http.ResponseWriter, r *http.Request) {
 	//获取用户名和密码
 	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
-
+	mpassword := dao.MD5Hash(password)
 	user, _ := dao.CheckUserName(username)
 	fmt.Println(user)
 	if user.ID > 0 {
@@ -112,7 +113,7 @@ func Regist(w http.ResponseWriter, r *http.Request) {
 	} else {
 		//将用户保存到数据中
 		identity := "0"
-		dao.SaveUser(username, password, identity)
+		dao.SaveUser(username, mpassword, identity)
 
 		t := template.Must(template.ParseFiles("views/pages/user/regist_success.html"))
 		t.Execute(w, "")

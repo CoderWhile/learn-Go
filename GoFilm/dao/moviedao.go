@@ -122,7 +122,8 @@ func GetMovies() ([]*model.Movie, error) {
 
 // 获取前十条票房最高的电影
 func GetMovieByBoxoffice() ([]*model.Movie, error) {
-	sql := `select id,title,genre,area,intro,imagePath,rating,status,duration,boxoffice from movies order by boxoffice desc limit 0,10`
+	sql := `select id,title,genre,area,intro,imagePath,rating,status,duration,boxoffice,rating_count
+	        from movies order by boxoffice desc limit 10`
 	rows, err := utils.Db.Query(sql)
 	if err != nil {
 		return nil, err
@@ -130,7 +131,7 @@ func GetMovieByBoxoffice() ([]*model.Movie, error) {
 	var movies []*model.Movie
 	for rows.Next() {
 		movie := &model.Movie{}
-		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration, &movie.BoxOffice)
+		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration, &movie.BoxOffice, &movie.RatingCount)
 		movies = append(movies, movie)
 	}
 	return movies, nil
@@ -138,8 +139,8 @@ func GetMovieByBoxoffice() ([]*model.Movie, error) {
 
 // 向数据库中添加一部电影
 func AddMovie(movie *model.Movie) error {
-	sqlStr := "insert into movies(title,genre,area,intro,imagePath,rating,status,duration) values(?,?,?,?,?,?,?,?)"
-	_, err := utils.Db.Exec(sqlStr, movie.Title, movie.Genre, movie.Area, movie.Intro, movie.ImagePath, movie.Rating, movie.Status, movie.Duration)
+	sqlStr := "insert into movies(title,genre,area,intro,imagePath,rating,status,duration,boxoffice) values(?,?,?,?,?,?,?,?,?)"
+	_, err := utils.Db.Exec(sqlStr, movie.Title, movie.Genre, movie.Area, movie.Intro, movie.ImagePath, movie.Rating, movie.Status, movie.Duration, movie.BoxOffice)
 
 	if err != nil {
 		fmt.Println(err)
@@ -171,11 +172,11 @@ func GetMovieCount() int {
 
 // 根据电影id查询电影
 func GetMovieById(id int) (*model.Movie, error) {
-	sqlStr := `select title,genre,area,intro,imagePath,rating,status,duration,boxoffice from movies where id=?`
+	sqlStr := `select title,genre,area,intro,imagePath,rating,status,duration,boxoffice,rating_count from movies where id=?`
 	movie := &model.Movie{}
 	row := utils.Db.QueryRow(sqlStr, id)
 	movie.ID = id
-	row.Scan(&movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration, &movie.BoxOffice)
+	row.Scan(&movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration, &movie.BoxOffice, &movie.RatingCount)
 
 	return movie, nil
 }

@@ -111,6 +111,20 @@
 		];
 
 		// ===== 影院信息更新 =====
+		$("#cinemaSaveBtn").click(function(){
+			var btn = $(this);
+			btn.prop("disabled", true).text("保存中...");
+			$.post("/cinemaupdate", $("#cinemaForm").serialize(), function(res){
+				if(res === "ok"){
+					alert("影院信息已更新");
+					location.reload();
+				} else {
+					alert(res);
+					btn.prop("disabled", false).text("保存修改");
+				}
+			});
+		});
+
 		$("#cinemaDeleteBtn").click(function(){
 			var cid = $("input[name='cinemaId']").val();
 			var name = $("input[name='name']").val();
@@ -242,7 +256,7 @@
 	<!-- ========== 一、影院信息 ========== -->
 	<h2>影院信息</h2>
 	{{if .Cinema}}
-	<form action="/admin/cinema/update" method="POST">
+	<form id="cinemaForm">
 		<input type="hidden" name="cinemaId" value="{{.Cinema.ID}}" />
 		<table>
 			<tr>
@@ -261,7 +275,7 @@
 				<td><input name="intro" type="text" value="{{.Cinema.Intro}}" style="width:95%;" /></td>
 				<td class="btn-row">
 					<button type="button" id="cinemaDeleteBtn" class="btn-delete">删除影院</button>
-					<button type="submit" class="btn-submit">保存修改</button>
+					<button type="button" id="cinemaSaveBtn" class="btn-submit">保存修改</button>
 				</td>
 			</tr>
 		</table>

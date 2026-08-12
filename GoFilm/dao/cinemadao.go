@@ -65,3 +65,13 @@ func DeleteCinemaById(id string) error {
 	}
 	return nil
 }
+
+// 更新影院信息
+func UpdateCinema(cinema *model.Cinema) error {
+	sqlStr := `update cinemas set name=?,address=?,intro=? where id=?`
+	_, err := utils.Db.Exec(sqlStr, cinema.Name, cinema.Address, cinema.Intro, cinema.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

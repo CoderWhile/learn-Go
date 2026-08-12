@@ -69,7 +69,20 @@
 		loadReviews();
 
 		// 每 10 秒自动拉取新评论
-		setInterval(loadReviews, 1000);
+		setInterval(loadReviews, 10000);
+
+
+		// 评分下拉
+		$("#ratingSelect").change(function(){
+			var score = $(this).val();
+			if(score == "0") return;
+			if(!isLogin){ alert("请先登录"); $(this).val("{{.MyScore}}"); return; }
+			$.post("/api/rating/submit", {movieId: movieId, score: score}, function(res){
+				if(res.error){ alert(res.error); return; }
+				$("#ratingMsg").text("评分成功").css("color","green").fadeOut(2000);
+				$(".rating-count").text(res.count>0 ? "（"+res.count+"人评分）" : "");
+			});
+		});
 
 		$("#postReviewBtn").click(postReview);
 		$("#cancelReply").click(function(){
@@ -111,8 +124,30 @@
 					<span class="tag">{{.Movie.Status}}</span>
 				</div>
 				{{if .Movie.Rating}}
-				<div class="detail-meta">⭐ {{.Movie.Rating}} 分</div>
+				<div class="detail-meta">
+					⭐ {{.Movie.Rating}} 分
+					{{if .Movie.RatingCount}}
+					<span class="rating-count">（{{.Movie.RatingCount}}人评分）</span>
+					{{end}}
+				</div>
 				{{end}}
+				<div class="my-rating">
+					我的评分：
+					<select id="ratingSelect" style="width:60px;">
+						<option value="0">--</option>
+						<option value="1" {{if eq .MyScore 1}}selected{{end}}>1</option>
+						<option value="2" {{if eq .MyScore 2}}selected{{end}}>2</option>
+						<option value="3" {{if eq .MyScore 3}}selected{{end}}>3</option>
+						<option value="4" {{if eq .MyScore 4}}selected{{end}}>4</option>
+						<option value="5" {{if eq .MyScore 5}}selected{{end}}>5</option>
+						<option value="6" {{if eq .MyScore 6}}selected{{end}}>6</option>
+						<option value="7" {{if eq .MyScore 7}}selected{{end}}>7</option>
+						<option value="8" {{if eq .MyScore 8}}selected{{end}}>8</option>
+						<option value="9" {{if eq .MyScore 9}}selected{{end}}>9</option>
+						<option value="10" {{if eq .MyScore 10}}selected{{end}}>10</option>
+					</select>
+					<span id="ratingMsg"></span>
+				</div>
 				<div class="detail-intro">{{.Movie.Intro}}</div>
 			</div>
 		</div>

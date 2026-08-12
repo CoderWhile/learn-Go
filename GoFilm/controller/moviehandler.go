@@ -119,7 +119,9 @@ func AddMovieHandler(w http.ResponseWriter, r *http.Request) {
 		Rating:    irating,
 		Status:    status,
 		Duration:  int(iduration),
+		BoxOffice: 0,
 	}
+	fmt.Printf("%+v\n", movie)
 	dao.AddMovie(movie)
 	t := template.Must(template.ParseFiles("views/pages/movie/movie_add_success.html"))
 	t.Execute(w, movie)
@@ -149,6 +151,19 @@ func MovieUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	duration := r.PostFormValue("duration")
 	irating, _ := strconv.ParseFloat(rating, 64)
 	iduration, _ := strconv.ParseInt(duration, 10, 0)
+	var tmpl *template.Template
+	if status == "下架" {
+		//判断当前电影是否还有预售场次
+		showtimes, _ := dao.GetShowtimesByMovieId(int(imovieid))
+		if showtimes != nil {
+			data := map[string]interface{}{
+				"Error": "仍有放映场次",
+				//"Movie": parseMovieFromForm(r), // 保留用户已填内容
+			}
+			tmpl.ExecuteTemplate(w, "movie_edit.html", data)
+			return
+		}
+	}
 	movie := &model.Movie{
 		ID:        int(imovieid),
 		Title:     title,
@@ -203,9 +218,9 @@ func MovieDetailHandler(w http.ResponseWriter, r *http.Request) {
 		showtimeGroups = append(showtimeGroups, showtimeGroup)
 	}
 	if flag {
-		//已经登录了,设置page中的IsLogin和Username
 		page.IsLogin = true
 		page.Username = session.UserName
+		page.MyScore = dao.GetUserRating(session.UserID, int(imovieID))
 
 	}
 	if movie.Status == "下架" {

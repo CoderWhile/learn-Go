@@ -6,6 +6,7 @@ type MovieDetail struct {
 	Movie          *Movie
 	Isdelist       bool
 	ShowtimeGroups []*ShowtimeGroup
+	MyScore        int
 }
 type ShowtimeGroup struct {
 	CinemaName string

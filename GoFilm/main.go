@@ -3,6 +3,7 @@ package main
 import (
 	"GoFilm/controller"
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"sync"
@@ -38,6 +39,9 @@ func main() {
 
 	//添加影院
 	http.HandleFunc("/addcinema", controller.AddCinemaHandler)
+
+	//更新影院
+	http.HandleFunc("/cinemaupdate", controller.UpdateCinemaHandler)
 
 	//进入查看影院界面
 	http.HandleFunc("/cinemalist", controller.CinemaHandler)
@@ -120,6 +124,9 @@ func main() {
 	//获取某电影的所有评论
 	http.HandleFunc("/getcomment", controller.GetCommentTree)
 
+	//评分
+	http.HandleFunc("/api/rating/submit", controller.SubmitRatingHandler)
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -128,12 +135,12 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 func StartShowtimeChecker(ctx context.Context) {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 
 	// ★ 防重叠：上一轮没跑完就跳过
 	var mu sync.Mutex
-
+	fmt.Println("更新")
 	// 启动时立即执行一次
 	go func() {
 		if mu.TryLock() {

@@ -24,11 +24,14 @@ func UserOrdersHandler(w http.ResponseWriter, r *http.Request) {
 		cinema, _ := dao.GetCinemaById(st.CinemaID)
 		hall, _ := dao.GetHallById(st.HallID)
 		seat, _ := dao.GetSeatById(tk.SeatID)
-		showTime, err := time.Parse("2006-01-02T15:04", st.StartTime)
-		isPassed := err == nil && time.Now().After(showTime)
+		loc, _ := time.LoadLocation("Asia/Shanghai")
+		now := time.Now().In(loc)
 		status := "未放映"
-		if isPassed {
+		isPassed := false
+		showTime, _ := time.ParseInLocation("2006-01-02T15:04", st.StartTime, loc)
+		if !showTime.After(now) {
 			status = "已放映"
+			isPassed = true
 		}
 
 		item := model.OrderItem{

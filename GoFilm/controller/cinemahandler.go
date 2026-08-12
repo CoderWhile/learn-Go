@@ -44,6 +44,24 @@ var funcMap = template.FuncMap{
 	"multiply": multiply,
 }
 
+func UpdateCinemaHandler(w http.ResponseWriter, r *http.Request) {
+	cinemaid := r.PostFormValue("cinemaId")
+	name := r.PostFormValue("name")
+	address := r.PostFormValue("address")
+	intro := r.PostFormValue("intro")
+	cinema := &model.Cinema{
+		ID:      cinemaid,
+		Name:    name,
+		Address: address,
+		Intro:   intro,
+	}
+	if err := dao.UpdateCinema(cinema); err != nil {
+		w.Write([]byte("更新失败：" + err.Error()))
+		return
+	}
+	w.Write([]byte("ok"))
+}
+
 // 影院详细信息展示
 func CinemaInfoHandler(w http.ResponseWriter, r *http.Request) {
 	pagecinemainfo := &model.PageCinemaInfo{}
@@ -100,7 +118,7 @@ func DeleteCinemaHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.Write([]byte("ok"))
 	}
-	
+
 }
 
 // 用户端影院列表

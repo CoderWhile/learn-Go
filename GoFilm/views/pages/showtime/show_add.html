@@ -18,19 +18,33 @@
 	.form-btn button:hover { opacity: 0.85; }
 	.btn-submit { background: linear-gradient(90deg, #8b6914, #b8860b); color: #fff; }
 	.btn-cancel { background: #999; color: #fff; }
+	#msg { text-align: center; margin-top: 12px; font-size: 14px; }
 </style>
 <script>
 	$(function(){
 		$("#submitBtn").click(function(){
 			var movieId = $("#movieSelect").val();
-			if(!movieId){ alert("请选择电影！"); return false; }
+			if(!movieId){ alert("请选择电影！"); return; }
 			var hallId = $("#hallSelect").val();
-			if(!hallId){ alert("请选择影厅！"); return false; }
+			if(!hallId){ alert("请选择影厅！"); return; }
 			var showTime = $("#showTime").val();
-			if(!showTime){ alert("请选择放映时间！"); return false; }
-			if(new Date(showTime) <= new Date()){ alert("放映时间必须在当前时间之后！"); return false; }
+			if(!showTime){ alert("请选择放映时间！"); return; }
+			if(new Date(showTime) <= new Date()){ alert("放映时间必须在当前时间之后！"); return; }
 			var price = $("#price").val().trim();
-			if(!price || parseFloat(price) <= 0){ alert("请输入正确的票价！"); return false; }
+			if(!price || parseFloat(price) <= 0){ alert("请输入正确的票价！"); return; }
+
+			$(this).prop("disabled", true).text("提交中...");
+			$("#msg").text("");
+
+			$.post("/addshowtime", $("#showForm").serialize(), function(res){
+				if(res === "ok"){
+					$("#msg").css("color","green").text("添加成功，跳转中...");
+					setTimeout(function(){ location.href = document.referrer || "/manager"; }, 800);
+				} else {
+					$("#msg").css("color","red").text(res);
+					$("#submitBtn").prop("disabled", false).text("提交");
+				}
+			});
 		});
 	});
 </script>
@@ -52,7 +66,7 @@
 <div id="main">
 	<div class="form-wrap">
 		<h2>添加排片</h2>
-		<form action="/addshowtime" method="POST">
+		<form id="showForm">
 			<input type="hidden" name="cinemaId" value="{{.CinemaID}}" />
 
 
@@ -96,10 +110,11 @@
 			</div>
 
 			<div class="form-btn">
-				<button type="submit" id="submitBtn" class="btn-submit">提交</button>
+				<button type="button" id="submitBtn" class="btn-submit">提交</button>
 				<button type="button" class="btn-cancel" onclick="history.back()">取消</button>
 			</div>
 		</form>
+		<div id="msg"></div>
 	</div>
 </div>
 

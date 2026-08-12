@@ -167,7 +167,7 @@ func BuyTicketHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		// 没锁就直接插入（UNIQUE 约束防并发）
+		// 没锁就直接插入
 		result, err = tx.Exec(
 			"INSERT INTO tickets (price, showtime_id, user_id, seat_id, status, lock_time, created_at) VALUES (?, ?, ?, ?, 'paid', NULL, NOW())",
 			st.Price, showtimeID, sess.UserID, seatID,
