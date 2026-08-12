@@ -48,6 +48,13 @@ func FirstPage(w http.ResponseWriter, r *http.Request) {
 	page.Movies = movies
 	page.TotalMovieCount = len(movies)
 
+	// 票房排行榜（始终显示）
+	boxOffice, _ := dao.GetMovieByBoxoffice()
+	for i := range boxOffice {
+		boxOffice[i].Rank = i + 1
+	}
+	page.BoxOfficeMovies = boxOffice
+
 	t := template.Must(template.ParseFiles("views/index.html"))
 	t.Execute(w, page)
 }

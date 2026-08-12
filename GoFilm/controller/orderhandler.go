@@ -96,6 +96,7 @@ func RefundTicketHandler(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("退票失败"))
 			return
 		}
+		dao.UpdateBoxOffice(-showtime.Price, showtime.MovieID)
 		w.Write([]byte("ok"))
 	}
 }

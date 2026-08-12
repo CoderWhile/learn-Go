@@ -87,7 +87,7 @@ func GetMoviesByReigonAndTag(reigon string, tag string) ([]*model.Movie, error) 
 		return movies, nil
 	} else {
 		fmt.Println("all")
-		sql := `select id,title,genre,area,intor,imagePath,rating,duration,status from movies`
+		sql := `select id,title,genre,area,intro,imagePath,rating,duration,status from movies`
 		rows, err := utils.Db.Query(sql)
 		if err != nil {
 			return nil, err
@@ -116,6 +116,22 @@ func GetMovies() ([]*model.Movie, error) {
 		var movie model.Movie
 		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating)
 		movies = append(movies, &movie)
+	}
+	return movies, nil
+}
+
+// 获取前十条票房最高的电影
+func GetMovieByBoxoffice() ([]*model.Movie, error) {
+	sql := `select id,title,genre,area,intro,imagePath,rating,status,duration,boxoffice from movies order by boxoffice desc limit 0,10`
+	rows, err := utils.Db.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+	var movies []*model.Movie
+	for rows.Next() {
+		movie := &model.Movie{}
+		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration, &movie.BoxOffice)
+		movies = append(movies, movie)
 	}
 	return movies, nil
 }
@@ -155,11 +171,11 @@ func GetMovieCount() int {
 
 // 根据电影id查询电影
 func GetMovieById(id int) (*model.Movie, error) {
-	sqlStr := `select title,genre,area,intro,imagePath,rating,status,duration from movies where id=?`
+	sqlStr := `select title,genre,area,intro,imagePath,rating,status,duration,boxoffice from movies where id=?`
 	movie := &model.Movie{}
 	row := utils.Db.QueryRow(sqlStr, id)
 	movie.ID = id
-	row.Scan(&movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration)
+	row.Scan(&movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status, &movie.Duration, &movie.BoxOffice)
 
 	return movie, nil
 }
@@ -174,5 +190,10 @@ func DeleteMovieById(id int) error {
 	return nil
 }
 
-// 根据电影Id增加电影票房数量
-func AddMovieCountByID(count int) error { return nil }
+// 更改电影票房数量
+func UpdateBoxOffice(boxoffice float64, movieid int) error {
+	sql := `update movies set boxoffice=boxoffice+? where id=?`
+	_, err := utils.Db.Exec(sql, boxoffice, movieid)
+	return err
+
+}

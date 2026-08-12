@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <title>网上影院 - 首页</title>
 <link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<style>
+	.content-wrap { display: flex; gap: 24px; width: 1160px; margin: 0 auto; padding: 16px 0; }
+	.rank-sidebar { width: 220px; flex-shrink: 0; background: linear-gradient(180deg, #f9f4e8, #fff); border: 1px solid #e8dcc8; border-radius: 8px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+	.rank-header { font-size: 18px; font-weight: bold; color: #8b6914; padding-bottom: 12px; border-bottom: 2px solid #c9a84c; margin-bottom: 12px; }
+	.rank-list { list-style: none; margin: 0; padding: 0; }
+	.rank-item { display: flex; align-items: center; gap: 8px; padding: 8px 4px; cursor: pointer; border-radius: 4px; transition: background 0.2s; }
+	.rank-item:hover { background: #fdf3e7; }
+	.rank-num { width: 22px; height: 22px; line-height: 22px; text-align: center; font-size: 12px; font-weight: bold; background: #e0e0e0; color: #888; border-radius: 4px; flex-shrink: 0; }
+	.rank-num.top { background: linear-gradient(135deg, #e74c3c, #c0392b); color: #fff; }
+	.rank-title { flex: 1; font-size: 13px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	.rank-sale { font-size: 12px; color: #b8860b; font-weight: bold; white-space: nowrap; }
+	.rank-empty { color: #999; font-size: 13px; padding: 12px 0; text-align: center; }
+	.main-content { flex: 1; min-width: 0; }
+</style>
 <script src="/static/script/jquery-1.7.2.js"></script>
 <script>
 	$(function(){
@@ -86,7 +100,6 @@
 		<div id="subnav">
 			<div class="subnav-inner">
 				<a class="nav-item active" href="/main">首页</a>
-<!--				<a class="nav-item" href="/main?category=1">电影分类</a>-->
 				<a class="nav-item" href="/cinema/list">查看影院</a>
 				{{if .IsLogin}}
 					<a class="nav-item" href="/getMyOrders">我的</a>
@@ -96,6 +109,29 @@
 					<a class="nav-item" href="/pages/user/login.html">管理员登录</a>
 			</div>
 		</div>
+
+		<!-- 内容区：排行榜 + 电影展示 -->
+		<div class="content-wrap">
+			<!-- 左侧票房排行榜 -->
+			<div class="rank-sidebar">
+				<div class="rank-header">🔥 票房排行</div>
+				<ul class="rank-list">
+					{{if .BoxOfficeMovies}}
+					{{range .BoxOfficeMovies}}
+					<li class="rank-item" onclick="location.href='/movie/detail?movieId={{.ID}}'">
+						<span class="rank-num {{if le .Rank 3}}top{{end}}">{{.Rank}}</span>
+						<span class="rank-title">{{.Title}}</span>
+<!--						<span class="rank-sale">¥{{.BoxOffice}}</span>-->
+					</li>
+					{{end}}
+					{{else}}
+					<li class="rank-empty">暂无票房数据</li>
+					{{end}}
+				</ul>
+			</div>
+
+			<!-- 右侧展示区 -->
+			<div class="main-content">
 
 		<!-- 筛选区 -->
 		<div id="filter_bar">
@@ -118,14 +154,6 @@
 						<option value="korea"  {{if eq .Region "korea"}}selected{{end}}>韩国</option>
 					</select>
 				</div>
-<!--				<div class="filter-right">-->
-<!--					<ul class="cat-list">-->
-<!--						<li class="cat-item {{if not .CategoryID}}active{{end}}" data-cat="0">全部</li>-->
-<!--						{{range .Categories}}-->
-<!--						<li class="cat-item {{if eq .ID $.CategoryID}}active{{end}}" data-cat="{{.ID}}">{{.Name}}</li>-->
-<!--						{{end}}-->
-<!--					</ul>-->
-<!--				</div>-->
 			</div>
 		</div>
 
@@ -154,6 +182,9 @@
 			</div>
 			{{end}}
 		</div>
+
+			</div><!-- .main-content -->
+		</div><!-- .content-wrap -->
 
 	</div>
 

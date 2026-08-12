@@ -96,9 +96,11 @@ func DeleteCinemaHandler(w http.ResponseWriter, r *http.Request) {
 	err := dao.DeleteCinemaById(cinemaid)
 	if err != nil {
 		fmt.Println(err)
+		w.Write([]byte("仍有放映任务"))
+	} else {
+		w.Write([]byte("ok"))
 	}
-	fmt.Println("完成删除")
-
+	
 }
 
 // 用户端影院列表

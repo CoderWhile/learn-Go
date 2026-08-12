@@ -67,10 +67,10 @@ func GetCommentTree(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	movieID, _ := strconv.Atoi(r.URL.Query().Get("movieId"))
 	comments, _ := dao.GetCommentsByMovieId(movieID)
-	for _, comment := range comments {
-		fmt.Printf("%+v\n", comment)
-	}
-	fmt.Println("获得所有评论")
+	//for _, comment := range comments {
+	//	fmt.Printf("%+v\n", comment)
+	//}
+	//fmt.Println("获得所有评论")
 	roots := buildTree(comments)
 	json.NewEncoder(w).Encode(roots)
 }

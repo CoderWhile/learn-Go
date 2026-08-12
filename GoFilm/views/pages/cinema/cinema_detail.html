@@ -116,7 +116,8 @@
 			var name = $("input[name='name']").val();
 			if(confirm("确定删除《" + name + "》及旗下所有影厅和排片吗？")){
 				$.post("/deletecinema", {cinemaId: cid}, function(res){
-
+					if(res == "ok"){ alert("删除成功！"); location.reload(); }
+					else { alert("删除失败："+res); }
 					location.href = "/cinemalist";
 
 				});

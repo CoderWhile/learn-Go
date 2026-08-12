@@ -128,11 +128,13 @@
 					<h3>📍 {{.CinemaName}} <span class="addr">{{.CinemaAddr}}</span></h3>
 					<div class="showtime-list">
 						{{range .Showtimes}}
+						{{if .IsYuShow}}
 						<div class="showtime-item" data-sid="{{.ID}}">
 							<span class="time">{{.StartTime}}</span>
 							<span class="hall">{{.Hall.Name}}</span>
 							<span class="price">¥{{.Price}}</span>
 						</div>
+						{{end}}
 						{{end}}
 					</div>
 				</div>

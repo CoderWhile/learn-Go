@@ -154,6 +154,7 @@ func StartShowtimeChecker(ctx context.Context) {
 				controller.CheckStatusShowtime(ctx)
 			}()
 		case <-ctx.Done():
+			//被取消
 			return
 		}
 	}

@@ -11,6 +11,7 @@ type Page struct {
 	CategoryID      int         // 当前分类ID
 	TagID           int         // 当前标签ID
 	Categories      []*Category // 分类列表
+	BoxOfficeMovies []*Movie    // 票房前十
 
 	// 分页相关 (保留以备后用)
 	PageNo      int

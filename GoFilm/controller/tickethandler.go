@@ -186,8 +186,10 @@ func BuyTicketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	//购票成功增加电影票房数量
 	_ = st.MovieID
-	//
+
 	tx.Commit()
+	fmt.Println("购票成功")
+	dao.UpdateBoxOffice(st.Price*float64(len(seatIDs)), st.MovieID)
 	w.Write([]byte("ok"))
 }
 
@@ -248,7 +250,10 @@ func LockSeatsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	tx.Commit()
+	//增加票房
+
 	w.Write([]byte("ok"))
+
 }
 
 //如何实现电影名称的搜索功能,go语言中有什么和字符串匹配相关的函数
