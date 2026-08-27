@@ -105,7 +105,7 @@ func GetMoviesByReigonAndTag(reigon string, tag string) ([]*model.Movie, error) 
 
 // 获取所有电影
 func GetMovies() ([]*model.Movie, error) {
-	sqlStr := `select id,title,genre,area,intro,imagePath,rating from movies`
+	sqlStr := `select id,title,genre,area,intro,imagePath,rating,status from movies`
 	utils.Db.Query(sqlStr)
 	rows, err := utils.Db.Query(sqlStr)
 	if err != nil {
@@ -114,10 +114,24 @@ func GetMovies() ([]*model.Movie, error) {
 	var movies []*model.Movie
 	for rows.Next() {
 		var movie model.Movie
-		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating)
+		rows.Scan(&movie.ID, &movie.Title, &movie.Genre, &movie.Area, &movie.Intro, &movie.ImagePath, &movie.Rating, &movie.Status)
 		movies = append(movies, &movie)
 	}
 	return movies, nil
+}
+
+// 获取所有可用于排片的电影
+func GetMovieToAdd() ([]*model.Movie, error) {
+	movies, _ := GetMovies()
+	fmt.Println("1", movies)
+	var newMovies []*model.Movie
+	for _, movie := range movies {
+		if movie.Status == "上映中" {
+			fmt.Println("添加")
+			newMovies = append(newMovies, movie)
+		}
+	}
+	return newMovies, nil
 }
 
 // 获取前十条票房最高的电影

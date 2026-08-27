@@ -103,3 +103,108 @@ func RefundTicketHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("ok"))
 	}
 }
+
+// 未支付订单页面（锁定中的票）
+func UnpaidOrdersHandler(w http.ResponseWriter, r *http.Request) {
+	_, sess := dao.IsLogin(r)
+	if sess == nil {
+		http.Redirect(w, r, "/pages/user/login.html", http.StatusFound)
+		return
+	}
+	tickets, _ := dao.GetTicketsByUserId(sess.UserID)
+	var orders []model.OrderItem
+	var total float64
+	for _, tk := range tickets {
+		// 只展示锁定（未支付）的票
+		if tk.Status != model.TicketStatusLocked {
+			continue
+		}
+		st, _ := dao.GetShowtimeById(tk.ShowtimeID)
+		if st == nil {
+			continue
+		}
+		movie, _ := dao.GetMovieById(st.MovieID)
+		cinema, _ := dao.GetCinemaById(st.CinemaID)
+		hall, _ := dao.GetHallById(st.HallID)
+		seat, _ := dao.GetSeatById(tk.SeatID)
+
+		item := model.OrderItem{
+			TicketID:  tk.ID,
+			ShowTime:  st.StartTime,
+			Price:     st.Price,
+			OrderTime: tk.CreatedAt,
+		}
+		if movie != nil {
+			item.MovieTitle = movie.Title
+			item.MovieImage = movie.ImagePath
+		}
+		if cinema != nil {
+			item.CinemaName = cinema.Name
+		}
+		if hall != nil {
+			item.HallName = hall.Name
+		}
+		if seat != nil {
+			item.Row = seat.Row
+			item.Col = seat.Col
+			item.SeatLabel = seat.Row + strconv.Itoa(seat.Col)
+		}
+		total += st.Price
+		orders = append(orders, item)
+	}
+
+	page := &model.UnpaidOrderPage{
+		Orders:   orders,
+		Username: sess.UserName,
+		IsLogin:  true,
+		Total:    total,
+	}
+	t := template.Must(template.ParseFiles("views/pages/user/unpaid_orders.html"))
+	t.Execute(w, page)
+}
+
+// 一键支付所有锁定票
+func PayAllLockedHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, sess := dao.IsLogin(r)
+	if sess == nil {
+		w.Write([]byte("请先登录"))
+		return
+	}
+	// 先累计票房，再支付
+	tickets, _ := dao.GetTicketsByUserId(sess.UserID)
+	boxMap := make(map[int]float64)
+	for _, tk := range tickets {
+		if tk.Status != model.TicketStatusLocked {
+			continue
+		}
+		st, _ := dao.GetShowtimeById(tk.ShowtimeID)
+		if st != nil {
+			boxMap[st.MovieID] += tk.Price
+		}
+	}
+	if err := dao.PayLockedTickets(sess.UserID); err != nil {
+		w.Write([]byte("支付失败"))
+		return
+	}
+	for mid, amount := range boxMap {
+		dao.UpdateBoxOffice(amount, mid)
+	}
+	w.Write([]byte("ok"))
+}
+
+// 取消锁定单张票
+func CancelLockHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, sess := dao.IsLogin(r)
+	if sess == nil {
+		w.Write([]byte("请先登录"))
+		return
+	}
+	tid, _ := strconv.Atoi(r.PostFormValue("ticketId"))
+	if err := dao.DeleteLockedTicketByID(tid, sess.UserID); err != nil {
+		w.Write([]byte("取消失败"))
+		return
+	}
+	w.Write([]byte("ok"))
+}

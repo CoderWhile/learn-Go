@@ -3,11 +3,13 @@ package controller
 import (
 	"GoFilm/dao"
 	"GoFilm/utils"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //// TicketSelectHandler 渲染选座购票页
@@ -269,5 +271,42 @@ func UnlockSeatsHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.PostFormValue("showtimeId")
 	showtimeID, _ := strconv.Atoi(sid)
 	utils.Db.Exec("DELETE FROM tickets WHERE showtime_id=? AND user_id=? AND status='locked'", showtimeID, sess.UserID)
+	w.Write([]byte("ok"))
+}
+
+// CleanExpiredLocks 定期清理超过5分钟未支付的锁定票
+func CleanExpiredLocks(ctx context.Context) {
+	ticker := time.NewTicker(30 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			result, err := utils.Db.Exec(
+				"DELETE FROM tickets WHERE status='locked' AND lock_time < NOW()",
+			)
+			if err == nil {
+				if n, _ := result.RowsAffected(); n > 0 {
+					fmt.Printf("已自动解锁 %d 张过期票\n", n)
+				}
+			}
+		case <-ctx.Done():
+			return
+		}
+	}
+}
+
+// 释放锁定单张票
+func UnlockSeatHandler2(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, sess := dao.IsLogin(r)
+	if sess == nil {
+		w.Write([]byte("ok"))
+		return
+	}
+	ticketid := r.PostFormValue("ticketId")
+	id, _ := strconv.Atoi(ticketid)
+	//sid := r.PostFormValue("showtimeId")
+	//showtimeID, _ := strconv.Atoi(sid)
+	utils.Db.Exec("DELETE FROM tickets WHERE id=?", id)
 	w.Write([]byte("ok"))
 }

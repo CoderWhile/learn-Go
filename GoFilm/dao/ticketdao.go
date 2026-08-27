@@ -40,7 +40,7 @@ func GetSoldSeatIdsByShowtime(showtimeID int) (map[int64]bool, error) {
 
 // GetTicketsByUserId 查询用户的购票记录
 func GetTicketsByUserId(userID int) ([]*model.Ticket, error) {
-	sqlStr := `SELECT id, showtime_id, user_id, seat_id, status, lock_time, created_at
+	sqlStr := `SELECT id, showtime_id, user_id, seat_id, status, price, lock_time, created_at
                FROM tickets WHERE user_id = ? ORDER BY created_at DESC`
 	rows, err := utils.Db.Query(sqlStr, userID)
 	if err != nil {
@@ -51,7 +51,7 @@ func GetTicketsByUserId(userID int) ([]*model.Ticket, error) {
 	var list []*model.Ticket
 	for rows.Next() {
 		t := &model.Ticket{}
-		rows.Scan(&t.ID, &t.ShowtimeID, &t.UserID, &t.SeatID, &t.Status, &t.LockTime, &t.CreatedAt)
+		rows.Scan(&t.ID, &t.ShowtimeID, &t.UserID, &t.SeatID, &t.Status, &t.Price, &t.LockTime, &t.CreatedAt)
 		list = append(list, t)
 	}
 	return list, nil
@@ -114,4 +114,18 @@ func GetTicketByID(id int) (*model.Ticket, error) {
 		return nil, err
 	}
 	return t, nil
+}
+
+// PayLockedTickets 一键支付用户所有锁定中的票
+func PayLockedTickets(userID int) error {
+	sql := `UPDATE tickets SET status='paid', lock_time=NULL WHERE user_id=? AND status='locked'`
+	_, err := utils.Db.Exec(sql, userID)
+	return err
+}
+
+// DeleteLockedTicketByID 删除用户某张锁定中的票（取消锁定）
+func DeleteLockedTicketByID(id, userID int) error {
+	sql := `DELETE FROM tickets WHERE id=? AND user_id=? AND status='locked'`
+	_, err := utils.Db.Exec(sql, id, userID)
+	return err
 }

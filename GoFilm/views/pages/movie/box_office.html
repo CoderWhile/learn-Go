@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 票房排行</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<style>
+	.bo-wrap { width: 960px; margin: 20px auto; }
+	.bo-wrap h2 { font-size: 22px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #b8860b; }
+	.bo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+	.bo-header .total { color: #999; font-size: 14px; }
+
+	.bo-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+	.bo-table th { background: linear-gradient(180deg, #fdf3e7, #f9f4e8); color: #8b6914; font-size: 14px; padding: 14px 12px; text-align: left; border-bottom: 2px solid #d4a853; }
+	.bo-table td { padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 14px; color: #444; }
+	.bo-table tr:hover td { background: #fdfcf8; }
+	.bo-table .rank { width: 60px; text-align: center; font-size: 16px; font-weight: bold; }
+	.bo-table .rank.medal { font-size: 24px; }
+	.bo-table .poster { width: 60px; }
+	.bo-table .poster img { width: 50px; height: 68px; object-fit: cover; border-radius: 4px; }
+	.bo-table .title { font-weight: bold; color: #333; }
+	.bo-table .title a { color: #333; text-decoration: none; }
+	.bo-table .title a:hover { color: #b8860b; }
+	.bo-table .info { font-size: 12px; color: #999; }
+	.bo-table .amount { font-weight: bold; color: #e74c3c; font-size: 15px; white-space: nowrap; }
+	.bo-table .rating { color: #f5a623; font-weight: bold; }
+
+	.empty-tip { text-align: center; padding: 80px 0; }
+	.empty-tip p { font-size: 16px; color: #999; }
+	.empty-tip a { color: #b8860b; text-decoration: none; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left"><span class="logo-icon">🎬</span><span class="logo-text">网上影院</span></div>
+		<div class="topbar-right">
+			<a href="/main" class="top-btn">首页</a>
+<!--			{{if .IsLogin}}-->
+<!--			<a href="/getMyOrders" class="top-btn">我的订单</a>-->
+<!--			{{end}}-->
+		</div>
+	</div>
+</div>
+
+<div id="main">
+	<div class="bo-wrap">
+		<div class="bo-header">
+			<h2>🔥 票房排行榜 TOP10</h2>
+		</div>
+
+		{{if .Movies}}
+		<table class="bo-table">
+			<thead>
+				<tr>
+					<th class="rank">排名</th>
+					<th>海报</th>
+					<th>电影</th>
+					<th>票房</th>
+					<th>评分</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{range .Movies}}
+				<tr>
+					<td class="rank">
+						{{if eq .Rank 1}}<span class="medal">🥇</span>
+						{{else if eq .Rank 2}}<span class="medal">🥈</span>
+						{{else if eq .Rank 3}}<span class="medal">🥉</span>
+						{{else}}<span>{{.Rank}}</span>{{end}}
+					</td>
+					<td class="poster"><img src="{{.ImagePath}}" alt="{{.Title}}"></td>
+					<td>
+						<div class="title"><a href="/movie/detail?movieId={{.ID}}">{{.Title}}</a></div>
+						<div class="info">{{.Genre}} · {{.Area}}</div>
+					</td>
+					<td class="amount">¥{{.BoxOffice}}</td>
+					<td>
+						{{if .Rating}}
+						<span class="rating">⭐ {{.Rating}}</span>
+						{{if .RatingCount}}<div class="info">{{.RatingCount}}人</div>{{end}}
+						{{else}}
+						<span style="color:#ccc;">暂无</span>
+						{{end}}
+					</td>
+				</tr>
+				{{end}}
+			</tbody>
+		</table>
+		{{else}}
+		<div class="empty-tip">
+			<p>暂无票房数据，快去<a href="/main">选购电影票</a>吧</p>
+		</div>
+		{{end}}
+	</div>
+</div>
+
+<div id="bottom"><span>GoFilm网上影院.Copyright &copy;2026</span></div>
+</body>
+</html>

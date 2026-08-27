@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网上影院 - 未支付订单</title>
+<link type="text/css" rel="stylesheet" href="/static/css/style.css" >
+<script src="/static/script/jquery-1.7.2.js"></script>
+<style>
+	.order-wrap { width: 960px; margin: 20px auto; }
+	.order-wrap h2 { font-size: 22px; margin-bottom: 20px; padding-left: 12px; border-left: 4px solid #b8860b; }
+
+	.order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+	.order-count { color: #999; font-size: 14px; }
+
+	.pay-bar { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+	.pay-total { font-size: 18px; }
+	.pay-total .amount { color: #e74c3c; font-weight: bold; font-size: 22px; }
+	.btn-payall { width: 160px; height: 42px; background: linear-gradient(90deg, #e74c3c, #c0392b); color: #fff; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; }
+	.btn-payall:hover { opacity: 0.85; }
+	.btn-payall[disabled] { background: #ccc; cursor: not-allowed; }
+
+	.order-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 16px 20px; margin-bottom: 14px; display: flex; gap: 16px; align-items: center; transition: box-shadow 0.2s; }
+	.order-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+	.order-poster { width: 80px; flex-shrink: 0; }
+	.order-poster img { width: 80px; height: 110px; object-fit: cover; border-radius: 4px; }
+	.order-info { flex: 1; }
+	.order-info h3 { font-size: 17px; color: #333; margin-bottom: 4px; }
+	.order-meta { font-size: 13px; color: #888; line-height: 1.8; }
+	.order-meta span { margin-right: 14px; }
+	.order-price { flex-shrink: 0; font-size: 18px; font-weight: bold; color: #e74c3c; text-align: right; min-width: 80px; }
+	.countdown { flex-shrink: 0; font-size: 12px; color: #e67e22; min-width: 100px; text-align: center; }
+	.btn-cancel { padding: 4px 12px; border: 1px solid #999; color: #666; background: #fff; border-radius: 4px; font-size: 12px; cursor: pointer; margin-top: 6px; }
+	.btn-cancel:hover { border-color: #e74c3c; color: #e74c3c; }
+
+	.empty-tip { text-align: center; padding: 80px 0; }
+	.empty-tip .icon { font-size: 64px; margin-bottom: 12px; }
+	.empty-tip p { font-size: 16px; color: #999; }
+	.empty-tip a { color: #b8860b; text-decoration: none; font-weight: bold; }
+</style>
+<script>
+	$(function(){
+		// 一键支付
+		$("#payAllBtn").click(function(){
+			if(!confirm("确认支付全部锁定订单，共 ¥" + $(this).attr("data-total") + " ？")) return;
+			$(this).prop("disabled", true);
+			$.post("/ticket/payall", {}, function(res){
+				if(res === "ok"){ alert("支付成功！"); location.href = "/getMyOrders"; }
+				else { alert("支付失败：" + res); $("#payAllBtn").prop("disabled", false); }
+			});
+		});
+
+		// 取消锁定单张票
+		$(".btn-cancel").click(function(){
+			var tid = $(this).attr("data-tid");
+			if(!confirm("确定取消锁定这张票吗？")) return;
+			$.post("/ticket/cancellock", {ticketId: tid}, function(res){
+				if(res === "ok"){ alert("已取消锁定"); location.reload(); }
+				else { alert("取消失败：" + res); }
+			});
+		});
+	});
+</script>
+</head>
+<body>
+
+<div id="topbar">
+	<div class="topbar-inner">
+		<div class="topbar-left"><span class="logo-icon">🎬</span><span class="logo-text">网上影院</span></div>
+		<div class="topbar-right">
+			<span class="welcome-text">{{.Username}} 的未支付订单</span>
+			<a href="/main" class="top-btn">首页</a>
+			<a href="/logout" class="top-btn">注销</a>
+		</div>
+	</div>
+</div>
+
+<div id="main">
+	<div class="order-wrap">
+		<div class="order-header">
+			<h2>未支付订单</h2>
+			{{if .Orders}}<span class="order-count">共 {{len .Orders}} 张锁定票</span>{{end}}
+		</div>
+
+		{{if .Orders}}
+		<!-- 一键支付栏 -->
+		<div class="pay-bar">
+			<div class="pay-total">应付合计：<span class="amount">¥{{printf "%.2f" .Total}}</span></div>
+			<button id="payAllBtn" class="btn-payall" data-total="{{printf "%.2f" .Total}}">一键支付</button>
+		</div>
+
+		{{range .Orders}}
+		<div class="order-card">
+			<div class="order-poster"><img src="{{.MovieImage}}" alt="{{.MovieTitle}}"></div>
+			<div class="order-info">
+				<h3>{{.MovieTitle}}</h3>
+				<div class="order-meta">
+					<span>{{.CinemaName}}</span>
+					<span>{{.HallName}}</span>
+					<span>{{.SeatLabel}} 座</span>
+					<span>{{.ShowTime}}</span>
+				</div>
+			</div>
+			<div class="countdown">5分钟内未支付<br>将自动解锁</div>
+			<div class="order-price">¥{{.Price}}<br><button class="btn-cancel" data-tid="{{.TicketID}}">取消锁定</button></div>
+		</div>
+		{{end}}
+		{{else}}
+		<div class="empty-tip">
+			<div class="icon">🧾</div>
+			<p>没有待支付的订单，快去<a href="/main">选购电影票</a>吧</p>
+		</div>
+		{{end}}
+	</div>
+</div>
+
+<div id="bottom"><span>GoFilm网上影院.Copyright &copy;2026</span></div>
+</body>
+</html>

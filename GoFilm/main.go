@@ -115,6 +115,13 @@ func main() {
 	//退票
 	http.HandleFunc("/ticket/refund", controller.RefundTicketHandler)
 
+	//未支付订单页面
+	http.HandleFunc("/unpaid/orders", controller.UnpaidOrdersHandler)
+	//一键支付
+	http.HandleFunc("/ticket/payall", controller.PayAllLockedHandler)
+	//取消锁定
+	http.HandleFunc("/ticket/cancellock", controller.CancelLockHandler)
+
 	//关键词搜索电影（待实现）
 	// http.HandleFunc("/Search", controller.SearchHandler)
 
@@ -124,6 +131,9 @@ func main() {
 	//获取某电影的所有评论
 	http.HandleFunc("/getcomment", controller.GetCommentTree)
 
+	//查看票房
+	//http.HandleFunc("/showboxoffice", controller.ShowBoxofficeHandler)
+
 	//评分
 	http.HandleFunc("/api/rating/submit", controller.SubmitRatingHandler)
 
@@ -131,6 +141,7 @@ func main() {
 	defer cancel()
 
 	go StartShowtimeChecker(ctx)
+	go controller.CleanExpiredLocks(ctx)
 
 	http.ListenAndServe(":8080", nil)
 }

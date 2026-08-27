@@ -23,3 +23,11 @@ type MyOrderPage struct {
 	Username string
 	IsLogin  bool
 }
+
+// 未支付订单页
+type UnpaidOrderPage struct {
+	Orders   []OrderItem
+	Username string
+	IsLogin  bool
+	Total    float64 // 合计金额
+}

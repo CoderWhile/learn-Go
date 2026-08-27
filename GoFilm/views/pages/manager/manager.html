@@ -8,6 +8,9 @@
 <script>
 	$(function(){
 		// 搜索
+		// setInterval(function() {
+		// 	location.reload();
+		// }, 1000);
 		$("#searchBtn").click(function(){
 			var keyword = $("#searchInput").val().trim();
 			location.href = "/manager?keyword=" + encodeURIComponent(keyword);
@@ -107,6 +110,7 @@
 				<a class="nav-item" href="/pages/movie/movie_add.html">添加电影</a>
 				<a class="nav-item" href="/pages/cinema/cinema_add.html">添加影院</a>
 				<a class="nav-item" href="/cinemalist">查看影院</a>
+<!--				<a class="nav-item" href="/showboxoffice">查看票房</a>-->
 				<a class="nav-item" href="/main">返回前台</a>
 			</div>
 		</div>

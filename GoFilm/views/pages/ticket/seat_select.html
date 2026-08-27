@@ -55,36 +55,29 @@
 	var gPrice = 0;
 	var gSelected = [];     // [{row:"A", col:3}, ...]
 	var gSeats = [];        // 后端返回的所有座位
-	var gLockTimer = null;  // 倒计时定时器
-	var gLockSeconds = 0;   // 剩余秒数
 
 	$(function(){
 		showtimeId = getQuery("showtimeId");
 		if(!showtimeId){ alert("缺少场次参数！"); return; }
 		loadShowtimeData();
 
-		// 页面关闭时释放锁定
-		$(window).on("beforeunload", function(){ releaseLock(); });
-
-		// 确认购票
+		// 订单锁定：点确定才锁座并跳转未支付订单页
 		$("#submitBtn").click(function(){
 			if(gSelected.length === 0){ alert("请先选择座位！"); return; }
-			if(!confirm("确认购买 " + gSelected.length + " 张票，共 ¥" + (gPrice*gSelected.length).toFixed(2) + " ？")) return;
+			if(!confirm("锁定 " + gSelected.length + " 张票，共 ¥" + (gPrice*gSelected.length).toFixed(2) + " ？\n锁定后请在5分钟内完成支付，否则将自动解锁。")) return;
 			$("#submitBtn").prop("disabled", true);
-			$.post("/ticket/buy", {
+			$.post("/ticket/lock", {
 				showtimeId: showtimeId,
 				seats: JSON.stringify(gSelected)
 			}, function(res){
-				if(res === "ok"){
-					clearInterval(gLockTimer);
-					alert("购票成功！");
-					location.href = "/main";
-				} else {
+				if(res === "busy"){
+					alert("部分座位已被他人锁定，请重新选择");
 					$("#submitBtn").prop("disabled", false);
-					alert("购票失败：" + res);
-					// 重新加载座位状态
 					loadShowtimeData();
+					return;
 				}
+				alert("锁定成功！请在5分钟内完成支付");
+				location.href = "/unpaid/orders";
 			});
 		});
 	});
@@ -166,7 +159,7 @@
 		return false;
 	}
 
-	// 点击可选座位 → 选座 + 锁座
+	// 点击可选座位 → 仅前端选中高亮，不锁座
 	$(document).on("click", ".seat-available, .seat-couple, .seat-selected", function(){
 		var row = $(this).data("row");
 		var col = $(this).data("col");
@@ -177,7 +170,6 @@
 		}
 		renderSeatMap();
 		updateOrder();
-		lockSeats();  // 后端锁座
 	});
 
 	//更新订单
@@ -193,49 +185,6 @@
 			$("#orderTotal").text("¥" + total.toFixed(2));
 			$("#submitBtn").prop("disabled", false);
 		}
-	}
-
-	// 后端锁定
-	function lockSeats(){
-		clearInterval(gLockTimer);
-		if(gSelected.length === 0){
-			releaseLock();
-			$("#lockCountdown").hide();
-			return;
-		}
-		$.post("/ticket/lock", {
-			showtimeId: showtimeId,
-			seats: JSON.stringify(gSelected)
-		}, function(res){
-			if(res === "busy"){
-				alert("部分座位已被他人锁定，请重新选择");
-				releaseLock();
-				loadShowtimeData();
-				return;
-			}
-			gLockSeconds = 300;
-			$("#lockCountdown").show();
-			tickCountdown();
-			gLockTimer = setInterval(tickCountdown, 1000);
-		});
-	}
-
-	function tickCountdown(){
-		var m = Math.floor(gLockSeconds / 60);
-		var s = gLockSeconds % 60;
-		$("#lockCountdown").text("座位已锁定 " + m + ":" + (s<10?"0":"") + s);
-		gLockSeconds--;
-		if(gLockSeconds < 0){
-			clearInterval(gLockTimer);
-			alert("锁座超时，请重新选座");
-			releaseLock();
-			loadShowtimeData();
-		}
-	}
-
-	function releaseLock(){
-		clearInterval(gLockTimer);
-		$.post("/ticket/unlock", {showtimeId: showtimeId}, function(){});
 	}
 
 	function getQuery(name){
@@ -291,10 +240,10 @@
 
 		<!-- 订单 -->
 		<div class="order-card">
-			<h3>订单确认 <span id="lockCountdown" style="font-size:13px;color:#e74c3c;font-weight:bold;display:none;"></span></h3>
+			<h3>订单确认</h3>
 			<div class="order-seats">已选座位：<span id="orderSeats">未选座</span></div>
 			<div class="order-total"><span class="label">应付金额：</span><span id="orderTotal">¥0.00</span></div>
-			<button id="submitBtn" class="btn-submit" disabled>确认购票</button>
+			<button id="submitBtn" class="btn-submit" disabled>订单锁定</button>
 		</div>
 
 	</div>

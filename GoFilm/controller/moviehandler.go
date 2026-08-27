@@ -234,3 +234,22 @@ func MovieDetailHandler(w http.ResponseWriter, r *http.Request) {
 	t := template.Must(template.ParseFiles("views/pages/movie/movie_detail.html"))
 	t.Execute(w, page)
 }
+
+// 票房排行榜页面
+func BoxOfficePage(w http.ResponseWriter, r *http.Request) {
+	movies, _ := dao.GetMovieByBoxoffice()
+	for i := range movies {
+		movies[i].Rank = i + 1
+	}
+	data := struct {
+		Movies  []*model.Movie
+		IsLogin bool
+	}{Movies: movies}
+	flag, sess := dao.IsLogin(r)
+	if flag {
+		data.IsLogin = true
+		_ = sess
+	}
+	t := template.Must(template.ParseFiles("views/pages/movie/box_office.html"))
+	t.Execute(w, data)
+}
