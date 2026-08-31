@@ -129,3 +129,14 @@ func DeleteLockedTicketByID(id, userID int) error {
 	_, err := utils.Db.Exec(sql, id, userID)
 	return err
 }
+
+// 清理锁定超时的票
+func CleanTicket() {
+	sql := `delete from tickets where status='locked' and lock_time<NOW()`
+	affected, err := utils.Db.Exec(sql)
+	if err == nil {
+		if n, _ := affected.RowsAffected(); n > 0 {
+			fmt.Println("自动解锁%d张过期票\n", n)
+		}
+	}
+}

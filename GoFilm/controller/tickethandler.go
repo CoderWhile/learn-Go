@@ -225,10 +225,7 @@ func LockSeatsHandler(w http.ResponseWriter, r *http.Request) {
 	hall.Seats, _ = dao.GetSeatsByHallId(st.HallID)
 	price := st.Price
 	hall.BuildMatrix()
-
-	//先把所有之前该用户的记录删掉
-	utils.Db.Exec("DELETE FROM tickets WHERE showtime_id=? AND user_id=? AND status='locked'", showtimeID, sess.UserID)
-
+	
 	tx, _ := utils.Db.Begin()
 	for _, si := range selected {
 		seat := hall.GetSeat(si.Row, si.Col)
@@ -274,21 +271,22 @@ func UnlockSeatsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("ok"))
 }
 
-// CleanExpiredLocks 定期清理超过5分钟未支付的锁定票
+// 每半分钟清理锁定的未支付的票
 func CleanExpiredLocks(ctx context.Context) {
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
-			result, err := utils.Db.Exec(
-				"DELETE FROM tickets WHERE status='locked' AND lock_time < NOW()",
-			)
-			if err == nil {
-				if n, _ := result.RowsAffected(); n > 0 {
-					fmt.Printf("已自动解锁 %d 张过期票\n", n)
-				}
-			}
+			dao.CleanTicket()
+			//result, err := utils.Db.Exec(
+			//	"DELETE FROM tickets WHERE status='locked' AND lock_time < NOW()",
+			//)
+			//if err == nil {
+			//	if n, _ := result.RowsAffected(); n > 0 {
+			//		fmt.Printf("已自动解锁 %d 张过期票\n", n)
+			//	}
+			//}
 		case <-ctx.Done():
 			return
 		}

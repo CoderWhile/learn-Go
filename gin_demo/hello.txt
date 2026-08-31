@@ -1,0 +1,10 @@
+<h1>hello world</h1>
+<h2>i am fine</h2>
+<img id='l1' src='https://rs-channel.huanqiucdn.cn/imageDir/b92d689325c32019e8cf7e47b1ebdea7.jpg'>
+</br>
+<button id='b1'>点我</button>
+<script>
+document.getElementById('b1').onclick=function(){
+    document.getElementById('l1').src='https://news.66wz.com/pic/003/006/983/00300698342_i1000500000500a0_98037498.jpg'
+}
+</script>

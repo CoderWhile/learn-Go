@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ClaudeCodeEditorTabs">
+    <option name="activeSessionId" value="b9c44947-d504-4931-966c-ea0f5dfb0bed" />
+    <option name="openSessionIds">
+      <list>
+        <option value="cd34454a-9069-4882-80db-f18109c634bb" />
+        <option value="b9c44947-d504-4931-966c-ea0f5dfb0bed" />
+      </list>
+    </option>
+    <option name="sessionPaths">
+      <map>
+        <entry key="b9c44947-d504-4931-966c-ea0f5dfb0bed" value="/sessions/9f0617ce-ff00-431c-b70e-606b3f0095cc" />
+        <entry key="cd34454a-9069-4882-80db-f18109c634bb" value="/sessions/9f0617ce-ff00-431c-b70e-606b3f0095cc" />
+      </map>
+    </option>
+    <option name="sessionTitles">
+      <map>
+        <entry key="b9c44947-d504-4931-966c-ea0f5dfb0bed" value="检查一下hello.txt中写的内容是否有问题" />
+        <entry key="cd34454a-9069-4882-80db-f18109c634bb" value="检查一下hello.txt中写的内容是否有问题" />
+      </map>
+    </option>
+  </component>
+</project>

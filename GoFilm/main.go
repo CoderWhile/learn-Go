@@ -145,6 +145,8 @@ func main() {
 
 	http.ListenAndServe(":8080", nil)
 }
+
+// 场次放映每分钟检查
 func StartShowtimeChecker(ctx context.Context) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
