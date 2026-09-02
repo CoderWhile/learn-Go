@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="de82ccc0-197a-49b8-beb5-d62042e4b794" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/ginweb02.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/go.imports.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb02/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb02/hello.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb02/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb03/hello.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb03/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/claudeCodeEditorTabs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/gin_demo.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/go.imports.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/.postman/resources.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/gin_demo.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/hello.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gin_demo/postman/globals/workspace.globals.yaml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="2" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../../../download/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "CoderWhile"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:CoderWhile/learn-Go.git",
+    "accountId": "0a2ee96e-c4d5-4cc9-90a5-afcf58c977ec"
+  }
+}]]></component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="3Im9tyMX7cqBHEhYanOlq0OP1hW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.GoLinterPluginOnboardingV2": "true",
+    "RunOnceActivity.GoLinterPluginStorageMigration": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.analysis.ui.options.defaults": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/xiaobai",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "D:/code/go/repository/learn-Go/GoWeb/ginweb04/main.go"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-72a9cf600ed8-3dd3895e5e08-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-261.23567.143" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-GO-261.23567.143" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="de82ccc0-197a-49b8-beb5-d62042e4b794" name="更改" comment="" />
+      <created>1788359095311</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1788359095311</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoModernizerVersionTracker">
+    <upgrades>
+      <map>
+        <entry key="$PROJECT_DIR$/go.mod">
+          <value>
+            <VersionUpgradeInfo>
+              <version>1.26.0</version>
+              <timestamp>1788359422524</timestamp>
+            </VersionUpgradeInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/go.mod">
+          <value>
+            <VersionUpgradeInfo>
+              <version>1.26.0</version>
+              <timestamp>1788359422524</timestamp>
+            </VersionUpgradeInfo>
+          </value>
+        </entry>
+      </map>
+    </upgrades>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/main.go</url>
+          <line>15</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
