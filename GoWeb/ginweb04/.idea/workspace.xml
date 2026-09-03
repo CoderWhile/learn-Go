@@ -5,31 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de82ccc0-197a-49b8-beb5-d62042e4b794" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/ginweb02.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/go.imports.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb02/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb02/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb02/hello.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb02/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb03/hello.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb03/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/claudeCodeEditorTabs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/gin_demo.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/go.imports.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/.postman/resources.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/gin_demo.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/hello.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../gin_demo/postman/globals/workspace.globals.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="2" />
+    <option name="cachedIndexableFilesCount" value="9" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -50,25 +29,29 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "CoderWhile"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;CoderWhile&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:CoderWhile/learn-Go.git",
-    "accountId": "0a2ee96e-c4d5-4cc9-90a5-afcf58c977ec"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:CoderWhile/learn-Go.git&quot;,
+    &quot;accountId&quot;: &quot;0a2ee96e-c4d5-4cc9-90a5-afcf58c977ec&quot;
   }
-}]]></component>
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/routergroup.go" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/utils.go" root0="SKIP_INSPECTION" />
+  </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="3Im9tyMX7cqBHEhYanOlq0OP1hW" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -90,11 +73,13 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/xiaobai",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "D:/code/go/repository/learn-Go/GoWeb/ginweb04/main.go"
+    "onboarding.tips.debug.path": "D:/code/go/repository/learn-Go/GoWeb/ginweb04/main.go",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.com.intellij.openapi.options.colors.pages.DefaultLanguageColorsPage"
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -129,14 +114,6 @@
             </VersionUpgradeInfo>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/go.mod">
-          <value>
-            <VersionUpgradeInfo>
-              <version>1.26.0</version>
-              <timestamp>1788359422524</timestamp>
-            </VersionUpgradeInfo>
-          </value>
-        </entry>
       </map>
     </upgrades>
   </component>
@@ -145,7 +122,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/main.go</url>
-          <line>15</line>
+          <line>59</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
