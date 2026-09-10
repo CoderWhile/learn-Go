@@ -5,18 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8ff41821-7947-4900-8c0f-4f18b8280909" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/../ginbeb06_querystring/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginbeb06_querystring/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb05/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb05/.idea/ginweb05_json.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb05/.idea/go.imports.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb05/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../ginweb05/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ginweb04/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ginweb04/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ginweb04/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../ginweb04/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ginweb04/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../ginweb04/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ginweb04/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../ginweb04/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb08_URL/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb08_URL/.idea/ginweb08_URL.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb08_URL/.idea/go.imports.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb08_URL/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb08_URL/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb08_URL/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb08_URL/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb09_userinfo/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb09_userinfo/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb09_userinfo/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb10_file/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb10_file/go.sum" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb10_file/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ginweb10_file/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,12 +30,13 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="1" />
+    <option name="cachedIndexableFilesCount" value="8" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Go File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -37,26 +44,26 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "CoderWhile"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;CoderWhile&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:CoderWhile/learn-Go.git",
-    "accountId": "0a2ee96e-c4d5-4cc9-90a5-afcf58c977ec"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:CoderWhile/learn-Go.git&quot;,
+    &quot;accountId&quot;: &quot;0a2ee96e-c4d5-4cc9-90a5-afcf58c977ec&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6,
-  "fromUser": false
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3IozZvDpkGNg5cHuSfLsUleV4r0" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -65,6 +72,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
+    "DefaultHtmlFileTemplate": "HTML File",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.GoLinterPluginOnboardingV2": "true",
     "RunOnceActivity.GoLinterPluginStorageMigration": "true",
@@ -124,7 +132,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/main.go</url>
-          <line>11</line>
+          <line>13</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
