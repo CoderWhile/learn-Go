@@ -1,0 +1,232 @@
+﻿
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[0.000ms] [rows:-] SELECT DATABASE()
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[5.957ms] [rows:1] SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'sql_test%' ORDER BY SCHEMA_NAME='sql_test' DESC,SCHEMA_NAME limit 1
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[2.608ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'sql_test' AND table_name = 'demo_q_users' AND table_type = 'BASE TABLE'
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[30.369ms] [rows:0] CREATE TABLE `demo_q_users` (`id` bigint AUTO_INCREMENT,`name` longtext,`age` bigint,PRIMARY KEY (`id`))
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[0.000ms] [rows:-] SELECT DATABASE()
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[0.504ms] [rows:1] SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'sql_test%' ORDER BY SCHEMA_NAME='sql_test' DESC,SCHEMA_NAME limit 1
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[0.586ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'sql_test' AND table_name = 'demo_q_soft' AND table_type = 'BASE TABLE'
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[21.634ms] [rows:0] CREATE TABLE `demo_q_soft` (`id` bigint AUTO_INCREMENT,`name` longtext,`deleted_at` datetime(3) NULL,PRIMARY KEY (`id`))
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[0.000ms] [rows:-] SELECT DATABASE()
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[0.504ms] [rows:1] SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'sql_test%' ORDER BY SCHEMA_NAME='sql_test' DESC,SCHEMA_NAME limit 1
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[0.543ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'sql_test' AND table_name = 'demo_q_hooks' AND table_type = 'BASE TABLE'
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:68
+[21.655ms] [rows:0] CREATE TABLE `demo_q_hooks` (`id` bigint AUTO_INCREMENT,`name` longtext,PRIMARY KEY (`id`))
+
+
+===== 鍦烘櫙 1 路 First / Take / Last 鐢熸垚鐨?SQL 鏈変綍涓嶅悓锛堝悇鐢ㄧ嫭绔嬪彉閲忥級 =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:79
+[31.114ms] [rows:0] TRUNCATE TABLE demo_q_users
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:80
+[5.282ms] [rows:5] INSERT INTO `demo_q_users` (`name`,`age`) VALUES ('alice',18),('bob',20),('charlie',20),('david',25),('eve',0)
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:93
+[0.000ms] [rows:1] SELECT * FROM `demo_q_users` ORDER BY `demo_q_users`.`id` LIMIT 1
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:94
+[0.506ms] [rows:1] SELECT * FROM `demo_q_users` LIMIT 1
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:95
+[0.000ms] [rows:1] SELECT * FROM `demo_q_users` ORDER BY `demo_q_users`.`id` DESC LIMIT 1
+
+
+===== 鍦烘櫙 1b 路 澶嶇敤鍚屼竴涓洰鏍囧彉閲忎細甯︾潃涓婃鍥炲啓鐨勪富閿?=====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:100
+[0.000ms] [rows:1] SELECT * FROM `demo_q_users` ORDER BY `demo_q_users`.`id` LIMIT 1
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:101
+[0.583ms] [rows:1] SELECT * FROM `demo_q_users` WHERE `demo_q_users`.`id` = 1 LIMIT 1
+  鈫?绗簩鏉?Take 涓轰粈涔堝浜?WHERE id = 1锛熷洜涓?First 宸叉妸涓婚敭鍥炲啓杩?u1b
+
+
+===== 鍦烘櫙 2 路 鏌ヤ笉鍒拌褰曪細First 鎶ラ敊 vs Find 涓嶆姤閿?=====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:106
+[32.824ms] [rows:0] TRUNCATE TABLE demo_q_users
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:108 record not found
+[0.503ms] [rows:0] SELECT * FROM `demo_q_users` ORDER BY `demo_q_users`.`id` LIMIT 1
+  First 绌鸿〃 鈫?errors.Is(err, ErrRecordNotFound) = true | err = record not found
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:112
+[0.000ms] [rows:0] SELECT * FROM `demo_q_users`
+  Find  绌鸿〃 鈫?err = <nil> | len = 0锛堜笉鎶ラ敊锛岃繑鍥炵┖鍒囩墖锛?
+
+===== 鍦烘櫙 3 路 鐩爣缁撴瀯浣撳甫闈為浂涓婚敭 鈫?鑷姩鏋勫缓 WHERE id = ? =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:79
+[31.706ms] [rows:0] TRUNCATE TABLE demo_q_users
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:80
+[4.728ms] [rows:5] INSERT INTO `demo_q_users` (`name`,`age`) VALUES ('alice',18),('bob',20),('charlie',20),('david',25),('eve',0)
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:120
+[0.000ms] [rows:1] SELECT * FROM `demo_q_users` WHERE `demo_q_users`.`id` = 3 ORDER BY `demo_q_users`.`id` LIMIT 1
+  鍙栧洖锛歩d=3 name=charlie
+
+
+===== 鍦烘櫙 4 路 Where + 闈為浂涓婚敭 = AND 鍙犲姞锛堝畼鏂规彁閱掔殑鍧戯級 =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:127 record not found
+[0.000ms] [rows:0] SELECT * FROM `demo_q_users` WHERE id = 20 AND `demo_q_users`.`id` = 3 ORDER BY `demo_q_users`.`id` LIMIT 1
+  WHERE id = 20 AND id = 3 鈫?err = record not found锛坕d=3 瀛樺湪鍗存煡涓嶅埌锛屽洜涓哄彔鍔犱簡 id=20锛?
+
+===== 鍦烘櫙 5 路 struct 鏉′欢璺宠繃闆跺€?vs map 鏉′欢鍖呭惈闆跺€?=====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:133
+[0.000ms] [rows:5] SELECT * FROM `demo_q_users`
+  Where(&User{Age:0}) 鈫?闆跺€艰璺宠繃锛岀瓑浠锋棤鏉′欢锛屾煡鍒?5 鏉?
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:136
+[0.000ms] [rows:1] SELECT * FROM `demo_q_users` WHERE `demo_q_users`.`age` = 0
+  Where(map{age:0})  鈫?闆跺€艰淇濈暀锛學HERE age = 0锛屾煡鍒?1 鏉?
+
+===== 鍦烘櫙 6 路 鎸囧畾缁撴瀯浣撴煡璇㈠瓧娈?=====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:142
+[1.811ms] [rows:1] SELECT * FROM `demo_q_users` WHERE `demo_q_users`.`age` = 0
+  Where(&User{Name:alice}, "Age")         鈫?鍙煡 Age 瀛楁锛屾煡鍒?1 鏉?
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:145
+[0.000ms] [rows:0] SELECT * FROM `demo_q_users` WHERE `demo_q_users`.`name` = 'alice' AND `demo_q_users`.`age` = 0
+  Where(&User{Name:alice}, "name", "Age") 鈫?鏌?name + Age 涓ゅ瓧娈碉紝鏌ュ埌 0 鏉?
+
+===== 鍦烘櫙 7 路 Select 瀛楁 + 鎵弿鍒板皬缁撴瀯浣擄紙鏅鸿兘閫夋嫨锛?=====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:155
+[0.533ms] [rows:5] SELECT `id`,`name` FROM `demo_q_users`
+  Select(id,name) 鈫?鏌ュ埌 5 鏉★紝姣忔潯鍙惈 id/name
+
+
+===== 鍦烘櫙 8 路 Limit(-1) / Offset(-1) 鍙栨秷闄愬埗 =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:161
+[0.000ms] [rows:2] SELECT * FROM `demo_q_users` LIMIT 2
+  Limit(2)           鈫?鏌ュ埌 2 鏉?
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:164
+[0.000ms] [rows:5] SELECT * FROM `demo_q_users` 
+  Limit(2).Limit(-1) 鈫?鏌ュ埌 5 鏉★紙limit 琚彇娑堬級
+
+
+===== 鍦烘櫙 9 路 Order 澶氬瓧娈?+ FIELD() =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:170
+[0.519ms] [rows:5] SELECT * FROM `demo_q_users` ORDER BY age desc,name
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:174
+[0.000ms] [rows:5] SELECT * FROM `demo_q_users` ORDER BY FIELD(id,3,1,2)
+  FIELD(id,3,1,2) 鈫?鎸?3,1,2 椤哄簭杩斿洖
+
+
+===== 鍦烘櫙 10 路 Group By + Having + Scan 鑱氬悎缁撴灉 =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:181
+[0.565ms] [rows:4] SELECT age, count(*) as total FROM `demo_q_users` GROUP BY `age` HAVING count(*) >= 1 ORDER BY age
+  age=0 鏈?1 浜?  age=18 鏈?1 浜?  age=20 鏈?2 浜?  age=25 鏈?1 浜?
+
+===== 鍦烘櫙 11 路 Not 涓?Or 鏉′欢 =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:189
+[0.000ms] [rows:4] SELECT * FROM `demo_q_users` WHERE NOT name = 'alice'
+  Not(name=alice) 鈫?鏌ュ埌 4 鏉?
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:192
+[0.000ms] [rows:2] SELECT * FROM `demo_q_users` WHERE name = 'alice' OR name = 'bob'
+  name=alice OR name=bob 鈫?鏌ュ埌 2 鏉?
+
+===== 鍦烘櫙 12 路 鍐呰仈鏉′欢 =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:198
+[0.695ms] [rows:3] SELECT * FROM `demo_q_users` WHERE age > 18
+  Find(&us, "age > ?", 18) 鈫?鏌ュ埌 3 鏉?
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:201
+[0.000ms] [rows:1] SELECT * FROM `demo_q_users` WHERE name = 'alice'
+  Find(&one, "name = ?", "alice") 鈫?alice
+
+
+===== 鍦烘櫙 13 路 db.Table + Scan 鍒伴潪妯″瀷 struct =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:211
+[0.000ms] [rows:4] SELECT name,age FROM `demo_q_users` WHERE age > 0
+  alice    18
+  bob      20
+  charlie  20
+  david    25
+
+
+===== 鍦烘櫙 14 路 杞垹闄わ細gorm.DeletedAt 鑷姩鍔?deleted_at IS NULL =====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:218
+[36.546ms] [rows:0] TRUNCATE TABLE demo_q_soft
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:219
+[3.334ms] [rows:1] INSERT INTO `demo_q_soft` (`name`,`deleted_at`) VALUES ('keep',NULL)
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:220
+[3.753ms] [rows:1] INSERT INTO `demo_q_soft` (`name`,`deleted_at`) VALUES ('trash',NULL)
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:221
+[3.161ms] [rows:1] UPDATE `demo_q_soft` SET `deleted_at`='2026-09-19 21:18:51.264' WHERE `demo_q_soft`.`id` = 2 AND `demo_q_soft`.`deleted_at` IS NULL
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:223
+[0.000ms] [rows:1] SELECT * FROM `demo_q_soft` WHERE `demo_q_soft`.`deleted_at` IS NULL
+  Find()            鈫?鏌ュ埌 1 鏉★紙鑷姩杩囨护宸插垹锛?
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:226
+[0.000ms] [rows:2] SELECT * FROM `demo_q_soft`
+  Unscoped().Find() 鈫?鏌ュ埌 2 鏉★紙鍚凡鍒狅級
+
+
+===== 鍦烘櫙 15 路 AfterFind 閽╁瓙锛氭瘡鏉¤褰曡Е鍙戜竴娆?=====
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:231
+[35.214ms] [rows:0] TRUNCATE TABLE demo_q_hooks
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:232
+[3.288ms] [rows:3] INSERT INTO `demo_q_hooks` (`name`) VALUES ('a'),('b'),('c')
+      [AfterFind 閽╁瓙] 璇诲埌 id=1 name=a
+      [AfterFind 閽╁瓙] 璇诲埌 id=2 name=b
+      [AfterFind 閽╁瓙] 璇诲埌 id=3 name=c
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:234
+[0.000ms] [rows:3] SELECT * FROM `demo_q_hooks`
+  鈫?娉ㄦ剰锛? 鏉¤褰曡Е鍙戜簡 3 娆?AfterFind
+
+
+鍏ㄩ儴鍦烘櫙鎵ц瀹屾瘯銆?
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:73
+[0.000ms] [rows:0] SET FOREIGN_KEY_CHECKS = 0;
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:73
+[16.570ms] [rows:0] DROP TABLE IF EXISTS `demo_q_hooks` CASCADE
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:73
+[64.431ms] [rows:0] DROP TABLE IF EXISTS `demo_q_soft` CASCADE
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:73
+[15.834ms] [rows:0] DROP TABLE IF EXISTS `demo_q_users` CASCADE
+
+2026/09/19 21:18:51 D:/code/go/repository/learn-Go/GORM/鏌ヨQuery/main.go:73
+[0.000ms] [rows:0] SET FOREIGN_KEY_CHECKS = 1;
+啒彎塅呉〽਍

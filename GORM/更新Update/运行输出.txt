@@ -1,0 +1,341 @@
+﻿
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.000ms] [rows:-] SELECT DATABASE()
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[1.074ms] [rows:1] SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'sql_test%' ORDER BY SCHEMA_NAME='sql_test' DESC,SCHEMA_NAME limit 1
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[4.082ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'sql_test' AND table_name = 'demo_u_users' AND table_type = 'BASE TABLE'
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[51.472ms] [rows:0] CREATE TABLE `demo_u_users` (`id` bigint unsigned AUTO_INCREMENT,`created_at` datetime(3) NULL,`updated_at` datetime(3) NULL,`deleted_at` datetime(3) NULL,`name` longtext,`age` bigint,`role` longtext,`active` boolean,PRIMARY KEY (`id`),INDEX `idx_demo_u_users_deleted_at` (`deleted_at`))
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[1.575ms] [rows:-] SELECT DATABASE()
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.000ms] [rows:1] SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'sql_test%' ORDER BY SCHEMA_NAME='sql_test' DESC,SCHEMA_NAME limit 1
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.603ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'sql_test' AND table_name = 'demo_u_metas' AND table_type = 'BASE TABLE'
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[21.180ms] [rows:0] CREATE TABLE `demo_u_metas` (`id` bigint AUTO_INCREMENT,`name` longtext,`age` bigint,PRIMARY KEY (`id`))
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.000ms] [rows:-] SELECT DATABASE()
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.521ms] [rows:1] SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'sql_test%' ORDER BY SCHEMA_NAME='sql_test' DESC,SCHEMA_NAME limit 1
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.000ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'sql_test' AND table_name = 'demo_u_hooks' AND table_type = 'BASE TABLE'
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[29.308ms] [rows:0] CREATE TABLE `demo_u_hooks` (`id` bigint unsigned AUTO_INCREMENT,`created_at` datetime(3) NULL,`updated_at` datetime(3) NULL,`deleted_at` datetime(3) NULL,`name` longtext,`age` bigint,PRIMARY KEY (`id`),INDEX `idx_demo_u_hooks_deleted_at` (`deleted_at`))
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.000ms] [rows:-] SELECT DATABASE()
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.725ms] [rows:1] SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'sql_test%' ORDER BY SCHEMA_NAME='sql_test' DESC,SCHEMA_NAME limit 1
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[0.000ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'sql_test' AND table_name = 'demo_u_tracks' AND table_type = 'BASE TABLE'
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:87
+[29.575ms] [rows:0] CREATE TABLE `demo_u_tracks` (`id` bigint unsigned AUTO_INCREMENT,`created_at` datetime(3) NULL,`updated_at` datetime(3) NULL,`deleted_at` datetime(3) NULL,`name` longtext,`age` bigint,`code` longtext,PRIMARY KEY (`id`),INDEX `idx_demo_u_tracks_deleted_at` (`deleted_at`))
+
+
+===== 鍦烘櫙 1 路 Save 鏈変富閿?= 鏇存柊鎵€鏈夊瓧娈碉紙闆跺€间篃鍐欒繘鍘伙級 =====
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:98
+[43.070ms] [rows:0] TRUNCATE TABLE demo_u_users
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:99
+[33.197ms] [rows:0] TRUNCATE TABLE demo_u_metas
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:100
+[5.590ms] [rows:3] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:33.883','2026-09-19 21:31:33.883',NULL,'alice',18,'user',true),('2026-09-19 21:31:33.883','2026-09-19 21:31:33.883',NULL,'bob',20,'user',true),('2026-09-19 21:31:33.883','2026-09-19 21:31:33.883',NULL,'charlie',25,'admin',false)
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:105
+[4.628ms] [rows:2] INSERT INTO `demo_u_metas` (`name`,`age`) VALUES ('alice',99),('bob',88)
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:115
+[0.000ms] [rows:1] SELECT * FROM `demo_u_users` WHERE `demo_u_users`.`deleted_at` IS NULL ORDER BY `demo_u_users`.`id` LIMIT 1
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:120
+[4.591ms] [rows:1] UPDATE `demo_u_users` SET `created_at`='2026-09-19 21:31:33.883',`updated_at`='2026-09-19 21:31:33.894',`deleted_at`=NULL,`name`='alice_v2',`age`=0,`role`='',`active`=false WHERE `demo_u_users`.`deleted_at` IS NULL AND `id` = 1
+  鈫?鐪?UPDATE 鐨?SET锛歛ge=0銆乺ole=''銆乤ctive=false 閮借鍐欒繘鍘讳簡锛圫ave=Select(*)锛?
+
+===== 鍦烘櫙 2 路 Save 鏃犱富閿?= Create =====
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:125
+[2.925ms] [rows:1] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:33.899','2026-09-19 21:31:33.899',NULL,'newcomer',0,'',false)
+  鈫?鏃犱富閿?鈫?璧?INSERT锛堜笉鏄?UPDATE锛?
+
+===== 鍦烘櫙 3 路 Save 涓婚敭涓嶅瓨鍦?= 鍏?Update(0 琛? 鍐嶅洖閫€ Create =====
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:130
+[0.762ms] [rows:0] UPDATE `demo_u_users` SET `created_at`='0000-00-00 00:00:00',`updated_at`='2026-09-19 21:31:33.902',`deleted_at`=NULL,`name`='ghost',`age`=30,`role`='',`active`=false WHERE `demo_u_users`.`deleted_at` IS NULL AND `id` = 99999
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:130
+[4.284ms] [rows:1] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`,`id`) VALUES ('2026-09-19 21:31:33.902','2026-09-19 21:31:33.902',NULL,'ghost',30,'',false,99999) ON DUPLICATE KEY UPDATE `updated_at`='2026-09-19 21:31:33.902',`deleted_at`=VALUES(`deleted_at`),`name`=VALUES(`name`),`age`=VALUES(`age`),`role`=VALUES(`role`),`active`=VALUES(`active`)
+  鈫?涓€鏉?UPDATE锛坮ows:0锛? 绱ц窡涓€鏉?INSERT ... ON DUPLICATE KEY UPDATE锛岃繖灏辨槸 Save 鐨?upsert 鍥為€€
+
+
+===== 鍦烘櫙 4 路 Update 鍗曞垪 + Model 甯︿富閿?=====
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:136
+[0.577ms] [rows:1] SELECT * FROM `demo_u_users` WHERE name = 'bob' AND `demo_u_users`.`deleted_at` IS NULL ORDER BY `demo_u_users`.`id` LIMIT 1
+
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:137
+[5.681ms] [rows:1] UPDATE `demo_u_users` SET `role`='vip',`updated_at`='2026-09-19 21:31:33.907' WHERE `demo_u_users`.`deleted_at` IS NULL AND `id` = 2
+  鈫?WHERE id = ?锛圡odel 鐨勪富閿嚜鍔ㄦ垚涓烘潯浠讹級
+
+
+===== 鍦烘櫙 5 路 鏃犳潯浠舵洿鏂颁細琚嫤鎴紙ErrMissingWhereClause锛?=====
+
+WHERE conditions required
+[0.000ms] [rows:0] UPDATE `demo_u_users` SET `role`='hacker',`updated_at`='2026-09-19 21:31:33.913' WHERE `demo_u_users`.`deleted_at` IS NULL
+  鉂?鏃犳潯浠舵洿鏂?鈫?err = WHERE conditions required锛坋rrors.Is = true锛?
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:144
+[5.820ms] [rows:5] UPDATE `demo_u_users` SET `role`='hacker',`updated_at`='2026-09-19 21:31:33.914' WHERE 1 = 1 AND `demo_u_users`.`deleted_at` IS NULL
+  鉁?Where("1 = 1") 鈫?鏄惧紡鏉′欢锛屾斁琛?
+2026/09/19 21:31:33 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:146
+[4.898ms] [rows:5] UPDATE `demo_u_users` SET `role`='hacker',`updated_at`='2026-09-19 21:31:33.921' WHERE `demo_u_users`.`deleted_at` IS NULL
+  鉁?AllowGlobalUpdate 鈫?浼氳瘽绾у叧闂繚鎶わ紝鏀捐
+
+
+===== 鍦烘櫙 6 路 Updates(struct) 鍙洿鏂伴潪闆跺€硷紙false/0 琚烦杩囷級 =====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:98
+[97.431ms] [rows:0] TRUNCATE TABLE demo_u_users
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:99
+[44.477ms] [rows:0] TRUNCATE TABLE demo_u_metas
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:100
+[5.671ms] [rows:3] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:34.068','2026-09-19 21:31:34.068',NULL,'alice',18,'user',true),('2026-09-19 21:31:34.068','2026-09-19 21:31:34.068',NULL,'bob',20,'user',true),('2026-09-19 21:31:34.068','2026-09-19 21:31:34.068',NULL,'charlie',25,'admin',false)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:105
+[4.703ms] [rows:2] INSERT INTO `demo_u_metas` (`name`,`age`) VALUES ('alice',99),('bob',88)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:153
+[4.504ms] [rows:1] UPDATE `demo_u_users` SET `updated_at`='2026-09-19 21:31:34.079',`name`='alice_v3' WHERE id = 1 AND `demo_u_users`.`deleted_at` IS NULL
+  鈫?鐪?SET锛氬彧鏈?name 鍜?updated_at锛宎ge/role/active 鐨勯浂鍊艰璺宠繃
+
+
+===== 鍦烘櫙 7 路 Updates(map) 浼氭洿鏂伴浂鍊?=====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:159
+[4.793ms] [rows:1] UPDATE `demo_u_users` SET `active`=false,`age`=0,`updated_at`='2026-09-19 21:31:34.083' WHERE id = 2 AND `demo_u_users`.`deleted_at` IS NULL
+  鈫?鐪?SET锛氬寘鍚?age=0, active=false锛坢ap 涓嶈烦杩囬浂鍊硷級
+
+
+===== 鍦烘櫙 8 路 Select("Age") 鎸囧畾瀛楁  vs  Select("*") 鍏ㄥ瓧娈?=====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:98
+[42.056ms] [rows:0] TRUNCATE TABLE demo_u_users
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:99
+[36.016ms] [rows:0] TRUNCATE TABLE demo_u_metas
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:100
+[4.876ms] [rows:3] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:34.166','2026-09-19 21:31:34.166',NULL,'alice',18,'user',true),('2026-09-19 21:31:34.166','2026-09-19 21:31:34.166',NULL,'bob',20,'user',true),('2026-09-19 21:31:34.166','2026-09-19 21:31:34.166',NULL,'charlie',25,'admin',false)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:105
+[4.219ms] [rows:2] INSERT INTO `demo_u_metas` (`name`,`age`) VALUES ('alice',99),('bob',88)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:166
+[3.360ms] [rows:1] UPDATE `demo_u_users` SET `updated_at`='2026-09-19 21:31:34.176',`age`=0 WHERE id = 1 AND `demo_u_users`.`deleted_at` IS NULL
+  鈫?Select("Age")锛氬彧鏇存柊 age=0锛孨ame 琚拷鐣ワ紙瀹夊叏锛?
+  -- 涓嬮潰鏄?Select("*")锛氳繛涓婚敭 id銆乧reated_at 閮藉啓锛宑reated_at 鍙?'0000-00-00' 鎶ラ敊 --
+
+Error 1292 (22007): Incorrect datetime value: '0000-00-00' for column 'created_at' at row 1
+[0.000ms] [rows:0] UPDATE `demo_u_users` SET `id`=0,`created_at`='0000-00-00 00:00:00',`updated_at`='2026-09-19 21:31:34.179',`deleted_at`=NULL,`name`='alice_v4',`age`=0,`role`='',`active`=false WHERE id = 1 AND `demo_u_users`.`deleted_at` IS NULL
+  鈫?Select("*") 瀵广€屾柊鏋勯€犵殑闆跺€?struct銆嶆槸鍗遍櫓鐨勶細id=0銆乧reated_at='0000-00-00' 閮借繘 SQL 浜?
+
+===== 鍦烘櫙 9 路 SQL 琛ㄨ揪寮忔洿鏂帮紙鍘熷瓙鑷锛?=====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:98
+[42.868ms] [rows:0] TRUNCATE TABLE demo_u_users
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:99
+[35.768ms] [rows:0] TRUNCATE TABLE demo_u_metas
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:100
+[4.903ms] [rows:3] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:34.258','2026-09-19 21:31:34.258',NULL,'alice',18,'user',true),('2026-09-19 21:31:34.258','2026-09-19 21:31:34.258',NULL,'bob',20,'user',true),('2026-09-19 21:31:34.258','2026-09-19 21:31:34.258',NULL,'charlie',25,'admin',false)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:105
+[4.333ms] [rows:2] INSERT INTO `demo_u_metas` (`name`,`age`) VALUES ('alice',99),('bob',88)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:177
+[3.922ms] [rows:1] UPDATE `demo_u_users` SET `age`=age + 10,`updated_at`='2026-09-19 21:31:34.267' WHERE id = 1 AND `demo_u_users`.`deleted_at` IS NULL
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:179
+[0.000ms] [rows:0] UPDATE `demo_u_users` SET `role`=CONCAT(role, '_vip') WHERE age > 100 AND `demo_u_users`.`deleted_at` IS NULL
+  鈫?绗竴涓?age = age + 10锛涚浜屼釜 role = CONCAT(...)锛堝甫鏉′欢锛?
+
+===== 鍦烘櫙 10 路 瀛愭煡璇㈡洿鏂帮紙璺ㄨ〃锛?=====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:98
+[39.764ms] [rows:0] TRUNCATE TABLE demo_u_users
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:99
+[34.699ms] [rows:0] TRUNCATE TABLE demo_u_metas
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:100
+[6.256ms] [rows:3] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:34.346','2026-09-19 21:31:34.346',NULL,'alice',18,'user',true),('2026-09-19 21:31:34.346','2026-09-19 21:31:34.346',NULL,'bob',20,'user',true),('2026-09-19 21:31:34.346','2026-09-19 21:31:34.346',NULL,'charlie',25,'admin',false)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:105
+[4.779ms] [rows:2] INSERT INTO `demo_u_metas` (`name`,`age`) VALUES ('alice',99),('bob',88)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:186
+[3.527ms] [rows:1] UPDATE `demo_u_users` SET `age`=(SELECT `age` FROM `demo_u_metas` WHERE demo_u_metas.name = demo_u_users.name),`updated_at`='2026-09-19 21:31:34.357' WHERE name = 'alice' AND `demo_u_users`.`deleted_at` IS NULL
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:189
+[0.000ms] [rows:1] SELECT * FROM `demo_u_users` WHERE name = 'alice' AND `demo_u_users`.`deleted_at` IS NULL ORDER BY `demo_u_users`.`id` LIMIT 1
+  alice 鐨?age 琚洿鏂颁负 meta 閲岀殑 99
+
+
+===== 鍦烘櫙 11 路 UpdateColumn 璺宠繃閽╁瓙 + 涓嶆洿鏂?updated_at =====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:194
+[41.322ms] [rows:0] TRUNCATE TABLE demo_u_hooks
+   [閽╁瓙] BeforeSave
+   [閽╁瓙] AfterSave
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:195
+[4.524ms] [rows:1] INSERT INTO `demo_u_hooks` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`) VALUES ('2026-09-19 21:31:34.403','2026-09-19 21:31:34.403',NULL,'a',1)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:197
+[0.000ms] [rows:1] SELECT * FROM `demo_u_hooks` WHERE name = 'a' AND `demo_u_hooks`.`deleted_at` IS NULL ORDER BY `demo_u_hooks`.`id` LIMIT 1
+
+  -- 鐢?Update锛堣Е鍙戦挬瀛?+ 鏇存柊 updated_at锛?-
+   [閽╁瓙] BeforeSave
+   [閽╁瓙] BeforeUpdate
+   [閽╁瓙] AfterUpdate
+   [閽╁瓙] AfterSave
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:199
+[5.001ms] [rows:1] UPDATE `demo_u_hooks` SET `age`=2,`updated_at`='2026-09-19 21:31:34.406' WHERE `demo_u_hooks`.`deleted_at` IS NULL AND `id` = 1
+
+  -- 鐢?UpdateColumn锛堣烦杩囬挬瀛?+ 涓嶅姩 updated_at锛?-
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:201
+[4.426ms] [rows:1] UPDATE `demo_u_hooks` SET `age`=3 WHERE `demo_u_hooks`.`deleted_at` IS NULL AND `id` = 1
+  鈫?瀵规瘮锛歎pdate 鎵撳嵃 4 琛岄挬瀛愶紝UpdateColumn 涓€琛岄兘娌℃湁
+
+
+===== 鍦烘櫙 12 路 鏇存柊閽╁瓙鐨勭湡瀹為『搴?=====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:206
+[40.573ms] [rows:0] TRUNCATE TABLE demo_u_hooks
+   [閽╁瓙] BeforeSave
+   [閽╁瓙] AfterSave
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:207
+[6.052ms] [rows:1] INSERT INTO `demo_u_hooks` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`) VALUES ('2026-09-19 21:31:34.456','2026-09-19 21:31:34.456',NULL,'b',1)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:209
+[0.000ms] [rows:1] SELECT * FROM `demo_u_hooks` WHERE name = 'b' AND `demo_u_hooks`.`deleted_at` IS NULL ORDER BY `demo_u_hooks`.`id` LIMIT 1
+   [閽╁瓙] BeforeSave
+   [閽╁瓙] BeforeUpdate
+   [閽╁瓙] AfterUpdate
+   [閽╁瓙] AfterSave
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:210
+[3.679ms] [rows:1] UPDATE `demo_u_hooks` SET `age`=9,`updated_at`='2026-09-19 21:31:34.463' WHERE `demo_u_hooks`.`deleted_at` IS NULL AND `id` = 1
+  鈫?椤哄簭锛欱eforeSave 鈫?BeforeUpdate 鈫?(UPDATE) 鈫?AfterUpdate 鈫?AfterSave
+
+
+===== 鍦烘櫙 13 路 Changed 鍒ゆ柇瀛楁鏄惁鍙樻洿 + SetColumn 鏀瑰€?=====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:215
+[41.937ms] [rows:0] TRUNCATE TABLE demo_u_tracks
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:216
+[4.811ms] [rows:1] INSERT INTO `demo_u_tracks` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`code`) VALUES ('2026-09-19 21:31:34.509','2026-09-19 21:31:34.509',NULL,'t1',1,'c1')
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:218
+[0.581ms] [rows:1] SELECT * FROM `demo_u_tracks` WHERE name = 't1' AND `demo_u_tracks`.`deleted_at` IS NULL ORDER BY `demo_u_tracks`.`id` LIMIT 1
+
+  -- Name 鍙樹簡锛氭墦鍗?'Name 鍙戠敓浜嗗彉鍖?锛屼笖 Age 琚?SetColumn 寮哄埗鏀规垚 18 --
+   [BeforeUpdate] Name 鍙戠敓浜嗗彉鍖?
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:220
+[2.656ms] [rows:1] UPDATE `demo_u_tracks` SET `age`=18,`name`='t1_v2',`updated_at`='2026-09-19 21:31:34.514' WHERE `demo_u_tracks`.`deleted_at` IS NULL AND `id` = 1
+
+  -- Name 娌″彉锛堝€肩浉鍚岋級锛欳hanged("Name")=false锛屼粈涔堥兘涓嶈Е鍙?--
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:223
+[4.487ms] [rows:1] UPDATE `demo_u_tracks` SET `name`='t1_v2',`updated_at`='2026-09-19 21:31:34.517' WHERE `demo_u_tracks`.`deleted_at` IS NULL AND `id` = 1
+
+  -- 鏀?Code锛欳hanged("Code") 瑙﹀彂鎷︽埅锛岃繑鍥?error --
+  Code 鍙樻洿琚嫤鎴?鈫?err = Code 瀛楁涓嶅厑璁镐慨鏀?
+
+===== 鍦烘櫙 14 路 鎵归噺鏇存柊锛歴truct 鐨?false 鏄浂鍊间細琚烦杩?=====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:98
+[46.401ms] [rows:0] TRUNCATE TABLE demo_u_users
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:99
+[36.863ms] [rows:0] TRUNCATE TABLE demo_u_metas
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:100
+[7.846ms] [rows:3] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:34.606','2026-09-19 21:31:34.606',NULL,'alice',18,'user',true),('2026-09-19 21:31:34.606','2026-09-19 21:31:34.606',NULL,'bob',20,'user',true),('2026-09-19 21:31:34.606','2026-09-19 21:31:34.606',NULL,'charlie',25,'admin',false)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:105
+[3.874ms] [rows:2] INSERT INTO `demo_u_metas` (`name`,`age`) VALUES ('alice',99),('bob',88)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:233
+[4.286ms] [rows:2] UPDATE `demo_u_users` SET `updated_at`='2026-09-19 21:31:34.619' WHERE role = 'user' AND `demo_u_users`.`deleted_at` IS NULL
+  鉂?struct 浼?Active:false 鈫?SET 閲屾病鏈?active锛屽彧鏇存柊浜?updated_at锛孯owsAffected=2
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:236
+[5.507ms] [rows:2] UPDATE `demo_u_users` SET `active`=false,`updated_at`='2026-09-19 21:31:34.622' WHERE role = 'user' AND `demo_u_users`.`deleted_at` IS NULL
+  鉁?map 浼?active:false 鈫?SET 閲屾湁 active=false锛孯owsAffected=2
+
+
+===== 鍦烘櫙 15 路 RowsAffected 璇箟锛歎pdate 甯?updated_at vs UpdateColumn 涓嶅甫 =====
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:98
+[44.300ms] [rows:0] TRUNCATE TABLE demo_u_users
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:99
+[38.744ms] [rows:0] TRUNCATE TABLE demo_u_metas
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:100
+[4.852ms] [rows:3] INSERT INTO `demo_u_users` (`created_at`,`updated_at`,`deleted_at`,`name`,`age`,`role`,`active`) VALUES ('2026-09-19 21:31:34.711','2026-09-19 21:31:34.711',NULL,'alice',18,'user',true),('2026-09-19 21:31:34.711','2026-09-19 21:31:34.711',NULL,'bob',20,'user',true),('2026-09-19 21:31:34.711','2026-09-19 21:31:34.711',NULL,'charlie',25,'admin',false)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:105
+[4.206ms] [rows:2] INSERT INTO `demo_u_metas` (`name`,`age`) VALUES ('alice',99),('bob',88)
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:242
+[0.000ms] [rows:0] UPDATE `demo_u_users` SET `active`=true WHERE id = 1 AND `demo_u_users`.`deleted_at` IS NULL
+  UpdateColumn 鎶?active 璁炬垚 true锛堝€兼湰鏉ュ氨娌″彉锛夆啋 RowsAffected=0锛圡ySQL 涓嶈娌″彉鐨勮锛?
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:244
+[4.994ms] [rows:1] UPDATE `demo_u_users` SET `active`=true,`updated_at`='2026-09-19 21:31:34.721' WHERE id = 1 AND `demo_u_users`.`deleted_at` IS NULL
+  Update 鍚屾牱鎶?active 璁炬垚 true 鈫?RowsAffected=1锛堝洜涓?updated_at 鍙樹簡锛屼篃绠?1 琛岋級
+
+
+鍏ㄩ儴鍦烘櫙鎵ц瀹屾瘯銆?
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:92
+[0.000ms] [rows:0] SET FOREIGN_KEY_CHECKS = 0;
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:92
+[15.652ms] [rows:0] DROP TABLE IF EXISTS `demo_u_tracks` CASCADE
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:92
+[15.232ms] [rows:0] DROP TABLE IF EXISTS `demo_u_hooks` CASCADE
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:92
+[15.059ms] [rows:0] DROP TABLE IF EXISTS `demo_u_metas` CASCADE
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:92
+[15.583ms] [rows:0] DROP TABLE IF EXISTS `demo_u_users` CASCADE
+
+2026/09/19 21:31:34 D:/code/go/repository/learn-Go/GORM/鏇存柊Update/main.go:92
+[0.000ms] [rows:0] SET FOREIGN_KEY_CHECKS = 1;
+啒彎塅呉〽਍
