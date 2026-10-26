@@ -1,0 +1,31 @@
+{"level":"DEBUG","time":"2026-10-21T21:10:15.112+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"ERROR","time":"2026-10-21T21:10:15.118+0800","caller":"mysql/mysql.go:24","msg":"connect DB failed","error":"sql: unknown driver \"mysql\" (forgotten import?)"}
+{"level":"DEBUG","time":"2026-10-21T21:11:55.414+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"ERROR","time":"2026-10-21T21:11:55.420+0800","caller":"mysql/mysql.go:25","msg":"connect DB failed","error":"invalid bool value: True%!(EXTRA string=bjy12345, string=127.0.0.1, string=13306, string=)"}
+{"level":"DEBUG","time":"2026-10-21T21:13:52.658+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"DEBUG","time":"2026-10-21T21:15:09.028+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"INFO","time":"2026-10-21T21:17:14.257+0800","caller":"logger/logger.go:71","msg":"/","status":200,"method":"GET","path":"/","query":"","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0","errors":"","cost":0.0005201}
+{"level":"INFO","time":"2026-10-21T21:17:14.380+0800","caller":"logger/logger.go:71","msg":"/hybridaction/zybTrackerStatisticsAction","status":404,"method":"GET","path":"/hybridaction/zybTrackerStatisticsAction","query":"data=%7B%7D&__callback__=__cb__zybTrackerStatisticsAction__53f17b09_47a4_4cfa_9788_67b7440dbed5__0","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0","errors":"","cost":0}
+{"level":"INFO","time":"2026-10-21T21:17:14.848+0800","caller":"logger/logger.go:71","msg":"/hybridaction/zybTrackerStatisticsAction","status":404,"method":"GET","path":"/hybridaction/zybTrackerStatisticsAction","query":"data=%7B%7D&__callback__=__cb__zybTrackerStatisticsAction__f3f6dfd6_509d_482a_8f11_3bf6e735c60a__1","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0","errors":"","cost":0}
+{"level":"INFO","time":"2026-10-21T21:17:15.619+0800","caller":"logger/logger.go:71","msg":"/favicon.ico","status":404,"method":"GET","path":"/favicon.ico","query":"","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0","errors":"","cost":0}
+{"level":"INFO","time":"2026-10-21T22:31:15.628+0800","caller":"web_app/main.go:74","msg":"Shutdown Server ..."}
+{"level":"FATAL","time":"2026-10-21T22:31:15.629+0800","caller":"web_app/main.go:83","msg":"Server exiting"}
+{"level":"DEBUG","time":"2026-10-21T22:36:39.022+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"ERROR","time":"2026-10-21T22:36:39.028+0800","caller":"mysql/mysql.go:26","msg":"connect DB failed","error":"invalid dbname \"%!s(int=0)\": invalid URL escape \"%!s\""}
+{"level":"DEBUG","time":"2026-10-21T22:37:32.135+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"DEBUG","time":"2026-10-21T22:41:01.508+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"DEBUG","time":"2026-10-21T22:44:15.847+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"ERROR","time":"2026-10-21T22:44:15.858+0800","caller":"mysql/mysql.go:26","msg":"connect DB failed","error":"dial tcp: lookup tcp/%!s(int=3306): unknown port"}
+{"level":"DEBUG","time":"2026-10-22T19:44:42.435+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"ERROR","time":"2026-10-22T19:44:42.451+0800","caller":"mysql/mysql.go:26","msg":"connect DB failed","error":"dial tcp: lookup tcp/%!s(int=3306): unknown port"}
+{"level":"DEBUG","time":"2026-10-22T19:46:36.033+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"ERROR","time":"2026-10-22T19:46:36.043+0800","caller":"mysql/mysql.go:26","msg":"connect DB failed","error":"dial tcp: lookup tcp/%!s(int=3306): unknown port"}
+{"level":"DEBUG","time":"2026-10-22T19:47:42.918+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"DEBUG","time":"2026-10-22T19:48:20.565+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"INFO","time":"2026-10-22T19:48:36.697+0800","caller":"logger/logger.go:73","msg":"/","status":200,"method":"GET","path":"/","query":"","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","errors":"","cost":0}
+{"level":"INFO","time":"2026-10-22T19:48:36.749+0800","caller":"logger/logger.go:73","msg":"/favicon.ico","status":404,"method":"GET","path":"/favicon.ico","query":"","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36","errors":"","cost":0}
+{"level":"INFO","time":"2026-10-22T20:45:13.281+0800","caller":"web_app/main.go:74","msg":"Shutdown Server ..."}
+{"level":"FATAL","time":"2026-10-22T20:45:13.283+0800","caller":"web_app/main.go:83","msg":"Server exiting"}
+{"level":"DEBUG","time":"2026-10-25T19:50:19.022+0800","caller":"web_app/main.go:38","msg":"logger init success..."}
+{"level":"INFO","time":"2026-10-25T19:50:23.834+0800","caller":"web_app/main.go:74","msg":"Shutdown Server ..."}
+{"level":"FATAL","time":"2026-10-25T19:50:23.834+0800","caller":"web_app/main.go:83","msg":"Server exiting"}
