@@ -67,7 +67,7 @@ func Init() (err error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./")
-	//viper.SetConfigFile("./conf/config.yaml") // 指定配置文件路径
+	//	viper.SetConfigFile("./conf/config.yaml") // 指定配置文件路径
 	err = viper.ReadInConfig() // 读取配置信息
 	if err != nil {            // 读取配置信息失败
 		fmt.Printf("viper.ReadInConfig() failed with %s\n", err)

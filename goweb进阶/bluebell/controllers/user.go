@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"bluebell/dao/mysql"
 	"bluebell/logic"
 	"bluebell/models"
+	"errors"
 	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -25,14 +26,11 @@ func SignUpHandler(c *gin.Context) {
 		//判断err是不是validator.VAlidationError类型
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			c.JSON(http.StatusOK,
-				gin.H{"msg": err.Error()})
-			return
+			ResponseError(c, CodeInvalidParam)
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"msg": removeTopStruct(errs.Translate(trans)),
-		}) //翻译错误
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		//翻译错误
 		return
 	}
 	//手动对请求参数进行纤细的业务规则校验(不能为空,
@@ -46,15 +44,16 @@ func SignUpHandler(c *gin.Context) {
 	fmt.Println(p)
 	//2.业务处理
 	if err := logic.SignUp(p); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "注册失败",
-		})
+		zap.L().Error("logic.SignUp failed", zap.Error(err))
+		if errors.Is(err, mysql.ErrorUserExist) {
+			ResponseError(c, CodeUserExist)
+			return
+		}
+		ResponseError(c, CodeServerBusy)
 		return
 	}
 	//3.返回响应
-	c.JSON(http.StatusOK, gin.H{
-		"msg": "success",
-	})
+	ResponseSuccess(c, nil)
 }
 
 // LoginHandler
@@ -67,26 +66,29 @@ func LoginHandler(c *gin.Context) {
 		//判断err是不是validator.VAlidationError类型
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			c.JSON(http.StatusOK,
-				gin.H{"msg": err.Error()})
+			ResponseError(c, CodeInvalidParam)
 			return
 		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"msg": removeTopStruct(errs.Translate(trans)),
-		}) //翻译错误
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		//翻译错误
 		return
 	}
 	//2.业务逻辑处理
-	if err := logic.Login(p); err != nil {
+	user, err := logic.Login(p)
+	if err != nil {
 		zap.L().Error("Logic.Login failed", zap.String("username", p.Username), zap.Error(err))
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "用户名或密码错误",
-		})
+		if errors.Is(err, mysql.ErrorUserExist) {
+			ResponseError(c, CodeUserNotExist)
+			return
+		}
+		ResponseError(c, CodeInvalidPassword)
 		return
 	}
+
 	//3.返回响应
-	c.JSON(http.StatusOK, gin.H{
-		"msg": "登录成功",
+	ResponseSuccess(c, gin.H{
+		"user_id":   fmt.Sprintf("%d", user.UserID), //id值大于1<<53-1 int64类型的最大值是1<<63-1
+		"user_name": user.Username,
+		"token":     user.Token,
 	})
 }

@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ClaudeCodeEditorTabs">
-    <option name="activeSessionId" value="cda0aa1c-43c4-4051-97e0-ba05c152574b" />
+    <option name="activeSessionId" value="7270e463-7e31-4ea1-b8fd-a773b8201bd2" />
     <option name="openSessionIds">
       <list>
         <option value="cda0aa1c-43c4-4051-97e0-ba05c152574b" />
+        <option value="7270e463-7e31-4ea1-b8fd-a773b8201bd2" />
       </list>
     </option>
     <option name="sessionPaths">
       <map>
+        <entry key="7270e463-7e31-4ea1-b8fd-a773b8201bd2" value="/sessions/744d4a8f-31e8-46c0-bc7f-dbbc84d1d3dd" />
         <entry key="cda0aa1c-43c4-4051-97e0-ba05c152574b" value="/sessions/08de3170-3eab-4f5b-995e-34609091f3ba" />
       </map>
     </option>
     <option name="sessionTitles">
       <map>
+        <entry key="7270e463-7e31-4ea1-b8fd-a773b8201bd2" value="我现在写的这个项目的makefile怎么写" />
         <entry key="cda0aa1c-43c4-4051-97e0-ba05c152574b" value="现在的代码为什么我无法用浏览器访问" />
       </map>
     </option>

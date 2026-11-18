@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
-	"errors"
 )
 
 const secret = "666"
@@ -21,7 +20,7 @@ func CheckUserExist(username string) (err error) {
 		return err
 	}
 	if count > 0 {
-		return errors.New("用户已存在")
+		return ErrorUserExist
 	}
 	return
 }
@@ -48,7 +47,7 @@ func Login(user *models.User) (err error) {
 	sqlStr := `select user_id,username,password from user where username = ?`
 	err = db.Get(user, sqlStr, user.Username)
 	if err == sql.ErrNoRows {
-		return errors.New("用户不存在")
+		return ErrorUserNotExist
 	}
 	if err != nil {
 		//查询数据库失败
@@ -57,7 +56,15 @@ func Login(user *models.User) (err error) {
 	//判断密码是否真确
 	password := encryptPassword(oPassword)
 	if password != user.Password {
-		return errors.New("密码错误")
+		return ErrorInvalidPassword
 	}
+	return
+}
+
+// GetUserById 根据id获取用户信息
+func GetUseById(id int64) (user *models.User, err error) {
+	user = new(models.User)
+	sqlStr := `select user_id,username from user where user_id = ?`
+	err = db.Get(user, sqlStr, id)
 	return
 }
