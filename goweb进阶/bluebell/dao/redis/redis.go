@@ -1,34 +1,40 @@
 package redis
 
 import (
+	"bluebell/settings"
 	"context"
 	"fmt"
 	"time"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/spf13/viper"
 )
 
-var rdb *redis.Client
+var (
+	client *redis.Client
+	Nil    = redis.Nil
+)
 
-func Init() (err error) {
-	rdb = redis.NewClient(&redis.Options{
-		Addr: fmt.Sprintf("%s:%d", viper.GetString("redis.host"),
-			viper.GetInt("redis.port"),
+// rdb *redis.Client
+
+func Init(cfg *settings.RedisConfig) (err error) {
+	client = redis.NewClient(&redis.Options{
+		Addr: fmt.Sprintf("%s:%s", cfg.Host,
+			cfg.Port,
 		),
-		Password: viper.GetString("redis.password"),
-		DB:       viper.GetInt("redis.db"),
-		PoolSize: viper.GetInt("redis.pool_size"),
+		Password:     cfg.Password,
+		DB:           cfg.DB,
+		PoolSize:     cfg.PoolSize,
+		MinIdleConns: cfg.MinIdleConns,
 	})
 	//给ping这次操作设置一个5秒的超时,如果5秒内连不上redis,就自动放弃并返回超时错误
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	_, err = rdb.Ping(ctx).Result()
+	_, err = client.Ping(ctx).Result()
 	return err
 }
 
 func Close() {
-	_ = rdb.Close()
+	_ = client.Close()
 }
 
 //func main() {

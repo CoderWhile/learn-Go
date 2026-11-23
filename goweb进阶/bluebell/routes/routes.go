@@ -33,7 +33,10 @@ func SetupRouter(mode string) *gin.Engine {
 
 		v1.POST("/post", controllers.CreatePostHandler)
 		v1.GET("/post/:id", controllers.GetPostDetailHandler)
-		v1.GET("/posts/", controllers.GetPostListHandler)
+		v1.GET("/posts", controllers.GetPostListHandler)
+		// 根据时间或分数获取帖子列表
+		v1.GET("/posts2", controllers.GetPostListHandler2)
+		v1.POST("/vote", controllers.PostVoteController)
 	}
 
 	r.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {

@@ -9,6 +9,11 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	orderTime  = "time"
+	orderScore = "score"
+)
+
 // CreatePostHandler 创建帖子的处理函数
 func CreatePostHandler(c *gin.Context) {
 	//1.获取参数及参数的校验
@@ -30,7 +35,7 @@ func CreatePostHandler(c *gin.Context) {
 	}
 	p.AuthorID = userID
 	//2.创建帖子
-	if err := logic.CreatePost(p); err != nil {
+	if err := logic.CreatePost(c, p); err != nil {
 		zap.L().Error("logic.CreatePost(p)  failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
@@ -65,6 +70,41 @@ func GetPostDetailHandler(c *gin.Context) {
 // GetPostListDetail 获取帖子列个表处理函数
 func GetPostListHandler(c *gin.Context) {
 	//获取分页参数
+	page, size := GetPageInfo(c)
+	// 获取数据
+	data, err := logic.GetPostList(page, size)
+	if err != nil {
+		zap.L().Error("logic.GetPostList() failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	//返回响应
+	ResponseSuccess(c, data)
+}
+
+// 升级版帖子列表接口
+// 根据前端传来的参数(按创建时间排序\按分数排序)动态的获取帖子列表
+// 1.获取参数
+// 2.去redis查询id列表
+// 3.根据id去数据库查询帖子详细信息
+func GetPostListHandler2(c *gin.Context) {
+	//	GET请求参数(query string): /api/v1/posts2?page=1&sizse=10&order=time
+	// 初始化结构体时指定初始参数
+	// c.ShouldBind() 根据请求的数据类型选择响应的方法去获取数据
+	//c.ShouldBindJSON()如果请求中携带的是json格式的数据,才能用这个方法获取
+
+	p := models.ParamPostList{
+		Page:  1,
+		Size:  10,
+		Order: orderTime,
+	}
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("get postslistHandler2 list with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
 	page, size := GetPageInfo(c)
 	// 获取数据
 	data, err := logic.GetPostList(page, size)
