@@ -88,3 +88,55 @@ func GetPostList(page, size int64) (data []*models.ApiPostDetail, err error) {
 
 	return
 }
+
+func GetPostList2(c *gin.Context, p *models.ParamPostList) (data []*models.ApiPostDetail, err error) {
+	// 2.去redis查询id列表
+
+	ids, err := redis.GetPostIDsInOrder(c, p)
+	if err != nil {
+		return
+	}
+	if len(ids) == 0 {
+		zap.L().Warn("redis.GEtPostIDsInOrder(p) return 0 data ")
+		return
+	}
+	zap.L().Debug("GetPostList2", zap.Any("ids", ids))
+	// 3.根据Id去MYsql数据库查询帖子详细信息
+	// 返回的数据还要按照给定的id的顺序返回
+	// 在mysql查询的时候用到了Order by FIND_IN_SET函数
+	// 或者按照之前的顺序排序
+	posts, err := mysql.GetPostListByIDs(ids)
+	if err != nil {
+		return
+	}
+	zap.L().Debug("GetPostList2", zap.Any("posts", posts))
+	// 提前查询好每篇帖子的投票数
+	voteData, err := redis.GetPostVoteDate(c, ids)
+	if err != nil {
+		return
+	}
+	// 将帖子的作者及分区信息查询出来填充的奥帖子中
+	for idx, post := range posts {
+
+		user, err := mysql.GetUseById(post.AuthorID)
+		if err != nil {
+			zap.L().Error("mysql.GetUseById(post.AuthorID) failed", zap.Int64("author_id", post.AuthorID), zap.Error(err))
+			continue
+		}
+		//根据社区id查询社区详细信息
+		community, err := mysql.GetCommunityDetailByID(post.CommunityID)
+		if err != nil {
+			zap.L().Error("mysql.GetCommunityDetailByID(post.CommunityID) failed", zap.Int64("community_id", post.CommunityID), zap.Error(err))
+			continue
+		}
+		//接口数据拼接
+		postdetail := &models.ApiPostDetail{
+			VoteNum:         voteData[idx],
+			AuthorName:      user.Username,
+			Post:            post,
+			CommunityDetail: community,
+		}
+		data = append(data, postdetail)
+	}
+	return
+}

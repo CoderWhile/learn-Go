@@ -9,11 +9,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	orderTime  = "time"
-	orderScore = "score"
-)
-
 // CreatePostHandler 创建帖子的处理函数
 func CreatePostHandler(c *gin.Context) {
 	//1.获取参数及参数的校验
@@ -85,7 +80,7 @@ func GetPostListHandler(c *gin.Context) {
 
 // 升级版帖子列表接口
 // 根据前端传来的参数(按创建时间排序\按分数排序)动态的获取帖子列表
-// 1.获取参数
+// 1.获取参数query string参数
 // 2.去redis查询id列表
 // 3.根据id去数据库查询帖子详细信息
 func GetPostListHandler2(c *gin.Context) {
@@ -94,10 +89,11 @@ func GetPostListHandler2(c *gin.Context) {
 	// c.ShouldBind() 根据请求的数据类型选择响应的方法去获取数据
 	//c.ShouldBindJSON()如果请求中携带的是json格式的数据,才能用这个方法获取
 
-	p := models.ParamPostList{
+	// 指定上默认的值最好事改成配置文件的
+	p := &models.ParamPostList{
 		Page:  1,
 		Size:  10,
-		Order: orderTime,
+		Order: models.OrderTime,
 	}
 	if err := c.ShouldBindQuery(p); err != nil {
 		zap.L().Error("get postslistHandler2 list with invalid param", zap.Error(err))
@@ -105,9 +101,8 @@ func GetPostListHandler2(c *gin.Context) {
 		return
 	}
 
-	page, size := GetPageInfo(c)
 	// 获取数据
-	data, err := logic.GetPostList(page, size)
+	data, err := logic.GetPostList2(c, p)
 	if err != nil {
 		zap.L().Error("logic.GetPostList() failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
@@ -116,4 +111,9 @@ func GetPostListHandler2(c *gin.Context) {
 
 	//返回响应
 	ResponseSuccess(c, data)
+}
+
+// 根据社区去查询帖子列表
+func GetCommunityPostListHandler(c *gin.Context) {
+	
 }
