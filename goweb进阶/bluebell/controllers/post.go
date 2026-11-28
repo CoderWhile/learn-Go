@@ -36,7 +36,7 @@ func CreatePostHandler(c *gin.Context) {
 		return
 	}
 	//3.返回响应
-	ResponseSuccess(c, CodeSuccess)
+	ResponseSuccess(c, nil)
 }
 
 // GetPostDetailHandler 获取帖子详情的处理函数
@@ -78,12 +78,21 @@ func GetPostListHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
-// 升级版帖子列表接口
-// 根据前端传来的参数(按创建时间排序\按分数排序)动态的获取帖子列表
-// 1.获取参数query string参数
-// 2.去redis查询id列表
-// 3.根据id去数据库查询帖子详细信息
+// GetPostListHandler2 升级版帖子列表接口
+// @Summary 升级版帖子列表接口
+// @Description 可按社区按时间或分数排序查询帖子列表接口
+// @Tags 帖子相关就i恶口(api分组展示使用的)
+// @Accept application/json
+// @Produce application/json
+// @Param authorizaton header string true "Bearer JWT"
+// @Security ApiKeyAuth
+// @Seccess 200 {object} _ResponsePostList
+// @Router /posts2 [get]
 func GetPostListHandler2(c *gin.Context) {
+
+	// 1.获取参数query string参数
+	// 2.去redis查询id列表
+	// 3.根据id去数据库查询帖子详细信息
 	//	GET请求参数(query string): /api/v1/posts2?page=1&sizse=10&order=time
 	// 初始化结构体时指定初始参数
 	// c.ShouldBind() 根据请求的数据类型选择响应的方法去获取数据
@@ -101,10 +110,10 @@ func GetPostListHandler2(c *gin.Context) {
 		return
 	}
 
+	data, err := logic.GetPostListNew(c, p) //更新合二为一
 	// 获取数据
-	data, err := logic.GetPostList2(c, p)
 	if err != nil {
-		zap.L().Error("logic.GetPostList() failed", zap.Error(err))
+		zap.L().Error("logic.GetPostListNew() failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
@@ -113,7 +122,27 @@ func GetPostListHandler2(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
-// 根据社区去查询帖子列表
-func GetCommunityPostListHandler(c *gin.Context) {
-	
-}
+//// 根据社区去查询帖子列表
+//func GetCommunityPostListHandler(c *gin.Context) {
+//	// 初始化结构体时指定参数
+//	p := &models.ParamCommunityPostList{
+//		ParamPostList: &models.ParamPostList{
+//			Page:  1,
+//			Size:  10,
+//			Order: models.OrderTime,
+//		},
+//	}
+//	if err := c.ShouldBindQuery(p); err != nil {
+//		zap.L().Error("get CommunitypostslistHandler list with invalid param", zap.Error(err))
+//		ResponseError(c, CodeInvalidParam)
+//		return
+//	}
+//	// 获取数据
+//	if err != nil {
+//		zap.L().Error("logic.GetCommunityPostList() failed", zap.Error(err))
+//		ResponseError(c, CodeServerBusy)
+//		return
+//	}
+//	//返回响应
+//	ResponseSuccess(c, data)
+//}

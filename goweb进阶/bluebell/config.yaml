@@ -7,6 +7,7 @@ start_time: "2020-07-01"
 
 auth:
   jwt_expire: 8760
+  refresh_expire: 8760
 
 log:
   level: "debug"

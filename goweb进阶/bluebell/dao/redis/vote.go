@@ -3,6 +3,7 @@ package redis
 import (
 	"errors"
 	"math"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,7 @@ var (
 	ErrVoteRepested   = errors.New("不允许重复投票")
 )
 
-func CreatPost(c *gin.Context, postID int64) error {
+func CreatPost(c *gin.Context, postID, communityID int64) error {
 	//这两个要么同时成功要么同时不成功-->事务
 	pipeline := client.TxPipeline()
 
@@ -35,6 +36,9 @@ func CreatPost(c *gin.Context, postID int64) error {
 		Score:  float64(time.Now().Unix()),
 		Member: postID,
 	})
+	// 把帖子id加到社区的set
+	cKey := getRedisKey(KeyCommunitySetPF + strconv.Itoa(int(communityID)))
+	pipeline.SAdd(c, cKey, postID)
 	_, err := pipeline.Exec(c)
 
 	if err != nil {
@@ -74,7 +78,7 @@ func VoteForPost(c *gin.Context, userID, postID string, value float64) error {
 
 	if value == 0 {
 		//移除投票项
-		pipeline.ZRem(c, getRedisKey(KeyPostVotedZSetPF+postID), postID)
+		pipeline.ZRem(c, getRedisKey(KeyPostVotedZSetPF+postID), userID)
 	} else {
 		pipeline.ZAdd(c, getRedisKey(KeyPostVotedZSetPF+postID), redis.Z{
 			Score:  value, //当前用户有投的是赞成票还是反对票
